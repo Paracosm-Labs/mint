@@ -1,4 +1,211 @@
-@tailwind base;
+.App {
+  text-align: center;
+}
+
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.features{
+  background-color: #fff;
+}
+
+.bg-mintdeals, .mintdeals.sidebar, .kmint.container-fluid, .testimonials, .App{
+  background: #4caf50 !important;
+}
+
+.testimonial{
+  min-height: 204px;
+}
+
+.mintdeals .nav-item a{color: #fff;}
+
+.kmint.container-fluid{
+  /* min-height: 680px; */
+}
+
+.kmint.container{
+  padding:3em;
+}
+
+main.kmint, .kmint.container{background-color: #fff;
+  min-height: 680px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 20px 20px 0 0;
+}
+
+.onboard-choice{
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+}
+
+.onboarding-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  margin: 0 0.25rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.step.active {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+
+.kmint .card{
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.price-qty-container .text-success {
+  float: right;
+}
+
+.kmint-deals{height: 530px!important;}
+
+.kmint-redeem{height: 400px!important;}
+
+ul.onboard{
+  min-height: 120px;
+}
+
+
+/* Custom Button Styles */
+
+/* Kmint Orange Button */
+.btn-kmint-orange {
+  color: #fff!important;
+  background-color: #FF9800!important;
+  border-color: #FF9800!important;
+}
+
+.btn-kmint-orange:hover,
+.btn-kmint-orange:focus,
+.btn-kmint-orange:active,
+.btn-kmint-orange.active,
+.open > .dropdown-toggle.btn-kmint-orange {
+  color: #fff!important;
+  background-color: #E65100!important;
+  border-color: #E65100!important;
+}
+
+.btn-kmint-orange:active,
+.btn-kmint-orange.active,
+.open > .dropdown-toggle.btn-kmint-orange {
+  background-image: none;
+}
+
+.btn-kmint-orange.disabled,
+.btn-kmint-orange[disabled],
+fieldset[disabled] .btn-kmint-orange,
+.btn-kmint-orange.disabled:hover,
+.btn-kmint-orange[disabled]:hover,
+fieldset[disabled] .btn-kmint-orange:hover,
+.btn-kmint-orange.disabled:focus,
+.btn-kmint-orange[disabled]:focus,
+fieldset[disabled] .btn-kmint-orange:focus,
+.btn-kmint-orange.disabled:active,
+.btn-kmint-orange[disabled]:active,
+fieldset[disabled] .btn-kmint-orange:active,
+.btn-kmint-orange.disabled.active,
+.btn-kmint-orange[disabled].active,
+fieldset[disabled] .btn-kmint-orange.active {
+  background-color: #FF9800;
+  border-color: #FF9800;
+}
+
+.btn-kmint-orange .badge {
+  color: #FF9800;
+  background-color: #fff;
+}
+
+/* Kmint Blue Button */
+.btn-kmint-blue {
+  color: #fff!important;
+  background-color: #2196F3!important;
+  border-color: #2196F3!important;
+}
+
+.btn-kmint-blue:hover,
+.btn-kmint-blue:focus,
+.btn-kmint-blue:active,
+.btn-kmint-blue.active,
+.open > .dropdown-toggle.btn-kmint-blue {
+  color: #fff!important;
+  background-color: #1976D2!important;
+  border-color: #1976D2!important;
+}
+
+.btn-kmint-blue:active,
+.btn-kmint-blue.active,
+.open > .dropdown-toggle.btn-kmint-blue {
+  background-image: none;
+}
+
+.btn-kmint-blue.disabled,
+.btn-kmint-blue[disabled],
+fieldset[disabled] .btn-kmint-blue,
+.btn-kmint-blue.disabled:hover,
+.btn-kmint-blue[disabled]:hover,
+fieldset[disabled] .btn-kmint-blue:hover,
+.btn-kmint-blue.disabled:focus,
+.btn-kmint-blue[disabled]:focus,
+fieldset[disabled] .btn-kmint-blue:focus,
+.btn-kmint-blue.disabled:active,
+.btn-kmint-blue[disabled]:active,
+fieldset[disabled] .btn-kmint-blue:active,
+.btn-kmint-blue.disabled.active,
+.btn-kmint-blue[disabled].active,
+fieldset[disabled] .btn-kmint-blue.active {
+  background-color: #2196F3;
+  border-color: #2196F3;
+}
+
+.btn-kmint-blue .badge {
+  color: #2196F3;
+  background-color: #fff;
+}
+/*Login form related*/
+.form-signin {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -10,24 +217,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 255, 255, 255;
   }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  padding: 1rem 
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */
+
