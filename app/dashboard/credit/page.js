@@ -4,24 +4,10 @@ import CreditSummary from '../../components/creditSummary';
 import CreditUsageHistory from '../../components/creditUsageHistory';
 import MakePaymentModal from '../../components/makePaymentModal';
 import BorrowModal from '../../components/borrowModal';
-import {useAuth} from "@/lib/AuthContext";
-import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation';
-
-
 
 function CreditManagement() {
   const [showMakePaymentModal, setShowMakePaymentModal] = useState(false);
   const [showBorrowModal, setShowBorrowModal] = useState(false);
-
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-  if(!isAuthenticated){
-    router.push('/', { scroll: false })
-    // redirect('/login')
-    return (<></>)
-  } 
-
 
   return (
       <main className="kmint col-md-6 ms-sm-auto col-lg-6 px-md-4">

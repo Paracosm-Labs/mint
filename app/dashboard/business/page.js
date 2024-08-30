@@ -3,19 +3,9 @@ import React from 'react';
 import ClubStats from '../../components/clubStats';
 import RedemptionChart from '../../components/redemptionChart';
 import RecentRedemptions from '../../components/recentRedemptions';
-import {useAuth} from "@/lib/AuthContext";
-import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation'
 
 function BusinessDashboard() {
-  
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-  if(!isAuthenticated){
-    router.push('/', { scroll: false })
-    // redirect('/login')
-    return (<></>)
-  }
+
   return (
         <main className="kmint col-md-6 ms-sm-auto col-lg-6 px-md-4">
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">

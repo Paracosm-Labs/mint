@@ -2,22 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import DealTable from '../../components/dealTable';
 import DealModal from '../../components/dealModal';
-import {useAuth} from "@/lib/AuthContext";
-import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation'
 
 function DealManagement() {
   const [showDealModal, setShowDealModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
-  
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-  if(!isAuthenticated){
-    router.push('/', { scroll: false })
-    // redirect('/login')
-    return (<></>)
-  }
-
 
   const handleNewDeal = () => {
     setSelectedDeal(null);

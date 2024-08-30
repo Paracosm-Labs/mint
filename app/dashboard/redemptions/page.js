@@ -2,20 +2,9 @@
 import React, { useState } from 'react';
 import RedemptionsTable from '../../components/redemptionsTable';
 import NewRedemptionModal from '../../components/newRedemptionModal';
-import {useAuth} from "@/lib/AuthContext";
-import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation'
 
 function Redemptions() {
   const [showModal, setShowModal] = useState(false);
-  
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-  if(!isAuthenticated){
-    router.push('/', { scroll: false })
-    // redirect('/login')
-    return (<></>)
-  }  
 
   const handleNewRedemption = () => {
     setShowModal(true);
