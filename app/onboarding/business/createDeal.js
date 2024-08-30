@@ -57,7 +57,7 @@ const CreateDeal = ({ onNext, onPrev, onDataUpdate }) => {
       </div>
       <div className="alert alert-info mb-5" role="alert">
         <i className='fa fa-lightbulb mx-2'></i>
-        As your customers redeem your deals, you'll be able to access a growing credit line through the power of Blockchain and DeFi. This can help you grow your business even further!
+        As your customers redeem your deals, you will be able to access a growing credit line through the power of Blockchain and DeFi. This can help you grow your business even further!
       </div>
       <div className="d-flex justify-content-between">
         <button type="button" className="btn btn-outline-secondary" onClick={onPrev}>Previous</button>
