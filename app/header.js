@@ -4,7 +4,7 @@ import React from 'react';
 import {useAuth} from "@/lib/AuthContext";
 import { getAddress, signUsingWallet, verifyWallet } from '@/lib/wallet';
 import { Button } from 'react-bootstrap';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import login from "@/lib/login";
 
 function Header() {
@@ -23,9 +23,12 @@ function Header() {
   } 
 
   const handleLogoutClick = () => {
+    console.log("logging out");
+    
     setIsAuthenticated(false);
     setJwtToken(null);
-    router.push('/', { scroll: false })
+    redirect("/");
+    // router.push('/', { scroll: false })
   }
 
   const getMenuEntries = ()=>{

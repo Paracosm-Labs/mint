@@ -15,7 +15,6 @@ export async function POST(request, res) {
       if(!address || !address.length){
         return NextResponse.json({auth : null, msg : 'Address not sent with request'}, { status: 500 });
       }
-      console.log(address);
 
         await dbConnect();
 
@@ -28,10 +27,10 @@ export async function POST(request, res) {
           );
       
           if (updatedUser) {
-            console.log('Nonce updated successfully:', updatedUser);
+            console.log(`Nonce updated successfully:${address}`, updatedUser);
             return NextResponse.json({ nonce: `${loginMsg}${nonce}` }, { status: 200 });
           } else {
-            console.log('User not found with the given address.');
+            console.log(`User not found with the given address : ${address}`);
             return NextResponse.json({auth : null, msg : 'User not found with the given address.'}, { status: 500 });
           }
 
