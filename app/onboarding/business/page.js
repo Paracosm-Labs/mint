@@ -11,7 +11,8 @@ import {useAuth} from "@/lib/AuthContext";
 
 import {verifyWallet, signUsingWallet} from "@/lib/wallet";
 import { businessOnboardingMsg } from '@/utils/messageForSign';
-
+import ClubDealRegistryABI from "@/abi/ClubDealsRegistry.js";
+import { USDDAddress, clubDealRegistryAddress } from '@/lib/address';
 
 
 const BusinessOnboarding = () => {
@@ -37,14 +38,14 @@ const BusinessOnboarding = () => {
       case 0:
         return <></>
       case 1:
-          return (<div class="alert alert-danger" role="alert">{errMsg}</div>)           
+          return (<div class="alert alert-danger" role="alert">{errMsg}</div>)   
+      // case 3:
+      //   return (<div class="alert alert-danger" role="alert">{errMsg}</div>)                   
       default:
+        return (<div class="alert alert-danger" role="alert">{errMsg}</div>) 
         break;
     }
   }
-
-
-
 
   const save = async (signature) => {
     const response = await fetch('/api/business/onboarding', {
@@ -54,14 +55,33 @@ const BusinessOnboarding = () => {
       },
       body: JSON.stringify({sign : signature, ...businessData}),
     });
+
+    const resJson = await response.json();
     if(response.status == 200){
-      const resJson = await response.json();
       return resJson.auth;
     }
-    return null;
+    if(response.status != 200){
+      setErr(3);
+      setErrMsg(resJson.error);
+      return null;
+    }
   }
 
-
+  const createClubOnChain = async (paymentTokenAddress, membershipFee, sendToCreditFacility, abi, contractAddress) => {
+    try {
+      const contract = await tronWeb.contract(abi, contractAddress);
+      const result = await contract.createClub(paymentTokenAddress, membershipFee, sendToCreditFacility).send({
+        feeLimit: 1000000000, 
+        callValue: 0,         
+      });
+      console.log('Transaction Result:', result);
+      return result; 
+    } catch (error) {
+      console.error('Error creating club:', error);
+      throw error;
+    }
+  };
+  
 
   const renderStep = () => {
     switch (currentStep) {
@@ -70,12 +90,12 @@ const BusinessOnboarding = () => {
       case 2:
         return <CreateClub onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
       case 3:
-        return <CreateDeal onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
-      case 4:
+      //   return <CreateDeal onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
+      // case 4:
         return (
           <DashboardTour 
             onComplete={() => {
-              console.log('Onboarding completed');
+              console.log('Onboarding completion started');
               console.log(businessData);
               
               verifyWallet().then(res => {
@@ -92,13 +112,20 @@ const BusinessOnboarding = () => {
                 setErr(0);
                 setErrMsg("");
 
-                signUsingWallet(businessOnboardingMsg)
-                .then(signature => save(signature)
-                .then((auth) => {
-                  setIsAuthenticated(true);
-                  setJwtToken(auth);
-                  router.push('/dashboard/business', { scroll: false })
-                }))
+                createClubOnChain(USDDAddress, businessData.clubInfo.membershipFee, true, ClubDealRegistryABI, clubDealRegistryAddress).then(txID => {
+                  signUsingWallet(businessOnboardingMsg)
+                  .then(signature => save(signature)
+                  .then((auth) => {
+                    if(auth){
+                      setIsAuthenticated(true);
+                      setJwtToken(auth);
+                      console.log('Onboarding completed successfully');
+                      router.push('/dashboard/business', { scroll: false })
+                    }
+                  }))
+                })
+
+
               })
             }} 
             onPrev={prevStep} 

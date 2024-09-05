@@ -7,9 +7,9 @@ import Club from "../../../models/club";
 import Deal from "../../../models/deal"; 
 
 
-const createDealInfo = (dealsWithClubAndBusiness)=> {
-    return dealsWithClubAndBusiness.map(d => {
-        let di = {};
+const createClubInfo = (clubAndBusiness)=> {
+    return clubAndBusiness.map(d => {
+        let clubInfo = {};
         /*
   {
       "id": 9,
@@ -22,15 +22,15 @@ const createDealInfo = (dealsWithClubAndBusiness)=> {
       "members": 70
   }
         */
-        di.id = d._id;
-        di.name = d.club.name;
-        di.description = d.description;
-        di.membershipFee = d.club.membershipFee;
-        di.category = d.club.business.industry;
-        di.country = d.club.business.country; 
-        di.image = "https://picsum.photos/300/150?random=9";
-        di.members = 0;
-        return di;
+  clubInfo.id = d._id;
+        clubInfo.name = d.name;
+        clubInfo.description = d.description;
+        clubInfo.membershipFee = d.membershipFee;
+        clubInfo.category = d.business.industry;
+        clubInfo.country = d.business.country; 
+        clubInfo.image = "https://picsum.photos/300/150?random=9";
+        clubInfo.members = 0;
+        return clubInfo;
     })
 }
 
@@ -38,15 +38,10 @@ export const dynamic = 'force-dynamic';
 export async function GET(request) {
     try {
         await dbConnect();
-        const dealsWithClubAndBusiness = await Deal.find()
-        .populate({path: 'club',
-            populate: {
-                path: 'business', // Populates the business within the club
-                },
-            })
+        const clubAndBusiness = await Club.find()
             .populate('business') // Populates the business at the deal level
             .exec();
-            let dealInfoList = createDealInfo(dealsWithClubAndBusiness);
+            let dealInfoList = createClubInfo(clubAndBusiness);
             console.log(dealInfoList);
             
             return NextResponse.json({clubs : dealInfoList}, { status: 200 });

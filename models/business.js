@@ -9,11 +9,9 @@ const BusinessSchema = new mongoose.Schema(
         },        
         name: {
             type: String,
-            required: true 
           },
           industry: {
               type: String,
-              required: true 
             },            
           country: {
             type: String,

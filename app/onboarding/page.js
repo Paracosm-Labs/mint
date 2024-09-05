@@ -2,12 +2,26 @@
 import Link from 'next/link'
 import React from 'react'
 import { Button, Card } from 'react-bootstrap'
+import { useRouter } from 'next/navigation';
+import {useAuth} from "@/lib/AuthContext";
+import login from "@/lib/login";
 
 const Onboarding = () => {
+  const { setIsAuthenticated, setJwtToken } = useAuth();
+  const router = useRouter();
+
+  const postLogin = (auth) => {
+    setIsAuthenticated(true);
+    setJwtToken(auth);
+    router.push('/dashboard/business', { scroll: false })    
+  }
+  const handleLoginClick = () => {
+      login(postLogin)
+    }
   return (
     <div className="container">
       <div className="container choice-container">
-        <h1 className="text-center text-white mt-3 mb-5">Get Started</h1>
+        <h1 className="text-center text-white mt-3 mb-5">Business</h1>
         <div className="row">
           <div className="col-md-3 mb-4">
             {/* <Card className="h-100 onboard-choice">
@@ -66,7 +80,7 @@ const Onboarding = () => {
             </Card>
           </div> */}
 
-          <div className="col-md-6 mb-4">
+          <div className="col-md-6 mb-3">
             <Card className="h-100 onboard-choice">
               <Card.Img 
                 variant="top" 
@@ -74,7 +88,7 @@ const Onboarding = () => {
                 alt="Person working on a laptop in a cafe, representing a small business owner"
               />
               <Card.Body className="text-center">
-                <Card.Title as="h2" className="mb-3">Business</Card.Title>
+                <Card.Title as="h3" className="mb-3">Get Started</Card.Title>
 
                 <ul className="onboard list-unstyled text-start mb-3">
                 <li>
@@ -97,12 +111,16 @@ const Onboarding = () => {
                     </li>
                 </ul>
 
-                <Button size="lg" className="btn btn-kmint-blue">
+                <Button size="" className="btn btn-kmint-blue">
                   <Link href="/onboarding/business" className="nav-link">
                   <span className='text-decoration-line-through text-muted text-white'>$60 One Time Payment</span><br/>
                     Free For Limited Time
                   </Link>
                 </Button>
+                <Card.Title as="h5" className="mt-3">Already Registered?</Card.Title>
+                <Button size="" className="btn btn-kmint-blue mt-2" onClick={handleLoginClick}>
+                  Login
+                </Button>                
               </Card.Body>
             </Card>
           </div>
