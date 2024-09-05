@@ -27,7 +27,7 @@ export async function POST(request) {
 
         const user = await User.create({address : address});   
         const business = await Business.create({...reqJson.businessInfo, owner : user._id}); 
-        const club = await Club.create({...reqJson.clubInfo, owner : user._id, business : business._id}); 
+        const club = await Club.create({...reqJson.clubInfo, owner : user._id, business : business._id, txID : reqJson.txID}); 
         if(reqJson.dealInfo){
             const deal = await Deal.create({...reqJson.dealInfo, owner : user._id, business : business._id, club : club._id}); 
         }

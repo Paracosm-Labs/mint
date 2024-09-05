@@ -47,13 +47,16 @@ const BusinessOnboarding = () => {
     }
   }
 
-  const save = async (signature) => {
+  const save = async (signature, txID) => {
+    if(!txID){
+      throw Error("txID is null");
+    }
     const response = await fetch('/api/business/onboarding', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({sign : signature, ...businessData}),
+      body: JSON.stringify({sign : signature, txID : txID, ...businessData}),
     });
 
     const resJson = await response.json();
@@ -69,15 +72,30 @@ const BusinessOnboarding = () => {
 
   const createClubOnChain = async (paymentTokenAddress, membershipFee, sendToCreditFacility, abi, contractAddress) => {
     try {
+      debugger;
       const contract = await tronWeb.contract(abi, contractAddress);
+  
       const result = await contract.createClub(paymentTokenAddress, membershipFee, sendToCreditFacility).send({
         feeLimit: 1000000000, 
         callValue: 0,         
       });
-      console.log('Transaction Result:', result);
-      return result; 
+  
+      const txID = result;
+  
+      console.log('Transaction ID:', txID);
+  
+      const receipt = await tronWeb.trx.getTransactionInfo(txID);
+  
+      if (receipt && receipt.receipt && receipt.receipt.result === 'SUCCESS') {
+        console.log('Transaction was successful');
+        
+        return txID; 
+      } else {
+        console.error('Transaction failed or not confirmed yet');
+        throw new Error('Transaction failed');
+      }
     } catch (error) {
-      console.error('Error creating club:', error);
+      console.error('Error in createClub function:', error);
       throw error;
     }
   };
@@ -112,9 +130,15 @@ const BusinessOnboarding = () => {
                 setErr(0);
                 setErrMsg("");
 
-                createClubOnChain(USDDAddress, businessData.clubInfo.membershipFee, true, ClubDealRegistryABI, clubDealRegistryAddress).then(txID => {
+                createClubOnChain(
+                  USDDAddress, 
+                  businessData.clubInfo.membershipFee, 
+                  true, 
+                  ClubDealRegistryABI, 
+                  clubDealRegistryAddress).then(txID => {
+                    console.log(txID);
                   signUsingWallet(businessOnboardingMsg)
-                  .then(signature => save(signature)
+                  .then(signature => save(signature,txID)
                   .then((auth) => {
                     if(auth){
                       setIsAuthenticated(true);
@@ -122,10 +146,14 @@ const BusinessOnboarding = () => {
                       console.log('Onboarding completed successfully');
                       router.push('/dashboard/business', { scroll: false })
                     }
-                  }))
+                  })).catch(error => {
+                    console.log(error);
+                  })
+                }).catch(error => {
+                  console.log(error);
+                  setErr(4);
+                  setErrMsg(error.message);
                 })
-
-
               })
             }} 
             onPrev={prevStep} 

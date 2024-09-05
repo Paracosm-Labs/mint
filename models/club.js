@@ -25,6 +25,10 @@ const ClubSchema = new mongoose.Schema(
         membershipFee: {
             type: Number,
             required: true, 
+        },
+        txID: {
+          type: String,
+          required: true 
         },                  
       },
       {
