@@ -1,19 +1,19 @@
-'use client'
-import React, { useState } from 'react'
-import StepIndicator from "./stepIndicator"
-import BusinessInfo from './businessInfo';
-import CreateClub from './createClub';
-import CreateDeal from './createDeal';
-import DashboardTour from './dashboardTour';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useState } from "react";
+import StepIndicator from "./stepIndicator";
+import BusinessInfo from "./businessInfo";
+import CreateClub from "./createClub";
+import CreateDeal from "./createDeal";
+import DashboardTour from "./dashboardTour";
+import { useRouter } from "next/navigation";
 
-import {useAuth} from "@/lib/AuthContext";
+import { useAuth } from "@/lib/AuthContext";
 
-import {verifyWallet, signUsingWallet} from "@/lib/wallet";
-import { businessOnboardingMsg } from '@/utils/messageForSign';
+import { verifyWallet, signUsingWallet } from "@/lib/wallet";
+import { businessOnboardingMsg } from "@/utils/messageForSign";
 import ClubDealRegistryABI from "@/abi/ClubDealsRegistry.js";
-import { USDDAddress, clubDealRegistryAddress } from '@/lib/address';
-
+import { USDDAddress } from "@/lib/address";
+import { createClubOnChain } from "@/lib/club";
 
 const BusinessOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -24,166 +24,155 @@ const BusinessOnboarding = () => {
 
   const { setIsAuthenticated, setJwtToken } = useAuth();
 
-
   const nextStep = () => setCurrentStep(currentStep + 1);
   const prevStep = () => setCurrentStep(currentStep - 1);
 
-  const handleDataUpdate = (section,data) => {
+  const handleDataUpdate = (section, data) => {
     businessData[section] = data;
     setBusinessData(businessData);
   };
 
   const showError = () => {
+    if (!errMsg) return <></>;
     switch (err) {
       case 0:
-        return <></>
+        return <></>;
       case 1:
-          return (<div class="alert alert-danger" role="alert">{errMsg}</div>)   
+        return (
+          <div className="alert alert-danger" role="alert">
+            {errMsg}
+          </div>
+        );
       // case 3:
-      //   return (<div class="alert alert-danger" role="alert">{errMsg}</div>)                   
+      //   return (<div className="alert alert-danger" role="alert">{errMsg}</div>)
       default:
-        return (<div class="alert alert-danger" role="alert">{errMsg}</div>) 
+        return (
+          <div className="alert alert-danger" role="alert">
+            {errMsg}
+          </div>
+        );
         break;
     }
-  }
+  };
 
   const save = async (signature, txID) => {
-    if(!txID){
+    if (!txID) {
       throw Error("txID is null");
     }
-    const response = await fetch('/api/business/onboarding', {
-      method: 'POST',
+    const response = await fetch("/api/business/onboarding", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({sign : signature, txID : txID, ...businessData}),
+      body: JSON.stringify({
+        sign: signature,
+        txID: txID,
+        ...businessData,
+      }),
     });
 
     const resJson = await response.json();
-    if(response.status == 200){
+    if (response.status == 200) {
       return resJson.auth;
     }
-    if(response.status != 200){
+    if (response.status != 200) {
       setErr(3);
       setErrMsg(resJson.error);
       return null;
     }
-  }
+  };
 
-  const createClubOnChain = async (paymentTokenAddress, membershipFee, sendToCreditFacility, abi, contractAddress) => {
+  const complete = async () => {
     try {
-      debugger;
-      const contract = await tronWeb.contract(abi, contractAddress);
-  
-      const result = await contract.createClub(paymentTokenAddress, membershipFee, sendToCreditFacility).send({
-        feeLimit: 1000000000, 
-        callValue: 0,         
-      });
-  
-      const txID = result;
-  
-      console.log('Transaction ID:', txID);
-  
-      const receipt = await tronWeb.trx.getTransactionInfo(txID);
-  
-      if (receipt && receipt.receipt && receipt.receipt.result === 'SUCCESS') {
-        console.log('Transaction was successful');
-        
-        return txID; 
+      let verifyWalletResponse = await verifyWallet();
+      if (!verifyWalletResponse || verifyWalletResponse.length == 0) {
+        setErr(1);
+        setErrMsg("Please install or login to Tronlink to proceed.");
+        return;
+      }
+      if (verifyWalletResponse.code != 200) {
+        setErr(2);
+        setErrMsg(verifyWalletResponse.message);
+        return;
+      }
+
+      let txID = await createClubOnChain(
+        USDDAddress,
+        businessData.clubInfo.membershipFee,
+        true
+      );
+
+      let signature = await signUsingWallet(businessOnboardingMsg);
+
+      let auth = await save(signature, txID);
+
+      if (auth) {
+        // setIsAuthenticated(true);
+        // setJwtToken(auth);
+        console.log("Onboarding completed successfully");
+        router.push("/login", {
+          scroll: false,
+        });
       } else {
-        console.error('Transaction failed or not confirmed yet');
-        throw new Error('Transaction failed');
+        setErr(3);
+        setErrMsg("Something went wrong. Please try again.");
+        throw Error("save failed.");
       }
     } catch (error) {
-      console.error('Error in createClub function:', error);
-      throw error;
+      console.error(error);
     }
   };
-  
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <BusinessInfo onNext={nextStep} onDataUpdate={handleDataUpdate} />;
-      case 2:
-        return <CreateClub onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
-      case 3:
-      //   return <CreateDeal onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
-      // case 4:
         return (
-          <DashboardTour 
-            onComplete={() => {
-              console.log('Onboarding completion started');
-              console.log(businessData);
-              
-              verifyWallet().then(res => {
-                if(!res || res.length == 0){
-                  setErr(1);
-                  setErrMsg("Please install or login to Tronlink to proceed.");
-                  return;
-                }
-                if(res.code != 200){
-                  setErr(2);
-                  setErrMsg(res.message);
-                  return;
-                }
-                setErr(0);
-                setErrMsg("");
-
-                createClubOnChain(
-                  USDDAddress, 
-                  businessData.clubInfo.membershipFee, 
-                  true, 
-                  ClubDealRegistryABI, 
-                  clubDealRegistryAddress).then(txID => {
-                    console.log(txID);
-                  signUsingWallet(businessOnboardingMsg)
-                  .then(signature => save(signature,txID)
-                  .then((auth) => {
-                    if(auth){
-                      setIsAuthenticated(true);
-                      setJwtToken(auth);
-                      console.log('Onboarding completed successfully');
-                      router.push('/dashboard/business', { scroll: false })
-                    }
-                  })).catch(error => {
-                    console.log(error);
-                  })
-                }).catch(error => {
-                  console.log(error);
-                  setErr(4);
-                  setErrMsg(error.message);
-                })
-              })
-            }} 
-            onPrev={prevStep} 
+          <BusinessInfo onNext={nextStep} onDataUpdate={handleDataUpdate} />
+        );
+      case 2:
+        return (
+          <CreateClub
+            onNext={nextStep}
+            onPrev={prevStep}
+            onDataUpdate={handleDataUpdate}
           />
         );
+      case 3:
+        //   return <CreateDeal onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
+        // case 4:
+        return <DashboardTour onComplete={complete} onPrev={prevStep} />;
       default:
-        return <BusinessInfo onNext={nextStep} onDataUpdate={handleDataUpdate} />;
+        return (
+          <BusinessInfo onNext={nextStep} onDataUpdate={handleDataUpdate} />
+        );
     }
   };
 
   return (
     <div className="kmint container onboarding-container">
-      <div className='row'>
-        <div className='col-2'></div>
-        <div className='col-8'>
-          <h1 className="text-center mb-4">Boost Your Business with MintDeals!</h1>
-          <p className="text-center mb-4">Join our platform and start offering amazing deals to your customers.<br/>
-          As your customers redeem your deals, you gain access to a growing credit line.</p>
+      <div className="row">
+        <div className="col-2"></div>
+        <div className="col-8">
+          <h1 className="text-center mb-4">
+            Boost Your Business with MintDeals!
+          </h1>
+          <p className="text-center mb-4">
+            Join our platform and start offering amazing deals to your
+            customers.
+            <br />
+            As your customers redeem your deals, you gain access to a growing
+            credit line.
+          </p>
           <StepIndicator currentStep={currentStep} />
           <div className="card">
-            <div className="card-body">
-              {renderStep()}
-            </div>
+            <div className="card-body">{renderStep()}</div>
           </div>
           {showError()}
         </div>
-        <div className='col-2'></div>
+        <div className="col-2"></div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BusinessOnboarding
+export default BusinessOnboarding;

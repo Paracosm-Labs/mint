@@ -1,68 +1,77 @@
-import React, { useState } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
+import { useAuth } from "@/lib/AuthContext";
+import { getDealDetails, getDealIdFromEvent } from "@/lib/deal";
+import { formatDate } from "@/lib/format";
 
 function DealTable({ onEdit }) {
-  // Sample data - replace with actual data fetching logic
-  const [deals, setDeals] = useState([
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/200x150',
-      supply: 250,
-      minted: 50,
-      description: '20% off on summer items',
-      validFrom: '2023-06-01',
-      validTo: '2023-08-31',
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/200x150',
-      supply: 250,
-      minted: 20,
-      description: '15% off on winter apparel',
-      validFrom: '2023-11-01',
-      validTo: '2023-12-31',
-    },
-    {
-      id: 3,
-      image: 'https://via.placeholder.com/200x150',
-      supply: 250,
-      minted: 0,
-      description: '75% off on spring apparel',
-      validFrom: '2023-11-01',
-      validTo: '2023-12-31',
+  const { data } = useAuth();
+  const [deals, setDeals] = useState([]);
+
+  const loadDeals = async () => {
+    try {
+      const response = await fetch(
+        "/api/deal?" +
+          new URLSearchParams({
+            club: data.userData.clubs._id,
+            business: data.userData.businesses._id,
+            owner: data.userData.user._id,
+          }).toString()
+      );
+
+      const deals_ = await response.json();
+      let deals = [];
+      for (let index = 0; index < deals_.length; index++) {
+        const deal_ = deals_[index];
+        let { clubId, dealId } = await getDealIdFromEvent(deal_.txID);
+        if (clubId && dealId) {
+          let details = await getDealDetails(clubId, dealId);
+          let deal = {
+            description: deal_.description,
+            image: "https://via.placeholder.com/200x150",
+            txID: deal_.txID,
+            ...details,
+          };
+          deals.push(deal);
+        }
+      }
+      console.log(deals);
+      setDeals(deals);
+    } catch (error) {
+      console.error(error);
     }
-  ]);
+  };
+
+  useEffect(() => {
+    loadDeals();
+  }, []);
 
   return (
     <div className="table-responsive">
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th></th>
-            <th>Supply/Minted</th>
+            <th>ID</th>
+            <th>Supply/Minted : (Max Supply)</th>
             <th>Description</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
           {deals.map((deal) => (
             <tr key={deal.id}>
-              <td><img src={deal.image} alt={deal.description} width="100" /></td>
-              <td>{deal.supply}/{deal.minted}</td>
-              <td>{deal.description}
-                <p className='text-muted text-small'>Valid Thru: {deal.validFrom} - {deal.validTo}</p>
+              <td>
+                {/* <img src={deal.image} alt={deal.description} width="100" /> */}
+                {deal.dealId}
               </td>
               <td>
-                {deal.minted === 0 && (
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    className="me-2 w-100"
-                    onClick={() => onEdit(deal)}
-                  >
-                    Edit
-                  </Button>
-                )}
+                {deal.remainingSupply}/{deal.redeemedSupply} : ({deal.maxSupply}
+                )
+              </td>
+              <td>
+                {deal.description}
+                <p className="text-muted text-small">
+                  Valid Till: {formatDate(deal.expiryDate)}
+                </p>
               </td>
             </tr>
           ))}

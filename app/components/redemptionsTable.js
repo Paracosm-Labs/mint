@@ -1,13 +1,57 @@
-// components/redemptionsTable.js
-import React from 'react';
+"use client";
+import { useAuth } from "@/lib/AuthContext";
+import React, { useEffect, useState } from "react";
+import { confirmRedemption, getRedemptionRequests } from "@/lib/redemptions";
+import { formatDate } from "@/lib/format";
+
+const redemptionList = [
+  {
+    id: 1,
+    owner: "Tx...8oPx",
+    status: "Completed",
+  },
+  {
+    id: 2,
+    owner: "Tx...tp9x",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    owner: "Tx...7ogc",
+    status: "Pending",
+  },
+];
 
 function RedemptionsTable() {
-  // Sample data - replace with actual data fetching logic
-  const redemptions = [
-    { id: 1, date: '2023-05-20', customer: 'Tx...8oPx', amount: '$50.00', status: 'Completed' },
-    { id: 2, date: '2023-05-19', customer: 'Tx...tp9x', amount: '$30.00', status: 'Pending' },
-    { id: 2, date: '2023-05-19', customer: 'Tx...7ogc', amount: '$30.00', status: 'Pending' },
-  ];
+  const { data } = useAuth();
+  const [redemptions, setRedemptions] = useState([]);
+
+  useEffect(() => {
+    getRedemptionRequests(data.userData.clubs)
+      .then((response) => setRedemptions(response))
+      .catch((error) => console.error("Error fetching redemptions:", error));
+  }, []);
+
+  const approveRedemption = async (redemption) => {
+    confirmRedemption(
+      redemption.onChainClubId,
+      redemption.onChainId,
+      redemption.tokenId
+    )
+      .then((txID) => {
+        console.log(`Redemption confirmed with transaction ID: ${txID}`);
+        alert(`Redemption confirmed`);
+        getRedemptionRequests(data.userData.clubs)
+          .then((response) => setRedemptions(response))
+          .catch((error) =>
+            console.error("Error fetching redemptions:", error)
+          );
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Failed to confirm redemption.");
+      });
+  };
 
   return (
     <div className="table-responsive">
@@ -15,9 +59,9 @@ function RedemptionsTable() {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Date</th>
             <th>Customer</th>
-            <th>Amount</th>
+            <th>Description</th>
+            <th>Valid till</th>
             <th>Status</th>
             <th></th>
           </tr>
@@ -26,12 +70,17 @@ function RedemptionsTable() {
           {redemptions.map((redemption) => (
             <tr key={redemption.id}>
               <td>{redemption.id}</td>
-              <td>{redemption.date}</td>
-              <td>{redemption.customer}</td>
-              <td>{redemption.amount}</td>
+              <td>{redemption.owner}</td>
+              <td>{redemption.description}</td>
+              <td>{formatDate(redemption.expiryDate)}</td>
               <td>{redemption.status}</td>
               <td>
-                <button className="btn btn-sm btn-outline-secondary">Approve</button>
+                <button
+                  className="btn btn-sm btn-outline-secondary"
+                  onClick={() => approveRedemption(redemption)}
+                >
+                  Approve
+                </button>
               </td>
             </tr>
           ))}

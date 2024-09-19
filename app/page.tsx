@@ -6,10 +6,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { setIsAuthenticated, setJwtToken } = useAuth();
+  const { setIsAuthenticated, setJwtToken, setData } = useAuth();
   const router = useRouter();
 
-  const postLogin = (auth: string) => {
+  const postLogin = (auth: string, data : any) => {
+    setData(data)
     setIsAuthenticated(true);
     setJwtToken(auth);
     router.push('/dashboard/business', { scroll: false })    

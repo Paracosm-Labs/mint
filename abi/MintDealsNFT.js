@@ -1,4 +1,4 @@
-const MintDealsNFT = [
+const MintDealsNftABI = [
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -721,4 +721,4 @@ const MintDealsNFT = [
 	}
 ]
 
-export default MintDealsNFT;
+export default MintDealsNftABI;
