@@ -1,37 +1,156 @@
-// components/BorrowModal.js
-import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import {
+  Modal,
+  Button,
+  Form,
+  Alert,
+  ProgressBar,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faPiggyBank, faUsers, faDollarSign, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { creditManager } from "@/contracts/CreditManager";
+import { creditFacility } from "@/contracts/CreditFacility";
+import {
+  USDDAddress,
+  USDDcTokenAddress,
+  USDTAddress,
+} from "@/contracts/tronContracts";
 
-function BorrowModal({ show, onHide }) {
-  const [borrowAmount, setBorrowAmount] = useState('');
-  const [purpose, setPurpose] = useState('');
-  const [repaymentTerm, setRepaymentTerm] = useState('');
+function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
+  const [borrowAmount, setBorrowAmount] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [borrowFrom, setBorrowFrom] = useState("creditFacility");
+  const [utilizationPercentage, setUtilizationPercentage] = useState(0);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (borrowAmount && availableCredit) {
+      const percentage = (parseFloat(borrowAmount) / availableCredit) * 100;
+      setUtilizationPercentage(Math.min(percentage, 100));
+    } else {
+      setUtilizationPercentage(0);
+    }
+  }, [borrowAmount, availableCredit]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Submitting borrow request:', { borrowAmount, purpose, repaymentTerm });
-    onHide();
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const tokenAddress = USDDAddress;
+      const cTokenAddress = USDDcTokenAddress;
+      if (borrowFrom === "creditManager") {
+        const manager = await creditManager();
+        await manager.borrow(tokenAddress, borrowAmount);
+      } else if (borrowFrom === "creditFacility") {
+        const facility = await creditFacility();
+        await facility.borrow(cTokenAddress, borrowAmount);
+      }
+
+      console.log("Borrow request submitted successfully");
+      if (onSuccess) onSuccess();
+      onHide();
+    } catch (err) {
+      console.error("Error borrowing tokens:", err);
+      setError("Failed to borrow tokens. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Basic Credit uses your individual credit limit, while Shared Credit
+      utilizes the community's shared credit pool.
+    </Tooltip>
+  );
 
   return (
     <Modal show={show} onHide={onHide} size="md" centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Borrow Funds</Modal.Title>
+      <Modal.Header closeButton className="bg-light">
+        <Modal.Title>
+          {/* <FontAwesomeIcon icon={faDollarSign} className="me-2 text-success" /> */}
+          Borrow Funds
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Borrow Amount</Form.Label>
-            <Form.Control
-              type="number"
-              value={borrowAmount}
-              onChange={(e) => setBorrowAmount(e.target.value)}
-              required
+          <div className="text-center mb-4">
+            <h5 className="mb-3">Select Borrowing Source</h5>
+            <OverlayTrigger
+              placement="top"
+              delay={{ show: 250, hide: 400 }}
+              overlay={renderTooltip}
+            >
+              <div
+                className="btn-group btn-group-lg"
+                role="group"
+                aria-label="Borrow From"
+              >
+                <Button
+                  variant={
+                    borrowFrom === "creditFacility"
+                      ? "primary"
+                      : "outline-primary"
+                  }
+                  onClick={() => setBorrowFrom("creditFacility")}
+                  className="d-flex align-items-center"
+                >
+                  {/* <FontAwesomeIcon icon={faPiggyBank} className="me-2" /> */}
+                  Basic Credit
+                </Button>
+                <Button
+                  variant={
+                    borrowFrom === "creditManager"
+                      ? "success"
+                      : "outline-success"
+                  }
+                  onClick={() => setBorrowFrom("creditManager")}
+                  className="d-flex align-items-center"
+                >
+                  {/* <FontAwesomeIcon icon={faUsers} className="me-2" /> */}
+                  Shared Credit
+                </Button>
+              </div>
+            </OverlayTrigger>
+          </div>
+          <Form.Group className="mb-4">
+            <Form.Label>Borrow Amount (USD)</Form.Label>
+            <div className="input-group">
+              <span className="input-group-text">$</span>
+              <Form.Control
+                type="number"
+                value={borrowAmount}
+                onChange={(e) => setBorrowAmount(e.target.value)}
+                required
+                min="0"
+                max={availableCredit}
+              />
+            </div>
+            <Form.Text className="text-muted">
+              Available credit: ${availableCredit}
+            </Form.Text>
+            <ProgressBar
+              now={utilizationPercentage}
+              variant={
+                utilizationPercentage > 80
+                  ? "danger"
+                  : utilizationPercentage > 50
+                  ? "warning"
+                  : "success"
+              }
+              className="mt-2"
             />
-            <Form.Text className="text-muted">Available credit: $2,500</Form.Text>
+            <small className="text-muted">
+              Credit Utilization: {utilizationPercentage.toFixed(2)}%
+            </small>
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-4">
             <Form.Label>Purpose of Borrowing</Form.Label>
             <Form.Select
               value={purpose}
@@ -46,16 +165,41 @@ function BorrowModal({ show, onHide }) {
               <option value="other">Other</option>
             </Form.Select>
           </Form.Group>
-          <div className="text-end">
-            <Button variant="secondary" onClick={onHide} className="me-2">
+          {error && <Alert variant="danger">{error}</Alert>}
+          <div className="d-flex justify-content-between align-items-center">
+            <Button variant="outline-secondary" onClick={onHide}>
               Cancel
             </Button>
-            <Button variant="success" type="submit">
-              Borrow Funds
+            <Button
+              variant="success"
+              type="submit"
+              disabled={loading || !borrowAmount || !purpose}
+            >
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Processing...
+                </>
+              ) : (
+                <>
+                  {/* <FontAwesomeIcon icon={faDollarSign} className="me-2" /> */}
+                  Borrow Funds
+                </>
+              )}
             </Button>
           </div>
         </Form>
       </Modal.Body>
+      <Modal.Footer className="bg-light">
+        <small className="text-muted">
+          {/* <FontAwesomeIcon icon={faInfoCircle} className="me-1" /> */}
+          Ensure you understand the terms before borrowing.
+        </small>
+      </Modal.Footer>
     </Modal>
   );
 }
