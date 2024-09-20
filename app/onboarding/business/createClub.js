@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-const CreateClub = ({ onNext, onPrev, onDataUpdate }) => {
-  const [type, setClubType] = useState('essential');
-  const [clubImage, setClubImage] = useState('');
-  const [name, setClubName] = useState('');
-  const [description, setDescription] = useState('');
-  const [membershipFee, setClubPrice] = useState('');
+  const CreateClub = ({ onNext, onPrev, onDataUpdate, data }) => {
+    const [type, setClubType] = useState(data.type || 'essential');
+    const [clubImage, setClubImage] = useState(data.image || '');
+    const [name, setClubName] = useState(data.name || '');
+    const [description, setDescription] = useState(data.description || '');
+    const [membershipFee, setClubPrice] = useState(data.membershipFee || '');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,6 +13,7 @@ const CreateClub = ({ onNext, onPrev, onDataUpdate }) => {
     onNext();
   };
 
+  
   return (
     <form onSubmit={handleSubmit}>
       <h3 className="mb-4">Club Details</h3>

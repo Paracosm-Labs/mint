@@ -4,6 +4,7 @@ import Club from "../components/club";
 import OffcanvasDeals from "../components/offcanvasDeals";
 import MyDealsModal from "../components/myDealsModal";
 import { getClubsForMember, getEventTxIDFromClubId } from "@/lib/club";
+import { ClipLoader } from "react-spinners";
 
 function CustomerClubs() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,8 +16,10 @@ function CustomerClubs() {
 
   const [refresh, setRefresh] = useState(0);
   const [refreshCanvas, setRefreshCanvas] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadClubs = async () => {
+    setIsLoading(true);  // Set loading to true when starting to fetch data
     try {
       let clubIds = await getClubsForMember();
       let clubTxIDs = new Map();
@@ -62,6 +65,8 @@ function CustomerClubs() {
     } catch (error) {
       console.error(error);
       alert(error.message);
+    } finally {
+      setIsLoading(false);  // Set loading to false when done fetching data
     }
   };
 
@@ -98,6 +103,19 @@ function CustomerClubs() {
   //   setRefreshCanvas((prev) => prev + 1);
   // };
 
+  if (isLoading) {
+    return (
+        <div className="kmint container mt-2" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // height: '80vh',  // This will make it full screen
+        }}>
+          <ClipLoader color="#98ff98" size={150} />
+        </div>
+    );
+  }
+  
   return (
     <div className="kmint container text-center">
       <h2>My Clubs</h2>

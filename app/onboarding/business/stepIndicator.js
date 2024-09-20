@@ -1,4 +1,4 @@
-// StepIndicator.js
+// stepIndicator.js
 import React from 'react';
 
 const StepIndicator = ({ currentStep }) => {

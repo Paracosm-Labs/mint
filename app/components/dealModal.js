@@ -1,6 +1,5 @@
-"use client";
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { createDeal } from "@/lib/deal";
 import { useAuth } from "@/lib/AuthContext";
 import { getClubIdFromEvent } from "@/lib/club";
@@ -8,9 +7,22 @@ import { getClubIdFromEvent } from "@/lib/club";
 function DealModal({ show, onHide, deal }) {
   const { data } = useAuth();
   const [dealImage, setDealImage] = useState(deal?.image || "");
-  const [maxSupply, setMaxSupply] = useState("");
-  const [dealDescription, setDealDescription] = useState("");
-  const [dealValidTo, setDealValidTo] = useState("");
+  const [maxSupply, setMaxSupply] = useState(deal?.maxSupply || "");
+  const [dealDescription, setDealDescription] = useState(deal?.description || "");
+  const [dealValidTo, setDealValidTo] = useState(deal?.validTo || "");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!maxSupply) newErrors.maxSupply = "Max supply is required";
+    if (!dealDescription) newErrors.dealDescription = "Description is required";
+    if (!dealValidTo) newErrors.dealValidTo = "Valid to date is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const isFormValid = maxSupply && dealDescription && dealValidTo;
 
   const save = async (txID, description) => {
     if (!txID) {
@@ -42,15 +54,25 @@ function DealModal({ show, onHide, deal }) {
   };
 
   const saveDeal = async () => {
-    const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
-    console.log("clubId", clubId);
+    if (!validateForm()) return;
 
-    const txID = await createDeal(clubId, maxSupply, dealValidTo, "", 5);
-    console.log("deal txID", txID);
+    setIsLoading(true);
+    try {
+      const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
+      console.log("clubId", clubId);
 
-    let resJson = await save(txID, dealDescription);
+      const txID = await createDeal(clubId, maxSupply, dealValidTo, "", 5);
+      console.log("deal txID", txID);
 
-    onHide();
+      let resJson = await save(txID, dealDescription);
+
+      onHide();
+    } catch (error) {
+      console.error("Error saving deal:", error);
+      // Here you might want to show an error message to the user
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,18 +81,18 @@ function DealModal({ show, onHide, deal }) {
         <Modal.Title>{deal ? "Edit Deal" : "Create New Deal"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
-          {/* <Form.Group className="mb-3">
-            <Form.Label>Deal Image</Form.Label>
-            <Form.Control type="file" value={dealImage} onChange={(e) => setDealImage(e.target.value)} />
-          </Form.Group> */}
+        <Form noValidate>
           <Form.Group className="mb-3">
             <Form.Label>Max Supply</Form.Label>
             <Form.Control
-              type="text"
+              type="number"
               value={maxSupply}
               onChange={(e) => setMaxSupply(e.target.value)}
+              isInvalid={!!errors.maxSupply}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.maxSupply}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
@@ -79,7 +101,11 @@ function DealModal({ show, onHide, deal }) {
               rows={3}
               value={dealDescription}
               onChange={(e) => setDealDescription(e.target.value)}
+              isInvalid={!!errors.dealDescription}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.dealDescription}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Valid To</Form.Label>
@@ -87,13 +113,18 @@ function DealModal({ show, onHide, deal }) {
               type="date"
               value={dealValidTo}
               onChange={(e) => setDealValidTo(e.target.value)}
+              isInvalid={!!errors.dealValidTo}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.dealValidTo}
+            </Form.Control.Feedback>
           </Form.Group>
           <div className="text-end">
             <Button
               variant="outline-secondary"
               onClick={onHide}
               className="me-2"
+              disabled={isLoading}
             >
               Cancel
             </Button>
@@ -101,8 +132,23 @@ function DealModal({ show, onHide, deal }) {
               className="btn btn-kmint-blue"
               type="button"
               onClick={saveDeal}
+              disabled={!isFormValid || isLoading}
             >
-              {deal ? "Update Deal" : "Create Deal"}
+              {isLoading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="me-2"
+                  />
+                  {deal ? "Updating..." : "Creating..."}
+                </>
+              ) : (
+                deal ? "Update Deal" : "Create Deal"
+              )}
             </Button>
           </div>
         </Form>

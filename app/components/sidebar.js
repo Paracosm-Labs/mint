@@ -15,7 +15,7 @@ function Sidebar() {
   };
 
   return (
-    <nav className="col-md-3 col-lg-2 d-md-block mintdeals sidebar">
+    <nav className="col-md-2 col-lg-2 d-md-block sidebar">
       <div className="position-sticky pt-3">
         <button
           className="navbar-toggler d-md-none"

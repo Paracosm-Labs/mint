@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import countries from '../../../utils/countries';
 import categories from '../../../utils/categories';
 
-const BusinessInfo = ({ onNext, onDataUpdate }) => {
-  const [name, setBusinessName] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [country, setCountry] = useState('');
+const BusinessInfo = ({ onNext, onDataUpdate, data }) => {
+  const [name, setBusinessName] = useState(data.name || '');
+  const [industry, setIndustry] = useState(data.industry || '');
+  const [country, setCountry] = useState(data.country || '');
   const [hasDominicaDID, setHasDominicaDID] = useState(false);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const BusinessInfo = ({ onNext, onDataUpdate }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onDataUpdate("businessInfo",{ name, industry, country });
+    onDataUpdate("businessInfo", { name, industry, country });
     onNext();
   };
 
@@ -32,7 +32,7 @@ const BusinessInfo = ({ onNext, onDataUpdate }) => {
     <form onSubmit={handleSubmit}>
       <h3 className="mb-4">Business Information</h3>
       
-      <div className="mb-3">
+      <div className="mb-3 d-none">
         {hasDominicaDID ? (
           <div className="alert alert-success" role="alert">
             <i className="fa fa-check-circle mx-2"></i>
@@ -44,7 +44,7 @@ const BusinessInfo = ({ onNext, onDataUpdate }) => {
             Your wallet does not contain the required Dominica Metaverse Bound Token (DMBT).
             <br />
             <small className="form-text text-muted">
-              Please acquire your Dominica Metaverse Bound Token (DMBT) to become a partner.&nbsp;
+              Please acquire your Dominica Metaverse Bound Token (DMBT) to attain verified status.&nbsp;
               <a href="https://www.htx.com/support/84933699113560" target="_blank" rel="noopener noreferrer">Follow this guide</a> to get it.
             </small>
           </div>

@@ -17,7 +17,20 @@ import { createClubOnChain } from "@/lib/club";
 
 const BusinessOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [businessData, setBusinessData] = useState({});
+  const [businessData, setBusinessData] = useState({
+    businessInfo: {
+      name: "",
+      industry: "",
+      country: "",
+    },
+    clubInfo: {
+      type: "essential",
+      name: "",
+      description: "",
+      membershipFee: "",
+    },
+  });
+
   const [err, setErr] = useState(0);
   const [errMsg, setErrMsg] = useState("");
   const router = useRouter();
@@ -28,8 +41,13 @@ const BusinessOnboarding = () => {
   const prevStep = () => setCurrentStep(currentStep - 1);
 
   const handleDataUpdate = (section, data) => {
-    businessData[section] = data;
-    setBusinessData(businessData);
+    setBusinessData(prevData => ({
+      ...prevData,
+      [section]: {
+        ...prevData[section],
+        ...data
+      }
+    }));
   };
 
   const showError = () => {
@@ -127,7 +145,10 @@ const BusinessOnboarding = () => {
     switch (currentStep) {
       case 1:
         return (
-          <BusinessInfo onNext={nextStep} onDataUpdate={handleDataUpdate} />
+          <BusinessInfo onNext={nextStep} 
+          onDataUpdate={handleDataUpdate}
+          data={businessData.businessInfo}
+          />
         );
       case 2:
         return (
@@ -135,6 +156,7 @@ const BusinessOnboarding = () => {
             onNext={nextStep}
             onPrev={prevStep}
             onDataUpdate={handleDataUpdate}
+            data={businessData.clubInfo}
           />
         );
       case 3:
@@ -143,13 +165,16 @@ const BusinessOnboarding = () => {
         return <DashboardTour onComplete={complete} onPrev={prevStep} />;
       default:
         return (
-          <BusinessInfo onNext={nextStep} onDataUpdate={handleDataUpdate} />
+          <BusinessInfo onNext={nextStep} 
+          onDataUpdate={handleDataUpdate}
+          data={businessData.clubInfo}
+          />
         );
     }
   };
 
   return (
-    <div className="kmint container onboarding-container">
+    <div className="kmint container">
       <div className="row">
         <div className="col-2"></div>
         <div className="col-8">
@@ -160,7 +185,7 @@ const BusinessOnboarding = () => {
             Join our platform and start offering amazing deals to your
             customers.
             <br />
-            As your customers redeem your deals, you gain access to a growing
+            As your customers join your club and redeem your deals, you gain access to a growing
             credit line.
           </p>
           <StepIndicator currentStep={currentStep} />

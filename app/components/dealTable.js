@@ -3,12 +3,16 @@ import { Table } from "react-bootstrap";
 import { useAuth } from "@/lib/AuthContext";
 import { getDealDetails, getDealIdFromEvent } from "@/lib/deal";
 import { formatDate } from "@/lib/format";
+import EmptyState from './emptyState';
+import { ClipLoader } from "react-spinners";
 
 function DealTable({ onEdit }) {
   const { data } = useAuth();
   const [deals, setDeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadDeals = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         "/api/deal?" +
@@ -39,12 +43,36 @@ function DealTable({ onEdit }) {
       setDeals(deals);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     loadDeals();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '300px',  // Adjust this value as needed
+      }}>
+        <ClipLoader color="#98ff98" size={100} />
+      </div>
+    );
+  }
+
+  if (deals.length === 0) {
+    return (
+      <EmptyState 
+        iconClass="fa-tags" 
+        message="No deals found. Create a new deal to get started!"
+      />
+    );
+  }
 
   return (
     <div className="table-responsive">
@@ -58,14 +86,10 @@ function DealTable({ onEdit }) {
         </thead>
         <tbody>
           {deals.map((deal) => (
-            <tr key={deal.id}>
+            <tr key={deal.dealId}>
+              <td>{deal.dealId}</td>
               <td>
-                {/* <img src={deal.image} alt={deal.description} width="100" /> */}
-                {deal.dealId}
-              </td>
-              <td>
-                {deal.remainingSupply}/{deal.redeemedSupply} : ({deal.maxSupply}
-                )
+                {deal.remainingSupply}/{deal.redeemedSupply} : ({deal.maxSupply})
               </td>
               <td>
                 {deal.description}

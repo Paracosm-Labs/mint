@@ -18,8 +18,8 @@ const Login = () => {
     login(postLogin);
   };
   return (
-    <main className="d-flex align-items-center py-4 form-signin w-100 m-auto">
-      <div>
+    <main className="d-flex align-items-center py-2 form-signin w-100 m-auto">
+      <div className="kmint container">
         <p className="h3 my-3 fw-normal">Welcome to MintDeals</p>
         <p className="mb-3 text-body-secondary">
           Remember to Login to Tronlink before proceeding!

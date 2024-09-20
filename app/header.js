@@ -40,24 +40,24 @@ function Header() {
   const getMenuEntries = () => {
     if (isAuthenticated) {
       return (
-        <ul className="navbar-nav ms-auto">
+        <ul className="navbar-nav ms-auto nav">
           <li className="nav-item">
-            <Link className="nav-link text-white" href="/explore">
+            <Link className="nav-link" href="/explore">
               Explore Clubs
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link text-white" href="/myclubs">
+            <Link className="nav-link" href="/myclubs">
               My Clubs
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link text-white" href="/dashboard/business">
+            <Link className="nav-link" href="/dashboard/business">
               Dashboard
             </Link>
           </li>
           <li className="nav-item">
-            <Button className="nav-link text-white" onClick={handleLogoutClick}>
+            <Button className="btn btn-kmint-blue" onClick={handleLogoutClick}>
               Logout
             </Button>
           </li>
@@ -67,17 +67,17 @@ function Header() {
     return (
       <ul className="navbar-nav ms-auto">
         <li className="nav-item">
-          <Link className="nav-link text-white" href="/explore">
+          <Link className="nav-link" href="/explore">
             Explore Clubs
           </Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link text-white" href="/myclubs">
+          <Link className="nav-link" href="/myclubs">
             My Clubs
           </Link>
         </li>
-        <li className="nav-item">
-          <Button className="nav-link text-white" onClick={handleLoginClick}>
+        <li className="">
+          <Button className="btn btn-mint" onClick={handleLoginClick}>
             Login
           </Button>
         </li>
@@ -85,9 +85,9 @@ function Header() {
     );
   };
   return (
-    <header className="mintdeals navbar navbar-expand-lg navbar-light bg-mintdeals">
-      <div className="container-fluid">
-        <Link className="navbar-brand text-white" href="/">
+    <header className="mintdeals navbar navbar-expand-lg navbar-dark">
+      <div className="container">
+        <Link className="navbar-brand" href="/">
           MintDeals
         </Link>
         <button

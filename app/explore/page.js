@@ -10,6 +10,7 @@ import {
   isUserClubMember,
 } from "@/lib/club";
 import { USDDAddress } from "@/lib/address";
+import { ClipLoader } from "react-spinners";
 
 function ExploreClubs() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
@@ -19,6 +20,7 @@ function ExploreClubs() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [clubs, setClubs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -35,6 +37,7 @@ function ExploreClubs() {
   ];
 
   const load = async () => {
+    setIsLoading(true);  // Set loading to true when starting to fetch data
     try {
       const response = await fetch("/api/explore/", {
         method: "GET",
@@ -63,6 +66,8 @@ function ExploreClubs() {
     } catch (error) {
       console.error(error);
       alert(error.message);
+    } finally {
+      setIsLoading(false);  // Set loading to false when done fetching data
     }
   };
 
@@ -135,6 +140,19 @@ function ExploreClubs() {
     setShowModal(false);
     // navigate('/explore/myclubs');
   };
+
+  if (isLoading) {
+    return (
+        <div className="kmint container mt-2" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // height: '80vh',  // This will make it full screen
+        }}>
+          <ClipLoader color="#98ff98" size={150} />
+        </div>
+    );
+  }
 
   return (
     <>

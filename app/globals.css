@@ -1,7 +1,4 @@
-.App {
-  text-align: center;
-}
-
+@import '~bootstrap/dist/css/bootstrap.min.css';
 
 body {
   margin: 0;
@@ -22,14 +19,15 @@ code {
 }
 
 .bg-mintdeals, .mintdeals.sidebar, .kmint.container-fluid, .testimonials, .App{
-  background: #4caf50 !important;
+  background: #98ff98 !important;
+  /* background: #4caf50 !important; */
 }
 
 .testimonial{
   min-height: 204px;
 }
 
-.mintdeals .nav-item a{color: #fff;}
+.navbar-nav .nav-item a, .navbar-brand{color: #000!important;}
 
 .kmint.container-fluid{
   /* min-height: 680px; */
@@ -194,43 +192,52 @@ fieldset[disabled] .btn-kmint-blue.active {
   color: #2196F3;
   background-color: #fff;
 }
-/*Login form related*/
-.form-signin {
-  max-width: 330px;
-  padding: 1rem;
-}
-
-.form-signin .form-floating:focus-within {
-  z-index: 2;
-}
 
 
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+
+/*////////////////////////////*/
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --mint-green: #98FF98;
+  --dark-green: #006400;
+  --light-gray: #F8F9FA;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 255, 255, 255;
-    --background-end-rgb: 255, 255, 255;
-  }
+.bg-mint {
+  background-color: var(--mint-green);
 }
-
-body {
-  color: rgb(var(--foreground-rgb));
-  padding: 1rem 
+.text-dark-green {
+  color: var(--dark-green);
 }
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-} */
-
+.btn-mint {
+  background-color: var(--mint-green);
+  color: var(--dark-green);
+  border: 2px solid var(--dark-green);
+}
+.btn-mint:hover {
+  background-color: var(--dark-green);
+  color: var(--mint-green);
+}
+.hero {
+  background: linear-gradient(rgba(152, 255, 152, 0.8),
+   rgba(152, 255, 152, 0.8)), 
+   url('https://picsum.photos/200/00');
+  background-size: cover;
+  background-position: center;
+  height: 88vh;
+  box-shadow: rgba(50, 50, 93, 0.5) 0px 13px 27pxs -5px, rgba(0, 0, 0, 0.5) 0px 8px 16px -8px;
+}
+.section-padding {
+  padding: 80px 0;
+}
+.benefit-icon {
+  font-size: 2.5rem;
+  color: var(--dark-green);
+}
+.testimonial-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
