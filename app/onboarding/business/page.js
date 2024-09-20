@@ -174,7 +174,7 @@ const BusinessOnboarding = () => {
   };
 
   return (
-    <div className="kmint container">
+    <div className="kmint container mt-2">
       <div className="row">
         <div className="col-2"></div>
         <div className="col-8">

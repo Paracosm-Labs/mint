@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Modal, Card, Button } from "react-bootstrap";
-import OffcanvasRedeem from "./offcanvasRedeem";
 import { loadDealsForClub } from "@/lib/deal";
 import {
   requestRedemption,
@@ -9,14 +8,16 @@ import {
 } from "@/lib/mintdeals";
 import { isRedemptionRequested } from "@/lib/redemptions";
 import { formatDate } from "@/lib/format";
-import EmptyState from './emptyState'; // Reusing the EmptyState component
-import { ClipLoader } from "react-spinners"; // For loading spinner
+import EmptyState from './emptyState';
+import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 function MyDealsModal({ show, onHide, club }) {
   const [showRedeem, setShowRedeem] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState(null);
   const [myDeals, setMyDeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [redeemingDealId, setRedeemingDealId] = useState(null); // Track which deal is being redeemed
 
   const loadNFTs = async () => {
     let dealList = [];
@@ -67,17 +68,39 @@ function MyDealsModal({ show, onHide, club }) {
   }, [club]);
 
   const handleRedeem = (deal) => {
+    setRedeemingDealId(deal.tokenId); // Set the deal as being redeemed
+
     requestRedemption(deal.tokenId)
       .then((txID) => {
         console.log("Redemption txID ", txID);
-        load().then((dealList) => {
-          if (dealList && dealList.length > 0) setMyDeals(dealList);
-        });
-        alert(`Redemption Request submitted with txId : ${txID}`);
+
+        // Wait for on-chain confirmation
+        const checkOnChainStatus = async () => {
+          let isRequested = false;
+          while (!isRequested) {
+            isRequested = await isRedemptionRequested(deal.tokenId); // Poll the on-chain status
+            if (isRequested) {
+              load().then((dealList) => {
+                setMyDeals(dealList);
+                setRedeemingDealId(null); // Reset the redeeming state once confirmed
+              });
+            } else {
+              // If not confirmed, wait and try again (polling)
+              await new Promise((resolve) => setTimeout(resolve, 5000)); // Poll every 5 seconds
+            }
+          }
+        };
+
+        checkOnChainStatus();
+
+        toast.success(`Redemption Request submitted with txId: ${txID}`);
       })
       .catch((error) => {
         console.error("Redemption failed:", error);
+        setRedeemingDealId(null); // Reset the redeeming state if there's an error
+        toast.error("Redemption request failed. Please try again.");
       });
+
     setSelectedDeal(deal);
     setShowRedeem(true);
   };
@@ -133,7 +156,18 @@ function MyDealsModal({ show, onHide, club }) {
                         </div>
                         <div className="d-flex justify-content-end align-items-center mt-3">
                           {deal.requested ? (
-                            <>Redemption Requested</>
+                            <>
+                              <Button className="btn-secondary btn-sm" disabled>Redemption Requested</Button>
+                            </>
+                          ) : redeemingDealId === deal.tokenId ? (
+                            <Button className="btn-kmint-blue" disabled>
+                              <span
+                                className="spinner-border spinner-border-sm me-2"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                              Requesting...
+                            </Button>
                           ) : (
                             <Button
                               className="btn-kmint-blue"
@@ -153,11 +187,11 @@ function MyDealsModal({ show, onHide, club }) {
         </Modal.Body>
       </Modal>
 
-      <OffcanvasRedeem
+      {/* <OffcanvasRedeem
         show={showRedeem}
         onHide={handleCloseRedeem}
         deal={selectedDeal}
-      />
+      /> */}
     </>
   );
 }

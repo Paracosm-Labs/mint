@@ -5,6 +5,7 @@ import { confirmRedemption, getRedemptionRequests } from "@/lib/redemptions";
 import { formatDate } from "@/lib/format";
 import EmptyState from './emptyState';
 import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 function RedemptionsTable() {
   const { data } = useAuth();
@@ -44,6 +45,8 @@ function RedemptionsTable() {
       );
       console.log(`Redemption confirmed with transaction ID: ${txID}`);
       alert(`Redemption confirmed`);
+      
+      toast.success("Action was successful!");
 
       // Refresh redemption requests after approval
       loadRedemptions(); // Call the load function to refresh data

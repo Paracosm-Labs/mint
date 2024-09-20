@@ -2,7 +2,7 @@
 import React from 'react';
 
 const StepIndicator = ({ currentStep }) => {
-  const steps = ['Business Info', 'Club Info', /*'Create Deal',*/ 'Dashboard Tour'];
+  const steps = ['Business Info', 'Club Info', /*'Create Deal',*/ 'Complete Setup'];
 
   return (
     <div className="step-indicator mb-4">

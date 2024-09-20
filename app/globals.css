@@ -80,6 +80,15 @@ main.kmint, .kmint.container{background-color: #fff;
   transition: transform 0.2s;
 }
 
+.club-card{
+  min-height: 420px;
+  max-height: 420px;
+}
+
+.club-card .card-text {
+  height: 69px;
+}
+
 .card:hover {
   transform: translateY(-5px);
 }

@@ -146,7 +146,7 @@ function ExploreClubs() {
         });
       }
     );
-    // setShowModal(false);
+    setShowModal(false);
   };
 
   if (isLoading) {

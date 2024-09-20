@@ -12,7 +12,7 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
           <div className="col-md-6">
             <img
               src={club?.image || "/api/placeholder/400/300"}
-              className="img-fluid rounded-3 mb-3"
+              className="img-fluid rounded-3 mb-3 w-100"
               alt={club?.name}
             />
           </div>
@@ -44,7 +44,12 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
                   onChange={() => setSelectedCurrency(currency)}
                   autoComplete="off"
                 />
-                <label className="btn btn-outline-primary" htmlFor={currency.toLowerCase()}>
+                <label className="btn btn-outline-success" htmlFor={currency.toLowerCase()}>
+                    <img 
+                        src={`/${currency.toLowerCase()}.png`} 
+                        alt={currency} 
+                        style={{ width: '24px', marginRight: '4px' }} 
+                  />
                   {currency}
                 </label>
               </React.Fragment>
@@ -57,7 +62,13 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
           Cancel
         </Button>
         <Button variant="success" onClick={onJoin} className="px-4">
-          Join with {selectedCurrency}
+          Join for ${club?.membershipFee} 
+          <img 
+                src={`/${selectedCurrency.toLowerCase()}.png`} 
+                alt={selectedCurrency} 
+                style={{ width: '24px', marginRight: '4px', marginLeft:'4px' }} 
+            />
+          {/* {selectedCurrency} */}
         </Button>
       </Modal.Footer>
     </Modal>

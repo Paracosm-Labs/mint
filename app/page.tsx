@@ -179,7 +179,7 @@ export default function Home() {
       <section className="bg-mint section-padding">
         <div className="container">
           <h2 className="text-center mb-4">Built on Trust and Innovation</h2>
-          <p className="text-center mb-4">MintDeals is revolutionizing business finance and customer loyalty through the power of blockchain technology. Built on the Tron network, we offer a secure, transparent, and efficient platform for businesses to access credit and engage with their customers like never before.</p>
+          <p className="lead mb-4">MintDeals is revolutionizing business finance and customer loyalty through the power of blockchain technology. Built on the Tron network, we offer a secure, transparent, and efficient platform for businesses to access credit and engage with their customers like never before.</p>
           <div className="text-center">
             <Link target="_blank" href="https://paracosmlabs.gitbook.io/mintdeals" className="btn btn-dark">Learn More About MintDeals</Link>
           </div>

@@ -33,7 +33,7 @@ const DashboardTour = ({ onComplete, onPrev }) => {
         >
           Previous
         </button>
-        <button type="button" className="btn btn-success" onClick={onComplete}>
+        <button type="button" className="btn btn-mint" onClick={onComplete}>
           Complete Onboarding
         </button>
       </div>

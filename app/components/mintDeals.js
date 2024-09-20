@@ -1,19 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { mintDeal } from "@/lib/club";
 import { formatDate } from "@/lib/format";
+import { toast } from "react-toastify";
 
-function MintDeal({ deal, club, onHide }) {
+function MintDeal({ deal, club, onMintSuccess }) { // Changed onHide to onMintSuccess
   const mint = async () => {
     try {
       console.log("minting");
       let txID = await mintDeal(club.onChainId, deal.onChainId);
-      console.log("mintin trxn", txID);
-      alert(`Deal Minted with Transaction id ${txID}`);
-      onHide();
+      console.log("minting txn", txID);
+      toast.success(`Deal Minted with Transaction ID - ${txID}`);
+      onMintSuccess();
     } catch (error) {
-      console.error(("Error while minting", error));
+      console.error("Error while minting", error);
+      toast.error(`Minting this deal failed. Please try again.`);
     }
   };
 

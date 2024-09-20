@@ -31,6 +31,10 @@ function OffcanvasDeals({ show, onHide, club }) {
     }
   }, [club]);
 
+  const handleMintSuccess = () => {
+    onHide(); // Close the offcanvas when the minting is successful
+  };
+
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -61,7 +65,7 @@ function OffcanvasDeals({ show, onHide, club }) {
             deal={deal}
             club={club}
             key={deal.txID}
-            onSave={onHide}
+            onMintSuccess={handleMintSuccess}
           />
         ))}
       </div>
