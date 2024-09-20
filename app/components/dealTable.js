@@ -39,6 +39,10 @@ function DealTable({ onEdit }) {
           deals.push(deal);
         }
       }
+
+      // Sort descending by dealId (most recent first)
+      deals.sort((a, b) => b.dealId - a.dealId); 
+
       console.log(deals);
       setDeals(deals);
     } catch (error) {
@@ -50,6 +54,15 @@ function DealTable({ onEdit }) {
 
   useEffect(() => {
     loadDeals();
+
+    // Set up an interval to refresh deals every 30 seconds
+    const interval = setInterval(() => {
+      loadDeals();
+    }, 30000); // 30 seconds
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(interval);    
+
   }, []);
 
   if (isLoading) {

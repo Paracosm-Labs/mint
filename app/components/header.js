@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
-import { getAddress, signUsingWallet, verifyWallet } from "@/lib/wallet";
 import { Button } from "react-bootstrap";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import login from "@/lib/login";
 
 function Header() {
   const { isAuthenticated } = useAuth();
   const { setIsAuthenticated, setJwtToken, setData } = useAuth();
+  const [isOpen, setIsOpen] = useState(false); // State for toggling
   const router = useRouter();
 
   const postLogin = async (auth, data) => {
@@ -30,11 +30,13 @@ function Header() {
 
   const handleLogoutClick = () => {
     console.log("logging out");
-
     setIsAuthenticated(false);
     setJwtToken(null);
-    redirect("/");
-    // router.push('/', { scroll: false })
+    router.push("/", { scroll: false });
+  };
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
   const getMenuEntries = () => {
@@ -78,12 +80,13 @@ function Header() {
         </li>
         <li className="">
           <Button className="btn btn-mint" onClick={handleLoginClick}>
-            Login
+            Business Login
           </Button>
         </li>
       </ul>
     );
   };
+
   return (
     <header className="mintdeals navbar navbar-expand-lg navbar-dark">
       <div className="container">
@@ -93,15 +96,11 @@ function Header() {
         <button
           className="navbar-toggler"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+          onClick={toggleMenu}
         >
-          <span className="navbar-toggler-icon"></span>
+          <span className="mt-3 navbar-toggler-icon">&#9776;</span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
+        <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
           {getMenuEntries()}
         </div>
       </div>

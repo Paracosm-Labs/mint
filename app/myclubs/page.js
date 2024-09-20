@@ -5,6 +5,8 @@ import OffcanvasDeals from "../components/offcanvasDeals";
 import MyDealsModal from "../components/myDealsModal";
 import { getClubsForMember, getEventTxIDFromClubId } from "@/lib/club";
 import { ClipLoader } from "react-spinners";
+import EmptyState from '../components/emptyState';
+import Link from "next/link";
 
 function CustomerClubs() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -116,6 +118,20 @@ function CustomerClubs() {
     );
   }
   
+  if (purchasedClubs.length === 0) {
+    return (
+      <div className="kmint container text-center">
+        <EmptyState 
+          iconClass="fa-folder-open" 
+          message="You haven't joined any clubs, yet."
+        />
+        <button className="btn btn-mint">
+          <Link href="/explore" className="nav-link"><i className="fa fa-search"/>&nbsp;Explore Clubs</Link>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="kmint container text-center">
       <h2>My Clubs</h2>

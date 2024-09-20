@@ -12,17 +12,26 @@ function RedemptionsTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [approvingRedemptionId, setApprovingRedemptionId] = useState(null);
 
-  useEffect(() => {
+  const loadRedemptions = async () => {
     setIsLoading(true);
-    getRedemptionRequests(data.userData.clubs)
-      .then((response) => {
-        setRedemptions(response);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching redemptions:", error);
-        setIsLoading(false);
-      });
+    try {
+      const response = await getRedemptionRequests(data.userData.clubs);
+      setRedemptions(response);
+    } catch (error) {
+      console.error("Error fetching redemptions:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadRedemptions(); // Initial load
+
+    const intervalId = setInterval(() => {
+      loadRedemptions(); // Refresh every 30 seconds
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, [data.userData.clubs]);
 
   const approveRedemption = async (redemption) => {
@@ -35,10 +44,9 @@ function RedemptionsTable() {
       );
       console.log(`Redemption confirmed with transaction ID: ${txID}`);
       alert(`Redemption confirmed`);
-      
+
       // Refresh redemption requests after approval
-      const updatedRedemptions = await getRedemptionRequests(data.userData.clubs);
-      setRedemptions(updatedRedemptions);
+      loadRedemptions(); // Call the load function to refresh data
     } catch (error) {
       console.error("Error confirming redemption:", error);
       alert("Failed to confirm redemption.");

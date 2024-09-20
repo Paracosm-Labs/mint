@@ -2,8 +2,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import  "bootstrap/dist/css/bootstrap.min.css"
-import Header from "./header";
-import Footer from "./footer";
+import Header from "./components/header";
+import Footer from "./components/footer";
 import Metadata from "../app/metadata";
 import {AuthProvider} from "../lib/AuthContext";
 

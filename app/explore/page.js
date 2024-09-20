@@ -2,15 +2,16 @@
 import React, { useEffect, useState } from "react";
 // import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 import {
   addClubMember,
   getClubDetails,
   getClubIdFromEvent,
   isUserClubMember,
 } from "@/lib/club";
-import { USDDAddress } from "@/lib/address";
+import { USDDAddress, USDTAddress } from "@/lib/address";
 import { ClipLoader } from "react-spinners";
+import JoinClubModal from "../components/joinClubModal";
 
 function ExploreClubs() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
@@ -21,6 +22,7 @@ function ExploreClubs() {
   const [showModal, setShowModal] = useState(false);
   const [clubs, setClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState("USDT");
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -119,7 +121,22 @@ function ExploreClubs() {
   });
 
   const join = (club) => {
-    addClubMember(club.onChainId, USDDAddress, club.membershipFee).then(
+    setSelectedClub(club);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedClub(null);
+    setSelectedCurrency("USDD");
+  };
+
+  const handlePayJoin = () => {
+    if (!selectedClub) return;
+
+    const currencyAddress = selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
+
+    addClubMember(selectedClub.onChainId, currencyAddress, selectedClub.membershipFee).then(
       (txID) => {
         console.log("txID: ", txID);
         load().then((clubs) => {
@@ -129,16 +146,7 @@ function ExploreClubs() {
         });
       }
     );
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedClub(null);
-  };
-
-  const handlePayJoin = () => {
-    setShowModal(false);
-    // navigate('/explore/myclubs');
+    // setShowModal(false);
   };
 
   if (isLoading) {
@@ -307,15 +315,15 @@ function ExploreClubs() {
                     <span className="text-success">{club.members} Members</span>
                   </div>
                   <div className="d-flex justify-content-between align-items-center">
-                    <h4 className="text-success mt-2">${club.membershipFee}</h4>
+                    <h4 className="text-success mt-3">${club.membershipFee}</h4>
                     {club.isMember ? (
-                      <></>
+                      <button className="btn btn-success disabled">Joined</button>
                     ) : (
                       <button
                         className="btn btn-success"
                         onClick={() => join(club)}
                       >
-                        Join Now
+                        Join Club
                       </button>
                     )}
                   </div>
@@ -325,37 +333,15 @@ function ExploreClubs() {
           ))}
         </div>
 
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>{selectedClub?.name}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <img
-              src={selectedClub?.image}
-              className="img-fluid mb-3"
-              alt={selectedClub?.name}
-            />
-            <h5>${selectedClub?.membershipFee}</h5>
-            <p>{selectedClub?.description}</p>
-            <p>
-              <strong>Category:</strong> {selectedClub?.category}
-            </p>
-            <p>
-              <strong>Country:</strong> {selectedClub?.country}
-            </p>
-            <p>
-              <strong>Members:</strong> {selectedClub?.members}
-            </p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="outline-secondary" onClick={handleCloseModal}>
-              Close
-            </Button>
-            <Button variant="success" onClick={handlePayJoin}>
-              Pay & Join Now
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <JoinClubModal
+          show={showModal}
+          onHide={handleCloseModal}
+          club={selectedClub}
+          selectedCurrency={selectedCurrency}
+          setSelectedCurrency={setSelectedCurrency}
+          onJoin={handlePayJoin}
+        />
+
       </div>
     </>
   );
