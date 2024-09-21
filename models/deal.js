@@ -17,6 +17,9 @@ const DealSchema = new mongoose.Schema(
       ref: "Club",
       required: true,
     },
+    image: {
+      type: String,
+    },
     description: {
       type: String,
     },

@@ -15,6 +15,7 @@ export async function POST(request) {
       business: reqJson.business,
       club: reqJson.club,
       txID: reqJson.txID,
+      image: reqJson.image,
     });
 
     return NextResponse.json(deal, { status: 200 });

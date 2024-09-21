@@ -3,8 +3,9 @@ import { Table } from "react-bootstrap";
 import { useAuth } from "@/lib/AuthContext";
 import { getDealDetails, getDealIdFromEvent } from "@/lib/deal";
 import { formatDate } from "@/lib/format";
-import EmptyState from './emptyState';
+import EmptyState from "./emptyState";
 import { ClipLoader } from "react-spinners";
+import Image from "next/image";
 
 function DealTable({ onEdit }) {
   const { data } = useAuth();
@@ -30,9 +31,13 @@ function DealTable({ onEdit }) {
         let { clubId, dealId } = await getDealIdFromEvent(deal_.txID);
         if (clubId && dealId) {
           let details = await getDealDetails(clubId, dealId);
+          let image = "https://via.placeholder.com/200x150";
+          if (deal_.image) {
+            image = deal_.image;
+          }
           let deal = {
             description: deal_.description,
-            image: "https://via.placeholder.com/200x150",
+            image: image,
             txID: deal_.txID,
             ...details,
           };
@@ -41,7 +46,7 @@ function DealTable({ onEdit }) {
       }
 
       // Sort descending by dealId (most recent first)
-      deals.sort((a, b) => b.dealId - a.dealId); 
+      deals.sort((a, b) => b.dealId - a.dealId);
 
       console.log(deals);
       setDeals(deals);
@@ -51,7 +56,6 @@ function DealTable({ onEdit }) {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     loadDeals();
 
@@ -61,18 +65,19 @@ function DealTable({ onEdit }) {
     }, 30000); // 30 seconds
 
     // Clean up the interval on component unmount
-    return () => clearInterval(interval);    
-
+    return () => clearInterval(interval);
   }, []);
 
   if (isLoading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '300px',  // Adjust this value as needed
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "300px", // Adjust this value as needed
+        }}
+      >
         <ClipLoader color="#98ff98" size={100} />
       </div>
     );
@@ -80,8 +85,8 @@ function DealTable({ onEdit }) {
 
   if (deals.length === 0) {
     return (
-      <EmptyState 
-        iconClass="fa-tags" 
+      <EmptyState
+        iconClass="fa-tags"
         message="No deals found. Create a new deal to get started!"
       />
     );
@@ -93,6 +98,7 @@ function DealTable({ onEdit }) {
         <thead>
           <tr>
             <th>ID</th>
+            <th></th>
             <th>Supply/Minted : (Max Supply)</th>
             <th>Description</th>
           </tr>
@@ -102,8 +108,20 @@ function DealTable({ onEdit }) {
             <tr key={deal.dealId}>
               <td>{deal.dealId}</td>
               <td>
-                {deal.remainingSupply}/{deal.redeemedSupply} : ({deal.maxSupply})
+                <Image
+                  loader={() => deal.image}
+                  // fill={true}
+                  width={100}
+                  height={100}
+                  src={deal.image}
+                  alt="Uploaded Image"
+                />
               </td>
+              <td>
+                {deal.remainingSupply}/{deal.redeemedSupply} : ({deal.maxSupply}
+                )
+              </td>
+
               <td>
                 {deal.description}
                 <p className="text-muted text-small">

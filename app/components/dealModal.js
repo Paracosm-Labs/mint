@@ -3,15 +3,20 @@ import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { createDeal } from "@/lib/deal";
 import { useAuth } from "@/lib/AuthContext";
 import { getClubIdFromEvent } from "@/lib/club";
+import Upload from "./upload";
+import Image from "next/image";
 
 function DealModal({ show, onHide, deal }) {
   const { data } = useAuth();
   const [dealImage, setDealImage] = useState(deal?.image || "");
   const [maxSupply, setMaxSupply] = useState(deal?.maxSupply || "");
-  const [dealDescription, setDealDescription] = useState(deal?.description || "");
+  const [dealDescription, setDealDescription] = useState(
+    deal?.description || ""
+  );
   const [dealValidTo, setDealValidTo] = useState(deal?.validTo || "");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [url, setUrl] = useState();
 
   const validateForm = () => {
     const newErrors = {};
@@ -24,13 +29,15 @@ function DealModal({ show, onHide, deal }) {
 
   const isFormValid = maxSupply && dealDescription && dealValidTo;
 
-  const save = async (txID, description) => {
+  const save = async (txID, description, imageUrl) => {
     if (!txID) {
       throw Error("txID is null");
     }
+    debugger;
     let payload = {
       description: description,
       txID: txID,
+      image: imageUrl,
       owner: data.userData.user._id,
       business: data.userData.businesses._id,
       club: data.userData.clubs._id,
@@ -61,10 +68,25 @@ function DealModal({ show, onHide, deal }) {
       const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
       console.log("clubId", clubId);
 
-      const txID = await createDeal(clubId, maxSupply, dealValidTo, "", 5);
+      let metadataName = data.userData.businesses.name;
+
+      let metadataUri = {
+        description: dealDescription,
+        external_url: "https://mintdeals/deals/",
+        image: url,
+        name: metadataName,
+      };
+
+      const txID = await createDeal(
+        clubId,
+        maxSupply,
+        dealValidTo,
+        JSON.stringify(metadataUri),
+        5
+      );
       console.log("deal txID", txID);
 
-      let resJson = await save(txID, dealDescription);
+      let resJson = await save(txID, dealDescription, url);
 
       onHide();
     } catch (error) {
@@ -82,6 +104,23 @@ function DealModal({ show, onHide, deal }) {
       </Modal.Header>
       <Modal.Body>
         <Form noValidate>
+          <Form.Group className="mb-3">
+            <Form.Label>Upload Image</Form.Label>
+            <Upload setImageUrl={setUrl}></Upload>
+            {url && (
+              <div className="mt-3">
+                {/** style accordingy */}
+                <Image
+                  loader={() => url}
+                  // fill={true}
+                  width={200}
+                  height={200}
+                  src={url}
+                  alt="Uploaded Image"
+                />
+              </div>
+            )}
+          </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Max Supply</Form.Label>
             <Form.Control
@@ -146,8 +185,10 @@ function DealModal({ show, onHide, deal }) {
                   />
                   {deal ? "Updating..." : "Creating..."}
                 </>
+              ) : deal ? (
+                "Update Deal"
               ) : (
-                deal ? "Update Deal" : "Create Deal"
+                "Create Deal"
               )}
             </Button>
           </div>
