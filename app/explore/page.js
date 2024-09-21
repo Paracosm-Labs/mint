@@ -152,14 +152,14 @@ function ExploreClubs() {
       );
       
       console.log("txID: ", txID);
-      
-      setShowModal(false); 
+      setShowModal(false);
+      toast.success(`Successfully joined ${selectedClub.name}`); 
       await load().then((clubs) => {
         if (clubs && clubs.length > 0) {
           setClubs(clubs);
         }
       });
-      toast.success(`Successfully joined ${selectedClub.name}`);
+      
     } catch (error) {
       console.error("Transaction failed:", error);
       toast.error(error);

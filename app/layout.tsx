@@ -30,7 +30,7 @@ export default function RootLayout({
         />
       </head>
       <AuthProvider>
-      <body className={`bg-mintdeals ${inter.className}`}>
+      <body id="root" className={`bg-mintdeals ${inter.className}`}>
         <Header />
         {children}
         <Footer/>

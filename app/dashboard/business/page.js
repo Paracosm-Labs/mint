@@ -10,10 +10,7 @@ function BusinessDashboard() {
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
       <div className="col-md-8">
         <h1 className="h2">Club Dashboard</h1>
-        <p>
-            Manage your business credit easily: borrow funds, make repayments and
-            track your credit history—all in one place.
-          </p>
+        <p>Oversee your club’s performance: track activity and monitor progress seamlessly.</p>
         </div>
         <div className="col-md-3 text-end">
           {/* <button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
