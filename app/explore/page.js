@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button, Form } from "react-bootstrap";
 import {
   addClubMember,
   getClubDetails,
@@ -12,6 +10,7 @@ import {
 import { USDDAddress, USDTAddress } from "@/lib/address";
 import { ClipLoader } from "react-spinners";
 import JoinClubModal from "../components/joinClubModal";
+import EmptyState from "../components/emptyState";
 
 function ExploreClubs() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
@@ -83,17 +82,21 @@ function ExploreClubs() {
   }, []);
 
   // Handle country and category change
-  const handleCountrySelect = (country) => {
+  const handleCountrySelect = (event, country) => {
+    event.preventDefault();
     setSelectedCountry(country);
   };
 
-  const handleCategorySelect = (category) => {
+  const handleCategorySelect = (event, category) => {
+    event.preventDefault();
     setSelectedCategory(category);
   };
 
-  const handleSortSelect = (sort) => {
+  const handleSortSelect = (event, sort) => {
+    event.preventDefault();
     setSelectedSort(sort);
   };
+
 
   // Filter clubs based on selected country and category
   const filteredClubs = clubs.filter(
@@ -162,6 +165,17 @@ function ExploreClubs() {
     );
   }
 
+  if (sortedClubs.length === 0) {
+    return (
+      <div className="kmint container mt-2">
+      <EmptyState 
+        iconClass="fa-folder-open" 
+        message="No clubs created yet."
+      />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="kmint container mt-2">
@@ -189,7 +203,7 @@ function ExploreClubs() {
           </div>
         </div>
 
-        <div className="row mb-4">
+        {/* <div className="row mb-4">
           <div className="col-6"></div>
           <div className="col-12">
             <div className="text-center">
@@ -291,7 +305,7 @@ function ExploreClubs() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="row" id="club-container">
           {sortedClubs.map((club) => (
