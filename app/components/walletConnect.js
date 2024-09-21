@@ -24,12 +24,24 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
     }
   };
 
+  // Manage logout with effect to avoid rendering conflicts
+  useEffect(() => {
+    const handleLogout = () => {
+      if (!isAuthenticated) {
+        // If not authenticated, redirect to home
+        router.push("/", { scroll: false });
+      }
+    };
+    handleLogout();
+  }, [isAuthenticated, router]);
+
   const handleLogoutClick = () => {
-    handleBusinessLogout();
-    setIsTronLinkConnected(false);
-    setTronAddress(null);
-    setIsAuthenticated(false);
-    router.push("/", { scroll: false });
+    try {
+      console.log("logging out");
+      setIsAuthenticated(false); // This will trigger the useEffect to handle navigation
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const getButtonText = () => {
@@ -48,8 +60,9 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
     } else if (isTronLinkConnected) {
       alert("Wallet is connected, but you're not logged in as a business user.");
     } else {
-      handleBusinessLogin();
-      connectTronLink(); // Also try to connect TronLink
+      handleBusinessLogin().then(() => {
+        connectTronLink(); // Connect TronLink after business login
+      });
     }
   };
 
@@ -74,7 +87,6 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
       {getButtonText()}
     </Button>
   );
-  
 };
 
 export default WalletConnect;
