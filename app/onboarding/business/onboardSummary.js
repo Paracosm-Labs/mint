@@ -15,7 +15,6 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
       try {
         const fee = await getClubCreationFee(ClubDealRegistryABI, clubDealRegistryAddress); // Pass ABI and address
         setClubCreationFee(fee); // Set the fee in state
-        console.log("X club creation fee:",fee);
       } catch (error) {
         console.error('Error fetching club creation fee:', error);
       } finally {

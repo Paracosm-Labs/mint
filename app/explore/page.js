@@ -138,8 +138,9 @@ function ExploreClubs() {
     if (!selectedClub) return;
 
     const currencyAddress = selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
-
-    addClubMember(selectedClub.onChainId, currencyAddress, selectedClub.membershipFee).then(
+    const tokenDecimals = selectedCurrency === "USDT" ? 6 : 18;
+    console.log("membership fee:", selectedClub.membershipFee);
+    addClubMember(selectedClub.onChainId, currencyAddress, selectedClub.membershipFee, tokenDecimals).then(
       (txID) => {
         console.log("txID: ", txID);
         load().then((clubs) => {
