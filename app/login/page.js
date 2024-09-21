@@ -3,6 +3,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import login from "@/lib/login";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const { setIsAuthenticated, setJwtToken, setData } = useAuth();
@@ -32,6 +34,14 @@ const Login = () => {
           Log in
         </button>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick
+        draggable
+        pauseOnHover
+        />
     </main>
   );
 };

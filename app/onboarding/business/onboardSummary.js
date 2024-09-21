@@ -7,7 +7,8 @@ import { clubDealRegistryAddress } from "../../../lib/address";
 const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
   const [selectedCurrency, setSelectedCurrency] = useState('USDT');
   const [clubCreationFee, setClubCreationFee] = useState(null); // State for the club creation fee
-  const [loadingFee, setLoadingFee] = useState(true); // Loading state
+  const [loadingFee, setLoadingFee] = useState(true); // Loading state for fetching fee
+  const [loading, setLoading] = useState(false); // Loading state for button
 
   // Fetch the club creation fee when the component mounts
   useEffect(() => {
@@ -25,9 +26,16 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
     fetchClubCreationFee(); // Call the function
   }, []);
 
-  const handleComplete = () => {
-    // Pass the selected currency to the onComplete function
-    onComplete(selectedCurrency);
+  const handleComplete = async () => {
+    setLoading(true); // Start loading state
+    try {
+      // Pass the selected currency to the onComplete function
+      await onComplete(selectedCurrency);
+    } catch (error) {
+      console.error("Error during payment:", error);
+    } finally {
+      setLoading(false); // Stop loading state
+    }
   };
 
   return (
@@ -58,13 +66,15 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
 
       <div className="alert alert-info" role="alert">
         <i className="fa fa-info-circle mx-2"></i>
-        {loadingFee ? (<>
+        {loadingFee ? (
+          <>
             <span
-            className="spinner-border spinner-border-sm me-2"
-            role="status"
-            aria-hidden="true"
-          ></span>
-        </>) : (
+              className="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>Loading fee...
+          </>
+        ) : (
           <>
             Club Creation Fee: <strong>${clubCreationFee}</strong>.
             <br />
@@ -86,13 +96,31 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
         <button type="button" className="btn btn-outline-secondary" onClick={onPrev}>
           Previous
         </button>
-        <button type="button" className="btn btn-kmint-blue" onClick={handleComplete}>
-          <img
-            src={`/${selectedCurrency.toLowerCase()}.png`}
-            alt={selectedCurrency}
-            style={{ width: '24px', marginRight: '4px', marginLeft: '4px' }}
-          />&nbsp;
-          Pay & Complete Onboarding
+        <button 
+          type="button" 
+          className="btn btn-kmint-blue" 
+          onClick={handleComplete}
+          disabled={loading || loadingFee} // Disable while loading
+        >
+          {loading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Processing...
+            </>
+          ) : (
+            <>
+              <img
+                src={`/${selectedCurrency.toLowerCase()}.png`}
+                alt={selectedCurrency}
+                style={{ width: '24px', marginRight: '4px', marginLeft: '4px' }}
+              />&nbsp;
+              Pay & Complete Onboarding
+            </>
+          )}
         </button>
       </div>
     </div>

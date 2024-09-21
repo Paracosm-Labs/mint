@@ -15,7 +15,7 @@ function BusinessDashboard() {
             track your credit history—all in one place.
           </p>
         </div>
-        <div className="btn-toolbar mb-2 mb-md-0">
+        <div className="col-md-3 text-end">
           {/* <button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
                 <span data-feather="calendar"></span>
                 This week
@@ -37,6 +37,7 @@ function BusinessDashboard() {
               <RecentRedemptions />
             </div> */}
       </div>
+
     </main>
   );
 }

@@ -35,8 +35,8 @@ export default function RootLayout({
         {children}
         <Footer/>
         <ToastContainer
-              position="bottom-center"
-              autoClose={5000}
+              position="top-center"
+              autoClose={8000}
               hideProgressBar={false}
               closeOnClick
               draggable

@@ -5,6 +5,7 @@ import { Card, Table, Badge, Spinner } from "react-bootstrap";
 import { creditManager } from "@/contracts/CreditManager";
 import { creditFacility } from "@/contracts/CreditFacility";
 import Link from "next/link";
+import EmptyState from "../components/emptyState";
 
 function CreditUsageHistory({ refresh }) {
   const [usageHistory, setUsageHistory] = useState([]);

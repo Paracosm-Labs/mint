@@ -11,6 +11,8 @@ import { USDDAddress, USDTAddress } from "@/lib/address";
 import { ClipLoader } from "react-spinners";
 import JoinClubModal from "../components/joinClubModal";
 import EmptyState from "../components/emptyState";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ExploreClubs() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
@@ -134,24 +136,36 @@ function ExploreClubs() {
     setSelectedCurrency("USDD");
   };
 
-  const handlePayJoin = () => {
+  const handlePayJoin = async () => {
     if (!selectedClub) return;
-
+  
     const currencyAddress = selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
     const tokenDecimals = selectedCurrency === "USDT" ? 6 : 18;
-    console.log("membership fee:", selectedClub.membershipFee);
-    addClubMember(selectedClub.onChainId, currencyAddress, selectedClub.membershipFee, tokenDecimals).then(
-      (txID) => {
-        console.log("txID: ", txID);
-        load().then((clubs) => {
-          if (clubs && clubs.length > 0) {
-            setClubs(clubs);
-          }
-        });
-      }
-    );
-    setShowModal(false);
+    
+    try {
+      console.log("membership fee:", selectedClub.membershipFee);
+      const txID = await addClubMember(
+        selectedClub.onChainId,
+        currencyAddress,
+        selectedClub.membershipFee,
+        tokenDecimals
+      );
+      
+      console.log("txID: ", txID);
+      
+      setShowModal(false); 
+      await load().then((clubs) => {
+        if (clubs && clubs.length > 0) {
+          setClubs(clubs);
+        }
+      });
+      toast.success(`Successfully joined ${selectedClub.name}`);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+      toast.error(error);
+    }
   };
+  
 
   if (isLoading) {
     return (
@@ -356,7 +370,14 @@ function ExploreClubs() {
           setSelectedCurrency={setSelectedCurrency}
           onJoin={handlePayJoin}
         />
-
+        <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              closeOnClick
+              draggable
+              pauseOnHover
+        />
       </div>
     </>
   );

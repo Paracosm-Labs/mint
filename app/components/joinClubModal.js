@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import CurrencySelector from './currencySelector';
 
 const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurrency, onJoin }) => {
+  const [loading, setLoading] = useState(false); // Loading state to handle button behavior
+
+  const handleJoinClick = async () => {
+    setLoading(true);  // Start loading when the user clicks Join
+    try {
+      await onJoin();
+    } finally {
+      setLoading(false); // Stop loading when transaction completes
+    }
+  };
+
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton className="border-0">
@@ -40,16 +51,34 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
         </Form.Group>
       </Modal.Body>
       <Modal.Footer className="border-1 justify-content-center">
-        <Button variant="outline-secondary" onClick={onHide} className="px-4">
+        <Button variant="outline-secondary" onClick={onHide} className="px-4" disabled={loading}>
           Cancel
         </Button>
-        <Button variant="success" onClick={onJoin} className="px-4">
-          Join for ${club?.membershipFee}
-          <img
-            src={`/${selectedCurrency.toLowerCase()}.png`}
-            alt={selectedCurrency}
-            style={{ width: '24px', marginRight: '4px', marginLeft: '4px' }}
-          />
+        <Button
+          variant="success"
+          onClick={handleJoinClick}
+          className="px-4"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Processing...
+            </>
+          ) : (
+            <>
+              Join for ${club?.membershipFee}
+              <img
+                src={`/${selectedCurrency.toLowerCase()}.png`}
+                alt={selectedCurrency}
+                style={{ width: '24px', marginRight: '4px', marginLeft: '4px' }}
+              />
+            </>
+          )}
         </Button>
       </Modal.Footer>
     </Modal>
