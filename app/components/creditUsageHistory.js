@@ -5,6 +5,7 @@ import { Card, Table, Badge, Spinner } from "react-bootstrap";
 import { creditManager } from "@/contracts/CreditManager";
 import { creditFacility } from "@/contracts/CreditFacility";
 import Link from "next/link";
+import EmptyState from "../components/emptyState";
 
 function CreditUsageHistory({ refresh }) {
   const [usageHistory, setUsageHistory] = useState([]);
@@ -106,7 +107,7 @@ function CreditUsageHistory({ refresh }) {
           Credit Usage History
         </h5>
       </Card.Header>
-      <Card.Body>
+        <Card.Body>
         {loading ? (
           <div className="text-center my-4">
             <Spinner animation="border" role="status" variant="primary">
@@ -117,6 +118,8 @@ function CreditUsageHistory({ refresh }) {
           <div className="alert alert-danger" role="alert">
             Error: {error}
           </div>
+        ) : usageHistory.length === 0 ? (
+          <EmptyState iconClass="fa-receipt" message="No usage history available, yet." />
         ) : (
           <div className="table-responsive">
             <Table hover className="align-middle">
@@ -135,9 +138,7 @@ function CreditUsageHistory({ refresh }) {
                     <td>
                       <span
                         className={`fw-bold ${
-                          item.type === "Borrowed"
-                            ? "text-danger"
-                            : "text-success"
+                          item.type === "Borrowed" ? "text-danger" : "text-success"
                         }`}
                       >
                         $
@@ -153,7 +154,6 @@ function CreditUsageHistory({ refresh }) {
                         className="d-flex align-items-center"
                         style={{ width: "fit-content" }}
                       >
-                        {/* <FontAwesomeIcon icon={getTypeIcon(item.type)} className="me-1" /> */}
                         {item.type}
                       </Badge>
                     </td>
@@ -163,7 +163,6 @@ function CreditUsageHistory({ refresh }) {
                         className="d-flex align-items-center"
                         style={{ width: "fit-content" }}
                       >
-                        {/* <FontAwesomeIcon icon={getSourceIcon(item.source)} className="me-1" /> */}
                         {item.source}
                       </Badge>
                       <Link

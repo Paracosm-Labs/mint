@@ -31,9 +31,12 @@ function DealManagement() {
 
   return (
     <main className="col-md-10 ms-sm-auto col-lg-10 px-md-4">
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">Manage Deals</h1>
-        <div className="btn-toolbar mb-2 mb-md-0">
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
+        <div className="col-md-7">
+          <h1 className="h2">Manage Deals</h1>
+          <p>Create and track your club's deals effortlessly to maximize customer engagement and loyalty.</p>
+        </div>
+        <div className="col-md-5 text-end">
           {/* <button type="button" className="btn btn-md btn-outline-secondary me-2">
                 Export CSV
               </button> */}
@@ -46,6 +49,7 @@ function DealManagement() {
           </button>
         </div>
       </div>
+      <hr/>
       <DealTable
         onEdit={handleEditDeal}
         onDelete={handleDeleteDeal}

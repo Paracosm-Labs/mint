@@ -7,6 +7,8 @@ import { getClubsForMember, getEventTxIDFromClubId } from "@/lib/club";
 import { ClipLoader } from "react-spinners";
 import EmptyState from '../components/emptyState';
 import Link from "next/link";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CustomerClubs() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,7 +68,8 @@ function CustomerClubs() {
       }
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      // alert(error.message);
+      toast.error(`An error has occured. Please install or login to TronLink. ${error.message}`);
     } finally {
       setIsLoading(false);  // Set loading to false when done fetching data
     }
@@ -177,6 +180,14 @@ function CustomerClubs() {
         club={selectedClub}
         key={refresh}
       />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick
+        draggable
+        pauseOnHover
+        />
     </div>
   );
 }

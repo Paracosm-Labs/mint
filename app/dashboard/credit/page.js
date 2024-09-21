@@ -42,29 +42,32 @@ const CreditPage = () => {
 
   return (
     <main className="col-md-10 ms-sm-auto col-lg-10 px-md-4">
-      <div className="col-md-6">
-        <h1>Credit Facility</h1>
-        <p>
-          Manage your business credit easily: borrow funds, make repayments and
-          track your credit history—all in one place.
-        </p>
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
+        <div className="col-md-7 col-sm-12">
+          <h2>Credit Facility</h2>
+          <p>
+            Manage your business credit easily: borrow funds, make repayments and
+            track your credit history—all in one place.
+          </p>
+        </div>
+        <div className="col-md-5 col-sm-12 text-end">
+          <button
+            type="button"
+            className="btn btn-md btn-outline-secondary me-2"
+            onClick={handleRepayClick}
+          >
+            Make Repayment
+          </button>
+          <button
+            type="button"
+            className="btn btn-md btn-success mt-3 mb-3  mx-3"
+            onClick={handleBorrowClick}
+          >
+            Borrow Now
+          </button>
+        </div>
       </div>
-      <div className="col-md-6 text-end">
-        <button
-          type="button"
-          className="btn btn-md btn-outline-secondary me-2"
-          onClick={handleRepayClick}
-        >
-          Make Repayment
-        </button>
-        <button
-          type="button"
-          className="btn btn-md btn-success mt-3 mb-3  mx-3"
-          onClick={handleBorrowClick}
-        >
-          Borrow Now
-        </button>
-      </div>
+      <hr/>
       <div className="col-md-12">
         <CreditSummary refresh={refresh} /> {/* Pass refresh state */}
         <CreditUsageHistory refresh={refresh} />

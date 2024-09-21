@@ -2,6 +2,8 @@
 import Sidebar from "../components/sidebar";
 import { useAuth } from "@/lib/AuthContext";
 import { redirect } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function DashboardLayout({ children }) {
   const { isAuthenticated, jwtToken, setData } = useAuth();
@@ -16,6 +18,14 @@ export default function DashboardLayout({ children }) {
         {children}
         <div className="col-md-3"></div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick
+        draggable
+        pauseOnHover
+        />
     </div>
   );
 }

@@ -29,8 +29,8 @@ function RedemptionsTable() {
     loadRedemptions(); // Initial load
 
     const intervalId = setInterval(() => {
-      loadRedemptions(); // Refresh every 30 seconds
-    }, 30000); // 30 seconds
+      loadRedemptions();
+    }, 120000); // 120 seconds
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, [data.userData.clubs]);
@@ -44,9 +44,9 @@ function RedemptionsTable() {
         redemption.tokenId
       );
       console.log(`Redemption confirmed with transaction ID: ${txID}`);
-      alert(`Redemption confirmed`);
+      // alert(`Redemption confirmed`);
       
-      toast.success("Action was successful!");
+      toast.success("Redemption confirmed.");
 
       // Refresh redemption requests after approval
       loadRedemptions(); // Call the load function to refresh data

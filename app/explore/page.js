@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, Button, Form } from "react-bootstrap";
 import {
   addClubMember,
   getClubDetails,
@@ -12,6 +10,9 @@ import {
 import { USDDAddress, USDTAddress } from "@/lib/address";
 import { ClipLoader } from "react-spinners";
 import JoinClubModal from "../components/joinClubModal";
+import EmptyState from "../components/emptyState";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ExploreClubs() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
@@ -83,17 +84,21 @@ function ExploreClubs() {
   }, []);
 
   // Handle country and category change
-  const handleCountrySelect = (country) => {
+  const handleCountrySelect = (event, country) => {
+    event.preventDefault();
     setSelectedCountry(country);
   };
 
-  const handleCategorySelect = (category) => {
+  const handleCategorySelect = (event, category) => {
+    event.preventDefault();
     setSelectedCategory(category);
   };
 
-  const handleSortSelect = (sort) => {
+  const handleSortSelect = (event, sort) => {
+    event.preventDefault();
     setSelectedSort(sort);
   };
+
 
   // Filter clubs based on selected country and category
   const filteredClubs = clubs.filter(
@@ -131,23 +136,36 @@ function ExploreClubs() {
     setSelectedCurrency("USDD");
   };
 
-  const handlePayJoin = () => {
+  const handlePayJoin = async () => {
     if (!selectedClub) return;
-
+  
     const currencyAddress = selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
-
-    addClubMember(selectedClub.onChainId, currencyAddress, selectedClub.membershipFee).then(
-      (txID) => {
-        console.log("txID: ", txID);
-        load().then((clubs) => {
-          if (clubs && clubs.length > 0) {
-            setClubs(clubs);
-          }
-        });
-      }
-    );
-    setShowModal(false);
+    const tokenDecimals = selectedCurrency === "USDT" ? 6 : 18;
+    
+    try {
+      console.log("membership fee:", selectedClub.membershipFee);
+      const txID = await addClubMember(
+        selectedClub.onChainId,
+        currencyAddress,
+        selectedClub.membershipFee,
+        tokenDecimals
+      );
+      
+      console.log("txID: ", txID);
+      setShowModal(false);
+      toast.success(`Successfully joined ${selectedClub.name}`); 
+      await load().then((clubs) => {
+        if (clubs && clubs.length > 0) {
+          setClubs(clubs);
+        }
+      });
+      
+    } catch (error) {
+      console.error("Transaction failed:", error);
+      toast.error(error);
+    }
   };
+  
 
   if (isLoading) {
     return (
@@ -159,6 +177,17 @@ function ExploreClubs() {
         }}>
           <ClipLoader color="#98ff98" size={150} />
         </div>
+    );
+  }
+
+  if (sortedClubs.length === 0) {
+    return (
+      <div className="kmint container mt-2">
+      <EmptyState 
+        iconClass="fa-folder-open" 
+        message="No clubs created yet."
+      />
+      </div>
     );
   }
 
@@ -189,7 +218,7 @@ function ExploreClubs() {
           </div>
         </div>
 
-        <div className="row mb-4">
+        {/* <div className="row mb-4">
           <div className="col-6"></div>
           <div className="col-12">
             <div className="text-center">
@@ -291,7 +320,7 @@ function ExploreClubs() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="row" id="club-container">
           {sortedClubs.map((club) => (
@@ -341,7 +370,14 @@ function ExploreClubs() {
           setSelectedCurrency={setSelectedCurrency}
           onJoin={handlePayJoin}
         />
-
+        <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              closeOnClick
+              draggable
+              pauseOnHover
+        />
       </div>
     </>
   );

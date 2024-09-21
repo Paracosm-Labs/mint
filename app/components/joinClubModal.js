@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import CurrencySelector from './currencySelector';
 
 const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurrency, onJoin }) => {
+  const [loading, setLoading] = useState(false); // Loading state to handle button behavior
+
+  const handleJoinClick = async () => {
+    setLoading(true);  // Start loading when the user clicks Join
+    try {
+      await onJoin();
+    } finally {
+      setLoading(false); // Stop loading when transaction completes
+    }
+  };
+
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton className="border-0">
@@ -24,51 +36,49 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
               {club?.category} |&nbsp;{club?.country} |&nbsp;<strong>{club?.members}</strong>&nbsp;Members
             </p>
             <div className="mt-3">
-                <h6 className="fw-bold mb-2">About this Club</h6>
-                <p>{club?.description}</p>
+              <h6 className="fw-bold mb-2">About this Club</h6>
+              <p>{club?.description}</p>
             </div>
           </div>
         </div>
 
         <Form.Group className="mt-4">
           <h6 className="fw-bold mb-2 text-center">Select Payment Currency</h6>
-          <div className="btn-group d-flex" role="group" aria-label="Currency selection">
-            {['USDT', 'USDD'].map((currency) => (
-              <React.Fragment key={currency}>
-                <input
-                  type="radio"
-                  className="btn-check"
-                  name="currency"
-                  id={currency.toLowerCase()}
-                  checked={selectedCurrency === currency}
-                  onChange={() => setSelectedCurrency(currency)}
-                  autoComplete="off"
-                />
-                <label className="btn btn-outline-success" htmlFor={currency.toLowerCase()}>
-                    <img 
-                        src={`/${currency.toLowerCase()}.png`} 
-                        alt={currency} 
-                        style={{ width: '24px', marginRight: '4px' }} 
-                  />
-                  {currency}
-                </label>
-              </React.Fragment>
-            ))}
-          </div>
+          <CurrencySelector
+            selectedCurrency={selectedCurrency}
+            setSelectedCurrency={setSelectedCurrency}
+          />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer className="border-1 justify-content-center">
-        <Button variant="outline-secondary" onClick={onHide} className="px-4">
+        <Button variant="outline-secondary" onClick={onHide} className="px-4" disabled={loading}>
           Cancel
         </Button>
-        <Button variant="success" onClick={onJoin} className="px-4">
-          Join for ${club?.membershipFee} 
-          <img 
-                src={`/${selectedCurrency.toLowerCase()}.png`} 
-                alt={selectedCurrency} 
-                style={{ width: '24px', marginRight: '4px', marginLeft:'4px' }} 
-            />
-          {/* {selectedCurrency} */}
+        <Button
+          variant="success"
+          onClick={handleJoinClick}
+          className="px-4"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Processing...
+            </>
+          ) : (
+            <>
+              Join for ${club?.membershipFee}
+              <img
+                src={`/${selectedCurrency.toLowerCase()}.png`}
+                alt={selectedCurrency}
+                style={{ width: '24px', marginRight: '4px', marginLeft: '4px' }}
+              />
+            </>
+          )}
         </Button>
       </Modal.Footer>
     </Modal>

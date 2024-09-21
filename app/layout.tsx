@@ -19,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Metadata seoTitle="Mint" seoDescription="Best Deals"></Metadata>
+      <Metadata 
+        seoTitle="MintDeals" 
+        seoDescription="MintDeals is a platform that empowers small businesses to offer exclusive tokenized deals as NFTs, while providing access to shared credit facilities backed by stablecoins and Bitcoin. Built on Tron blockchain, MintDeals allows businesses to enhance customer loyalty through unique deal clubs and secure onchain credit via JustLendDAO. Join the future of small business financing and loyalty programs with MintDeals—seamlessly integrating crypto and DeFi for real-world business growth."></Metadata>
       <head>
         {/* You can add meta tags, title, etc., here */}
         <link
@@ -28,13 +30,13 @@ export default function RootLayout({
         />
       </head>
       <AuthProvider>
-      <body className={`bg-mintdeals ${inter.className}`}>
+      <body id="root" className={`bg-mintdeals ${inter.className}`}>
         <Header />
         {children}
         <Footer/>
         <ToastContainer
-              position="bottom-center"
-              autoClose={5000}
+              position="top-center"
+              autoClose={8000}
               hideProgressBar={false}
               closeOnClick
               draggable

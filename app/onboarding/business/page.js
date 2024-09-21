@@ -4,7 +4,7 @@ import StepIndicator from "./stepIndicator";
 import BusinessInfo from "./businessInfo";
 import CreateClub from "./createClub";
 import CreateDeal from "./createDeal";
-import DashboardTour from "./dashboardTour";
+import OnboardSummary from "./onboardSummary";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/lib/AuthContext";
@@ -12,8 +12,9 @@ import { useAuth } from "@/lib/AuthContext";
 import { verifyWallet, signUsingWallet } from "@/lib/wallet";
 import { businessOnboardingMsg } from "@/utils/messageForSign";
 import ClubDealRegistryABI from "@/abi/ClubDealsRegistry.js";
-import { USDDAddress } from "@/lib/address";
+import { USDDAddress, USDTAddress } from "@/lib/address";
 import { createClubOnChain } from "@/lib/club";
+import { toast } from "react-toastify";
 
 const BusinessOnboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -100,34 +101,46 @@ const BusinessOnboarding = () => {
     }
   };
 
-  const complete = async () => {
+  const complete = async (selectedCurrency) => {
     try {
       let verifyWalletResponse = await verifyWallet();
-      if (!verifyWalletResponse || verifyWalletResponse.length == 0) {
+      if (!verifyWalletResponse || verifyWalletResponse.length === 0) {
         setErr(1);
         setErrMsg("Please install or login to Tronlink to proceed.");
         return;
       }
-      if (verifyWalletResponse.code != 200) {
+      if (verifyWalletResponse.code !== 200) {
         setErr(2);
         setErrMsg(verifyWalletResponse.message);
         return;
       }
-
+  
+      const currencyAddress = selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
+      const tokenDecimals = selectedCurrency === "USDT" ? 6 : 18;
+  
+      // Validate membership fee
+      if (!businessData.clubInfo.membershipFee) {
+        setErr(3);
+        setErrMsg("Membership fee is not set.");
+        return;
+      }
+  
+      console.log("membership fee:",businessData.clubInfo.membershipFee);
       let txID = await createClubOnChain(
-        USDDAddress,
+        currencyAddress,
         businessData.clubInfo.membershipFee,
-        true
+        true,
+        tokenDecimals
       );
-
+  
       let signature = await signUsingWallet(businessOnboardingMsg);
-
+  
       let auth = await save(signature, txID);
-
+  
       if (auth) {
         // setIsAuthenticated(true);
         // setJwtToken(auth);
-        console.log("Onboarding completed successfully");
+        toast.success("Onboarding completed successfully! Welcome to MintDeals!");
         router.push("/login", {
           scroll: false,
         });
@@ -140,6 +153,7 @@ const BusinessOnboarding = () => {
       console.error(error);
     }
   };
+    
 
   const renderStep = () => {
     switch (currentStep) {
@@ -162,7 +176,7 @@ const BusinessOnboarding = () => {
       case 3:
         //   return <CreateDeal onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
         // case 4:
-        return <DashboardTour onComplete={complete} onPrev={prevStep} />;
+        return <OnboardSummary onComplete={complete} onPrev={prevStep} businessInfo={businessData.businessInfo} clubInfo={businessData.clubInfo} />;
       default:
         return (
           <BusinessInfo onNext={nextStep} 
