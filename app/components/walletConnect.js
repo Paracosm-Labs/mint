@@ -35,7 +35,7 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   
       // Delay the redirection to give time for state change
       setTimeout(() => {
-        router.push("/login"); // Redirect to login after logout
+        router.push("/"); // Redirect after logout
       }, 50); // Small delay (50ms)
     } catch (error) {
       console.error("Logout error:", error);
@@ -76,7 +76,8 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   // Handle modal close
   const handleCloseModal = () => setShowModal(false);
 
-  const handleBusinessLoginWithClose = () => {
+  const handleBusinessLoginWithClose = (e) => {
+    e.preventDefault(); // Prevent default action
     handleBusinessLogin();
     setShowModal(false); // Close the modal
   };
