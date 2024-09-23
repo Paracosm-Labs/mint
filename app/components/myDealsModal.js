@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Modal, Card, Button } from "react-bootstrap";
 import { loadDealsForClub } from "@/lib/deal";
 import {
@@ -36,7 +36,7 @@ function MyDealsModal({ show, onHide, club }) {
     return dealList;
   };
 
-  const load = async () => {
+  const load = useCallback(async () => {
     let dealList = [];
     let nfts = await loadNFTs();
     let deals = await loadDealsForClub(club);
@@ -52,7 +52,7 @@ function MyDealsModal({ show, onHide, club }) {
       }
     }
     return dealList;
-  };
+  }, [club]);
 
   useEffect(() => {
     setIsLoading(true); // Set loading to true at the start
@@ -65,7 +65,7 @@ function MyDealsModal({ show, onHide, club }) {
         console.error(error);
         setIsLoading(false);
       });
-  }, [club]);
+  }, [load]);
 
   const handleRedeem = (deal) => {
     setRedeemingDealId(deal.tokenId); // Set the deal as being redeemed

@@ -34,7 +34,7 @@ function DealManagement() {
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
         <div className="col-md-7">
           <h1 className="h2">Manage Deals</h1>
-          <p>Create and track your club's deals effortlessly to maximize customer engagement and loyalty.</p>
+          <p>Create and track your club&apos;s deals effortlessly to maximize customer engagement and loyalty.</p>
         </div>
         <div className="col-md-5 text-end">
           {/* <button type="button" className="btn btn-md btn-outline-secondary me-2">

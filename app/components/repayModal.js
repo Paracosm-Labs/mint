@@ -20,6 +20,8 @@ import {
 import approveSpend from "@/lib/approveSpend";
 import trc20ABI from "@/abi/trc20";
 import Web3 from "web3";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
   const [paymentAmount, setPaymentAmount] = useState("");
@@ -63,10 +65,12 @@ function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
 
       console.log("Repayment submitted successfully");
       if (onSuccess) onSuccess();
+      toast.success("Repayment submitted successfully");
       onHide();
     } catch (err) {
       console.error("Error processing repayment:", err);
       setError("Failed to process repayment. Please try again.");
+      toast.error("Failed to process repayment. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -75,7 +79,7 @@ function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       Basic Credit repays your individual debt, while Shared Credit repays the
-      community's shared debt pool.
+      platform&apos;s shared debt pool.
     </Tooltip>
   );
 

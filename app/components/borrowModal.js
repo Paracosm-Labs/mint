@@ -18,6 +18,8 @@ import {
   USDTAddress,
   USDTcTokenAddress,
 } from "@/contracts/tronContracts";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
   const [borrowAmount, setBorrowAmount] = useState("");
@@ -55,10 +57,12 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
 
       console.log("Borrow request submitted successfully");
       if (onSuccess) onSuccess();
+      toast.success("Borrow request submitted successfully");
       onHide();
     } catch (err) {
       console.error("Error borrowing tokens:", err);
       setError("Failed to borrow tokens. Please try again.");
+      toast.error("Failed to borrow tokens. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -67,7 +71,7 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       Basic Credit uses your individual credit limit, while Shared Credit
-      utilizes the community's shared credit pool.
+      utilizes the platform&apos;s shared credit pool.
     </Tooltip>
   );
 

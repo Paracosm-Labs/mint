@@ -11,6 +11,7 @@ import { USDDAddress, USDTAddress } from "@/lib/address";
 import { ClipLoader } from "react-spinners";
 import JoinClubModal from "../components/joinClubModal";
 import EmptyState from "../components/emptyState";
+import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -326,7 +327,9 @@ function ExploreClubs() {
           {sortedClubs.map((club) => (
             <div className="col-md-4 mb-4" key={club.id}>
               <div className="card club-card">
-                <img
+                <Image
+                  height={200}
+                  width={400}
                   src={club.image}
                   className="card-img-top"
                   alt={club.name}

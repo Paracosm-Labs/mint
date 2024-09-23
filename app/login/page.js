@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import login from "@/lib/login";
+import Image from "next/image";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,7 +26,7 @@ const Login = () => {
         <div className="row">
         <div className="col-md-4"></div>
         <div className="col-md-4 text-center">
-          <img src="/logo192.png" height="192px"/>
+          <Image src="/logo192.png" height={192} width={192} alt="MintDeals Logo"/>
         <p className="h3 mt-5 my-3 fw-normal">Welcome to MintDeals</p>
         <p className="mb-3 text-body-secondary">
           Remember to Login to Tronlink before proceeding!

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from "next/image";
 
 const CurrencySelector = ({ selectedCurrency, setSelectedCurrency }) => {
   return (
@@ -15,10 +16,12 @@ const CurrencySelector = ({ selectedCurrency, setSelectedCurrency }) => {
             autoComplete="off"
           />
           <label className="btn btn-outline-success" htmlFor={currency.toLowerCase()}>
-            <img
+            <Image
               src={`/${currency.toLowerCase()}.png`}
               alt={currency}
-              style={{ width: '24px', marginRight: '4px' }}
+              width= {24}
+              height={24}
+              style={{ marginRight: '4px' }}
             />
             {currency}
           </label>

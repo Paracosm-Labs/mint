@@ -35,7 +35,7 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   
       // Delay the redirection to give time for state change
       setTimeout(() => {
-        router.push("/"); // Redirect to homepage after logout
+        router.push("/login"); // Redirect to login after logout
       }, 50); // Small delay (50ms)
     } catch (error) {
       console.error("Logout error:", error);
@@ -76,6 +76,11 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   // Handle modal close
   const handleCloseModal = () => setShowModal(false);
 
+  const handleBusinessLoginWithClose = () => {
+    handleBusinessLogin();
+    setShowModal(false); // Close the modal
+  };
+
   return (
     <>
       <Button
@@ -98,7 +103,7 @@ const WalletConnect = ({ handleBusinessLogin }) => {
         </Modal.Header>
         <Modal.Body className="text-center">
           <p>You are connected to your wallet.<br/>Please log in as a business user.</p>
-          <Button onClick={handleBusinessLogin} className="btn-kmint-blue">
+          <Button onClick={handleBusinessLoginWithClose} className="btn-kmint-blue">
             Business Login
           </Button>
         </Modal.Body>

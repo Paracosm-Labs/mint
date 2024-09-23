@@ -1,6 +1,6 @@
 "use client";
 import { useAuth } from "@/lib/AuthContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { confirmRedemption, getRedemptionRequests } from "@/lib/redemptions";
 import { formatDate } from "@/lib/format";
 import EmptyState from './emptyState';
@@ -13,7 +13,7 @@ function RedemptionsTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [approvingRedemptionId, setApprovingRedemptionId] = useState(null);
 
-  const loadRedemptions = async () => {
+  const loadRedemptions = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await getRedemptionRequests(data.userData.clubs);
@@ -23,7 +23,7 @@ function RedemptionsTable() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [data.userData.clubs]);
 
   useEffect(() => {
     loadRedemptions(); // Initial load
@@ -33,7 +33,7 @@ function RedemptionsTable() {
     }, 120000); // 120 seconds
 
     return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [data.userData.clubs]);
+  }, [loadRedemptions]);
 
   const approveRedemption = async (redemption) => {
     setApprovingRedemptionId(redemption.id);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card, ProgressBar, Row, Col, Badge, Spinner } from "react-bootstrap";
 import { creditManager } from "@/contracts/CreditManager";
 import { creditFacility } from "@/contracts/CreditFacility";
@@ -60,7 +60,7 @@ function CreditSummary({ refresh }) {
 
   const userAddress = window.tronWeb.defaultAddress.base58;
 
-  const fetchBasicCreditInfo = async () => {
+  const fetchBasicCreditInfo = useCallback(async () => {
     try {
       const creditFacilityContract = await creditFacility();
       const basicLimit =
@@ -84,9 +84,9 @@ function CreditSummary({ refresh }) {
         interestRate: 0,
       });
     }
-  };
+  }, [userAddress]);
 
-  const fetchSharedCreditInfo = async () => {
+  const fetchSharedCreditInfo = useCallback(async () => {
     try {
       const creditManagerContract = await creditManager();
       const creditData = await creditManagerContract.getCreditInfo(userAddress);
@@ -108,12 +108,12 @@ function CreditSummary({ refresh }) {
         interestRate: 0,
       });
     }
-  };
+  }, [userAddress]);
 
   useEffect(() => {
     fetchBasicCreditInfo();
     fetchSharedCreditInfo();
-  }, [refresh]);
+  }, [refresh, fetchBasicCreditInfo, fetchSharedCreditInfo]);
 
   const calcUsedPercentage = (used, limit) =>
     limit > 0 ? ((limit - used) / limit) * 100 : 0;

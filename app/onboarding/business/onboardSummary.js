@@ -3,6 +3,7 @@ import CurrencySelector from '../../components/currencySelector';
 import { getClubCreationFee } from "../../../lib/club";
 import ClubDealRegistryABI from "../../../abi/ClubDealsRegistry"; 
 import { clubDealRegistryAddress } from "../../../lib/address"; 
+import Image from "next/image";
 
 const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
   const [selectedCurrency, setSelectedCurrency] = useState('USDT');
@@ -113,10 +114,12 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
             </>
           ) : (
             <>
-              <img
+              <Image
                 src={`/${selectedCurrency.toLowerCase()}.png`}
                 alt={selectedCurrency}
-                style={{ width: '24px', marginRight: '4px', marginLeft: '4px' }}
+                width={24}
+                height={24}
+                style={{ marginRight: '4px', marginLeft: '4px' }}
               />&nbsp;
               Pay & Complete Onboarding
             </>

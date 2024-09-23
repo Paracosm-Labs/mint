@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { getClubDetails, getClubIdFromEvent } from "@/lib/club";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -14,20 +14,30 @@ function StatsCards() {
   const [statsData, setStatsData] = useState([]);
   console.log("userData", data);
 
-  const load = async () => {
-    const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
-    const clubDetails = await getClubDetails(clubId);
-    console.log("clubDetails", clubDetails);
-    setStatsData([
-      ...statsData,
-      { title: "Members", value: clubDetails.memberCount },
-    ]);
-  };
+  const load = useCallback(async () => {
+    try {
+      const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
+      const clubDetails = await getClubDetails(clubId);
+      
+      // Ensure clubDetails is defined before accessing its properties
+      if (clubDetails) {
+        setStatsData([
+          { title: "Members", value: clubDetails.memberCount || 0 }, // Default to 0 if undefined
+          // Add other stats here if available
+        ]);
+      } else {
+        console.error("Club details not found.");
+      }
+    } catch (error) {
+      console.error("Error loading club details:", error);
+    }
+  }, [data]);
+  
 
   useEffect(() => {
     load();
     // return () => {}
-  }, []);
+  }, [load]);
   return (
     <div className="row">
       {statsData.map((stat, index) => (

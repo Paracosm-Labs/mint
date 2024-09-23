@@ -1,3 +1,4 @@
+// utils/config.ts
 "server only"
 
 import { PinataSDK } from "pinata"

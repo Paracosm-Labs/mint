@@ -118,6 +118,7 @@ import { Button } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import login from "@/lib/login";
 import WalletConnect from "./walletConnect"; // Import WalletConnect
+import Image from "next/image";
 
 function Header() {
   const { isAuthenticated } = useAuth();
@@ -188,11 +189,11 @@ function Header() {
     <header className="mintdeals navbar navbar-expand-lg navbar-dark">
       <div className="container">
         <Link className="navbar-brand" href="/">
-        <img
+        <Image
           src="/logo192.png"
           alt="MintDeals Logo"
-          width="40"
-          height="40"
+          width={40}
+          height={40}
           className="d-inline-block align-top border border-white shadow-lg"
           style={{
             padding: "5px",

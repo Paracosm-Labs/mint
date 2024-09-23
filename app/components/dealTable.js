@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Table } from "react-bootstrap";
 import { useAuth } from "@/lib/AuthContext";
 import { getDealDetails, getDealIdFromEvent } from "@/lib/deal";
@@ -12,7 +12,7 @@ function DealTable({ onEdit }) {
   const [deals, setDeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadDeals = async () => {
+  const loadDeals = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -55,7 +55,8 @@ function DealTable({ onEdit }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  },[data]);
+
   useEffect(() => {
     loadDeals();
 
@@ -66,7 +67,7 @@ function DealTable({ onEdit }) {
 
     // Clean up the interval on component unmount
     return () => clearInterval(interval);
-  }, []);
+  }, [loadDeals]);
 
   if (isLoading) {
     return (
@@ -111,7 +112,7 @@ function DealTable({ onEdit }) {
                 <Image
                   loader={() => deal.image}
                   // fill={true}
-                  width={100}
+                  width={180}
                   height={100}
                   src={deal.image}
                   alt="Uploaded Image"

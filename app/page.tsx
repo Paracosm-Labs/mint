@@ -3,6 +3,7 @@ import { useAuth } from "@/lib/AuthContext";
 import login from "@/lib/login";
 import { getAddress, verifyWallet } from "@/lib/wallet";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -105,7 +106,11 @@ export default function Home() {
               </div>
             </div>
             <div className="col-md-6">
-              <img src="/images/hero-image.jpg" alt="MintDeals platform illustration" className="img-fluid  d-none" />
+              <Image src="/images/hero-image.jpg"
+               alt="MintDeals platform illustration" 
+               height={500}
+               width={300}
+               className="img-fluid  d-none" />
             </div>
           </div>
         </div>
@@ -118,7 +123,7 @@ export default function Home() {
           <div className="row justify-content-center align-items-center">
             {['logo1.png', 'logo2.png', 'logo3.png', 'logo4.png'].map((logo, index) => (
               <div key={index} className="col-6 col-md-3 mb-3 mb-md-0">
-                <img src={`/images/${logo}`} alt={`Trusted company ${index + 1}`} className="img-fluid" style={{maxHeight: '40px', filter: 'grayscale(100%) opacity(70%)'}} />
+                <Image src={`/images/${logo}`} alt={`Trusted company ${index + 1}`} className="img-fluid" height={40} width={80} style={{filter: 'grayscale(100%) opacity(70%)'}} />
               </div>
             ))}
           </div>
@@ -191,9 +196,9 @@ export default function Home() {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8 text-center">
-              <img src="/images/quote.svg" alt="Quote" className="mb-4" style={{width: '48px'}} />
+              <Image src="/images/quote.svg" alt="Quote" className="mb-4 d-none" width={48} height={48} />
               <blockquote className="blockquote mb-4">
-                <p className="mb-0 font-italic">"MintDeals transformed how we engage with our customers. Our loyalty program participation increased by 200%, and we've seen a 30% boost in repeat business."</p>
+                <p className="mb-0 font-italic">&quot;MintDeals transformed how we engage with our customers. Our loyalty program participation increased by 200%, and we&apos;ve seen a 30% boost in repeat business.&quot;</p>
               </blockquote>
               <figcaption className="blockquote-footer">
                 Sarah Johnson, <cite title="Source Title" />Owner of Blossom Cafe

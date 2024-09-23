@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import CurrencySelector from './currencySelector';
+import Image from "next/image";
 
 const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurrency, onJoin }) => {
   const [loading, setLoading] = useState(false); // Loading state to handle button behavior
@@ -22,10 +23,12 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
       <Modal.Body className="px-4">
         <div className="row">
           <div className="col-md-6">
-            <img
+            <Image
               src={club?.image || "/api/placeholder/400/300"}
               className="img-fluid rounded-3 mb-3 w-100"
               alt={club?.name}
+              height={200}
+              width={300}
             />
           </div>
           <div className="col-md-6">
@@ -72,10 +75,12 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
           ) : (
             <>
               Join for ${club?.membershipFee}
-              <img
+              <Image
                 src={`/${selectedCurrency.toLowerCase()}.png`}
                 alt={selectedCurrency}
-                style={{ width: '24px', marginRight: '4px', marginLeft: '4px' }}
+                width={24}
+                height={24}
+                style={{ marginRight: '4px', marginLeft: '4px' }}
               />
             </>
           )}
