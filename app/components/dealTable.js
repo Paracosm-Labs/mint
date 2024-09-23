@@ -59,10 +59,10 @@ function DealTable({ onEdit }) {
   useEffect(() => {
     loadDeals();
 
-    // Set up an interval to refresh deals every 30 seconds
+    // Set up an interval to refresh deals every 120 seconds
     const interval = setInterval(() => {
       loadDeals();
-    }, 30000); // 30 seconds
+    }, 120000); // 120 seconds
 
     // Clean up the interval on component unmount
     return () => clearInterval(interval);

@@ -16,11 +16,12 @@ import {
   USDDAddress,
   USDDcTokenAddress,
   USDTAddress,
+  USDTcTokenAddress,
 } from "@/contracts/tronContracts";
 
 function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
   const [borrowAmount, setBorrowAmount] = useState("");
-  const [purpose, setPurpose] = useState("");
+  // const [purpose, setPurpose] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [borrowFrom, setBorrowFrom] = useState("creditFacility");
@@ -42,8 +43,8 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
     setError(null);
 
     try {
-      const tokenAddress = USDDAddress;
-      const cTokenAddress = USDDcTokenAddress;
+      const tokenAddress = USDTAddress;
+      const cTokenAddress = USDTcTokenAddress;
       if (borrowFrom === "creditManager") {
         const manager = await creditManager();
         await manager.borrow(tokenAddress, borrowAmount);
@@ -120,7 +121,7 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
             </OverlayTrigger>
           </div>
           <Form.Group className="mb-4">
-            <Form.Label>Borrow Amount (USD)</Form.Label>
+            <Form.Label>Borrow Amount (USDT)</Form.Label>
             <div className="input-group">
               <span className="input-group-text">$</span>
               <Form.Control
@@ -150,12 +151,12 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
               Credit Utilization: {utilizationPercentage.toFixed(2)}%
             </small>
           </Form.Group>
-          <Form.Group className="mb-4">
+          {/* <Form.Group className="mb-4 d-none">
             <Form.Label>Purpose of Borrowing</Form.Label>
-            <Form.Select
+            <Form.Select 
               value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-              required
+              // onChange={(e) => setPurpose(e.target.value)}
+              
             >
               <option value="">Select a purpose</option>
               <option value="inventory">Inventory Purchase</option>
@@ -164,7 +165,7 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
               <option value="expansion">Business Expansion</option>
               <option value="other">Other</option>
             </Form.Select>
-          </Form.Group>
+          </Form.Group> */}
           {error && <Alert variant="danger">{error}</Alert>}
           <div className="d-flex justify-content-between align-items-center">
             <Button variant="outline-secondary" onClick={onHide}>
@@ -173,7 +174,7 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
             <Button
               variant="success"
               type="submit"
-              disabled={loading || !borrowAmount || !purpose}
+              disabled={loading || !borrowAmount}
             >
               {loading ? (
                 <>

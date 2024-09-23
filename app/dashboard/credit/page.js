@@ -31,11 +31,11 @@ const CreditPage = () => {
     setRefresh(!refresh); // Toggle to trigger a refresh
   };
 
-  // Auto refresh every 10 seconds
+  // Auto refresh every 60 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setRefresh((prevRefresh) => !prevRefresh);
-    }, 30000); // 30 seconds
+    }, 60000); // 60 seconds
 
     return () => clearInterval(interval); // Clean up on unmount
   }, []);

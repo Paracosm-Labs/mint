@@ -1,5 +1,6 @@
-DB_CONN_STR=connstr
-SECRET=auth_secret
-PINATA_API_KEY=your-pinata-api-key
-PINATA_SECRET_API_KEY=your-pinata-secret-api-key
-PINATA_GATEWAY=gateway
+DB_CONN_STR=xxx
+SECRET=xxx
+PINATA_JWT=xxx
+PINATA_API_KEY=xxx
+PINATA_SECRET_API_KEY=xxx
+NEXT_PUBLIC_GATEWAY_URL=xxx

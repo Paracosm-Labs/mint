@@ -25,6 +25,7 @@ const Login = () => {
         <div className="row">
         <div className="col-md-4"></div>
         <div className="col-md-4 text-center">
+          <img src="/logo192.png" height="192px"/>
         <p className="h3 mt-5 my-3 fw-normal">Welcome to MintDeals</p>
         <p className="mb-3 text-body-secondary">
           Remember to Login to Tronlink before proceeding!

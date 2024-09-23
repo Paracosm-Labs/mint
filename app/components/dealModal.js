@@ -5,18 +5,34 @@ import { useAuth } from "@/lib/AuthContext";
 import { getClubIdFromEvent } from "@/lib/club";
 import Upload from "./upload";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DealModal({ show, onHide, deal }) {
   const { data } = useAuth();
   const [dealImage, setDealImage] = useState(deal?.image || "");
   const [maxSupply, setMaxSupply] = useState(deal?.maxSupply || "");
-  const [dealDescription, setDealDescription] = useState(
-    deal?.description || ""
-  );
+  const [dealDescription, setDealDescription] = useState(deal?.description || "");
   const [dealValidTo, setDealValidTo] = useState(deal?.validTo || "");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [url, setUrl] = useState();
+
+  // Function to reset all form fields
+  const resetFields = () => {
+    setDealImage("");
+    setMaxSupply("");
+    setDealDescription("");
+    setDealValidTo("");
+    setUrl("");
+    setErrors({});
+  };
+
+  const handleClose = () => {
+    resetFields(); // Reset the fields when modal is closed
+    onHide(); // Call the onHide prop to close the modal
+  };
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -87,11 +103,12 @@ function DealModal({ show, onHide, deal }) {
       console.log("deal txID", txID);
 
       let resJson = await save(txID, dealDescription, url);
-
-      onHide();
+      toast.success("Deal created successfully!");
+      handleClose();
     } catch (error) {
       console.error("Error saving deal:", error);
-      // Here you might want to show an error message to the user
+       toast.error("Failed to create the deal. Please try again.");
+
     } finally {
       setIsLoading(false);
     }
@@ -108,15 +125,15 @@ function DealModal({ show, onHide, deal }) {
             <Form.Label>Upload Image</Form.Label>
             <Upload setImageUrl={setUrl}></Upload>
             {url && (
-              <div className="mt-3">
+              <div className="mt-3 text-center">
                 {/** style accordingy */}
                 <Image
                   loader={() => url}
                   // fill={true}
-                  width={200}
+                  width={400}
                   height={200}
                   src={url}
-                  alt="Uploaded Image"
+                  alt="Uploaded Deal Image"
                 />
               </div>
             )}

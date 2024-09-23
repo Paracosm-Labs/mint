@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 
-const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
+const WalletConnect = ({ handleBusinessLogin }) => {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [isTronLinkConnected, setIsTronLinkConnected] = useState(false);
   const [tronAddress, setTronAddress] = useState(null);
+  const [showModal, setShowModal] = useState(false); // State for modal visibility
   const router = useRouter();
 
   // TronLink connection handler
@@ -16,6 +17,8 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
         const address = window.tronWeb.defaultAddress.base58;
         setTronAddress(address);
         setIsTronLinkConnected(true);
+
+        setShowModal(false);
       } else {
         alert("Please install TronLink to connect your wallet.");
       }
@@ -24,21 +27,16 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
     }
   };
 
-  // Manage logout with effect to avoid rendering conflicts
-  useEffect(() => {
-    const handleLogout = () => {
-      if (!isAuthenticated) {
-        // If not authenticated, redirect to home
-        router.push("/", { scroll: false });
-      }
-    };
-    handleLogout();
-  }, [isAuthenticated, router]);
-
+  // Manage logout explicitly within the handler
   const handleLogoutClick = () => {
     try {
       console.log("logging out");
-      setIsAuthenticated(false); // This will trigger the useEffect to handle navigation
+      setIsAuthenticated(false); // Set auth state to false
+  
+      // Delay the redirection to give time for state change
+      setTimeout(() => {
+        router.push("/"); // Redirect to homepage after logout
+      }, 50); // Small delay (50ms)
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -58,7 +56,8 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
     if (isAuthenticated) {
       handleLogoutClick();
     } else if (isTronLinkConnected) {
-      alert("Wallet is connected, but you're not logged in as a business user.");
+      // Show modal for business login
+      setShowModal(true);
     } else {
       handleBusinessLogin().then(() => {
         connectTronLink(); // Connect TronLink after business login
@@ -66,6 +65,7 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
     }
   };
 
+  // Check TronLink connection when the component mounts
   useEffect(() => {
     if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
       setTronAddress(window.tronWeb.defaultAddress.base58);
@@ -73,19 +73,37 @@ const WalletConnect = ({ handleBusinessLogin, handleBusinessLogout }) => {
     }
   }, []);
 
+  // Handle modal close
+  const handleCloseModal = () => setShowModal(false);
+
   return (
-    <Button
-      className={
-        isAuthenticated
-          ? "btn btn-kmint"
-          : isTronLinkConnected
-          ? "btn btn-success"
-          : "btn btn-kmint-blue"
-      }
-      onClick={handleButtonClick}
-    >
-      {getButtonText()}
-    </Button>
+    <>
+      <Button
+        className={
+          isAuthenticated
+            ? "btn btn-kmint"
+            : isTronLinkConnected
+            ? "btn btn-success"
+            : "btn btn-kmint-blue"
+        }
+        onClick={handleButtonClick}
+      >
+        {getButtonText()}
+      </Button>
+
+      {/* Modal for Business Login */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Business Login</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          <p>You are connected to your wallet.<br/>Please log in as a business user.</p>
+          <Button onClick={handleBusinessLogin} className="btn-kmint-blue">
+            Business Login
+          </Button>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 

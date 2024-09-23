@@ -52,7 +52,7 @@ function RedemptionsTable() {
       loadRedemptions(); // Call the load function to refresh data
     } catch (error) {
       console.error("Error confirming redemption:", error);
-      alert("Failed to confirm redemption.");
+      toast.error("Failed to confirm redemption.");
     } finally {
       setApprovingRedemptionId(null); // Reset after the process
     }

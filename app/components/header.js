@@ -188,6 +188,20 @@ function Header() {
     <header className="mintdeals navbar navbar-expand-lg navbar-dark">
       <div className="container">
         <Link className="navbar-brand" href="/">
+        <img
+          src="/logo192.png"
+          alt="MintDeals Logo"
+          width="40"
+          height="40"
+          className="d-inline-block align-top border border-white shadow-lg"
+          style={{
+            padding: "5px",
+            marginRight: "10px",
+            backgroundColor: "white",
+            borderRadius: "15%", // Creates the rounded square effect
+            marginTop: "-5px",
+          }}
+        />
           MintDeals
         </Link>
         <button className="navbar-toggler" type="button" onClick={toggleMenu}>
