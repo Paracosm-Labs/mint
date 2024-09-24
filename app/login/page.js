@@ -25,7 +25,6 @@ const Login = () => {
     login(postLogin);
   };
   return (<>
-    // <main className="d-flex align-items-center py-2 form-signin w-100 m-auto">
       <div className="kmint container">
         <div className="row">
         <div className="col-md-4"></div>
@@ -54,7 +53,6 @@ const Login = () => {
         draggable
         pauseOnHover
         />
-    // </main>
     </>
   );
 };
