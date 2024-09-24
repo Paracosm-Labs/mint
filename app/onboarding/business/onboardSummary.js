@@ -8,6 +8,7 @@ import Image from "next/image";
 const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
   const [selectedCurrency, setSelectedCurrency] = useState('USDT');
   const [clubCreationFee, setClubCreationFee] = useState(null); // State for the club creation fee
+  // const [balance, setBalance] = useState(0);
   const [loadingFee, setLoadingFee] = useState(true); // Loading state for fetching fee
   const [loading, setLoading] = useState(false); // Loading state for button
 
@@ -59,7 +60,11 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
           <h5>Club Information</h5>
         </div>
         <div className="card-body">
+          <Image src={clubInfo.image} alt="Club Image" 
+            height={200} width={400}   
+          style={{ width: '100%', height: 'auto', marginTop: '10px', marginBottom:'20px'}} />
           <p><strong>Club Name:</strong> {clubInfo.name}</p>
+          {/* <p><strong>Club Image URL:</strong> {clubInfo.image}</p> */}
           <p><strong>Description:</strong> {clubInfo.description}</p>
           <p><strong>Membership Fee:</strong> {clubInfo.membershipFee} USDT/USDD</p>
         </div>
@@ -79,6 +84,7 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
           <>
             Club Creation Fee: <strong>${clubCreationFee}</strong>.
             <br />
+            {/* Your Balance: <strong>{balance}</strong> {selectedCurrency} */}
             Please ensure your TronLink wallet is connected and has sufficient funds.
           </>
         )}
@@ -89,6 +95,7 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
         <CurrencySelector
           selectedCurrency={selectedCurrency}
           setSelectedCurrency={setSelectedCurrency}
+          // onBalanceChange={setBalance}
         />
       </div>
       <hr/>

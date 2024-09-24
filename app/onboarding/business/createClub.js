@@ -1,4 +1,8 @@
+// app/onboarding/business/createClub.js
 import React, { useState } from 'react';
+import Image from "next/image";
+import Upload from '../../components/upload';
+
 
   const CreateClub = ({ onNext, onPrev, onDataUpdate, data }) => {
     const [type, setClubType] = useState(data.type || 'essential');
@@ -9,7 +13,7 @@ import React, { useState } from 'react';
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onDataUpdate("clubInfo",{ type, /*clubImage,*/ description, name,membershipFee });
+    onDataUpdate("clubInfo",{ type, image: clubImage?.url || clubImage, description, name,membershipFee });
     onNext();
   };
 
@@ -26,7 +30,7 @@ import React, { useState } from 'react';
           onChange={(e) => setClubType(e.target.value)}
           required disabled
         >
-          <option value="essential" selected>Essential - Customers pay a one time fee to join your club.</option>
+          <option value="essential">Essential - Customers pay a one time fee to join your club.</option>
         </select>
         <small className="form-text text-muted">
           More options coming soon!
@@ -54,16 +58,15 @@ import React, { useState } from 'react';
           // required
         />
       </div>
-      {/* <div className="mb-3">
-        <label htmlFor="clubImage" className="form-label">Image</label>
-        <input
-          type="file"
-          className="form-control"
-          id="clubImage"
-          value={clubImage}
-          onChange={(e) => setClubImage(e.target.value)}
-        />
-      </div> */}
+      <div className="mb-4">
+        <label htmlFor="clubImage" className="form-label">Club Image</label>
+        <Upload setImageUrl={setClubImage} /> {/* Using the Upload component */}
+        {clubImage && (
+          <Image src={clubImage.url} alt="Club Image" 
+            height={200} width={400}   
+          style={{ width: '100%', height: 'auto', marginTop: '10px' }} />
+        )}<small className="form-text text-muted">Recommended Dimensions - height 400px x width 800px</small>
+      </div>
       <div className="mb-3">
         <label htmlFor="membershipFee" className="form-label">Membership Cost</label>
         <input
@@ -72,11 +75,11 @@ import React, { useState } from 'react';
           id="membershipFee"
           value={membershipFee}
           onChange={(e) => setClubPrice(e.target.value)}
-          min="5"
+          min="10"
           // required
         />
         <small className="form-text text-muted">
-          Minimum value is $5 USDT/USDD
+          Minimum value is $10 USDT/USDD
         </small>
       </div>
       <div className="d-flex justify-content-between">

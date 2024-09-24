@@ -28,6 +28,7 @@ const BusinessOnboarding = () => {
       type: "essential",
       name: "",
       description: "",
+      image: "",
       membershipFee: "",
     },
   });

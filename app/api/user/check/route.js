@@ -1,3 +1,4 @@
+// app/api/user/check/route.js
 import { NextResponse } from "next/server";
 
 import dbConnect from "@/lib/dbConnect";

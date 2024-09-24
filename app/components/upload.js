@@ -96,7 +96,7 @@ export default function Upload({ setImageUrl }) {
   };
 
   return (
-    <div>
+    <div className="border p-3">
       <input type="file" accept="image/jpeg, image/png" onChange={handleChange} />
       {/* {previewUrl && (
         <Image src={previewUrl} alt="Preview" 
@@ -104,7 +104,7 @@ export default function Upload({ setImageUrl }) {
         height={200} 
         style={{ width: '100%', height: 'auto', marginTop: '10px' }} />
       )} */}
-      <button disabled={uploading} onClick={uploadFile}>
+      <button className="btn btn-outline-secondary" disabled={uploading} onClick={uploadFile}>
         {uploading ? "Uploading..." : "Upload"}
       </button>
     </div>

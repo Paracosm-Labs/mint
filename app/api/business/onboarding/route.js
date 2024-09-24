@@ -1,3 +1,4 @@
+//app/api/business/onboarding/route.js
 import { NextResponse } from "next/server";
 import { businessOnboardingMsg } from "@/utils/messageForSign";
 

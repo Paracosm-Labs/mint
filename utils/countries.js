@@ -757,12 +757,12 @@ const countries = [
         "code": "LC"
     },
     {
-        "name": "Saint Martin",
+        "name": "Saint Martin (French)",
         "code": "MF"
     },
     {
-        "name": "Saint Martin",
-        "code": "MF"
+        "name": "Sint Maarten (Dutch)",
+        "code": "SX"
     },
     {
         "name": "Saint Pierre and Miquelon",
@@ -811,10 +811,6 @@ const countries = [
     {
         "name": "Singapore",
         "code": "SG"
-    },
-    {
-        "name": "Sint Maarten",
-        "code": "SX"
     },
     {
         "name": "Slovakia",

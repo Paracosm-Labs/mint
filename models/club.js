@@ -1,3 +1,4 @@
+//models/club.js
 import mongoose, { Schema, Types } from "mongoose";
 
 const ClubSchema = new mongoose.Schema(
@@ -21,6 +22,10 @@ const ClubSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+    },
+    image: {
+      type: String, 
+      required: true,
     },
     txID: {
       type: String,

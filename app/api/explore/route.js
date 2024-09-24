@@ -27,7 +27,7 @@ const createClubInfo = (clubAndBusiness) => {
     clubInfo.membershipFee = d.membershipFee;
     clubInfo.category = d.business.industry;
     clubInfo.country = d.business.country;
-    clubInfo.image = "https://picsum.photos/300/150?random=9";
+    clubInfo.image = d.image; //"https://picsum.photos/300/150?random=9";
     clubInfo.members = 0;
     clubInfo.txID = d.txID;
     clubInfo.onChainId = d.onChainId;

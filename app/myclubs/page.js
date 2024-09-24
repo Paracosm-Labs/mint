@@ -48,7 +48,7 @@ function CustomerClubs() {
         let clubs = resJson.clubs.map((club) => {
           return {
             _id: club._id,
-            image: "https://picsum.photos/300/150?random=3",
+            image: club.image,
             name: club.name,
             description: club.clubDescription,
             price: null,
