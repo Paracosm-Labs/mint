@@ -65,18 +65,14 @@ const WalletConnect = ({ handleBusinessLogin }) => {
     if (isAuthenticated) {
       handleLogoutClick();
     } else if (isTronLinkConnected) {
-      setShowModal(true);
+      setShowModal(true); // Show modal for business login
     } else {
-      handleBusinessLogin()
-        .then(() => {
-          connectTronLink(); // Connect TronLink after business login
-        })
-        .catch((error) => {
-          console.error("Error during TronLink connection:", error);
-        });
+      // Handle TronLink connection and then trigger business login
+      handleBusinessLogin().then(() => {
+        connectTronLink();
+      });
     }
   };
-  
 
   // Check TronLink connection when the component mounts
   useEffect(() => {
