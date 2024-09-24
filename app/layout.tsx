@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <Metadata 
         seoTitle="MintDeals" 
-        seoDescription="MintDeals is a platform that empowers small businesses to offer exclusive tokenized deals as NFTs, while providing access to shared credit facilities backed by stablecoins and Bitcoin. Built on Tron blockchain, MintDeals allows businesses to enhance customer loyalty through unique deal clubs and secure onchain credit via JustLendDAO. Join the future of small business financing and loyalty programs with MintDeals—seamlessly integrating crypto and DeFi for real-world business growth."></Metadata>
+        seoDescription="MintDeals empowers small businesses with the ability to offer exclusive tokenized deals as NFTs, while providing access to a shared credit facility backed by stablecoins and Bitcoin. Built on Tron blockchain, MintDeals allows businesses to enhance customer loyalty through unique deal clubs and secure onchain credit via JustLendDAO. Join the future of small business financing and loyalty programs with MintDeals—seamlessly integrating crypto and DeFi for real-world business growth."></Metadata>
       <head>
         {/* You can add meta tags, title, etc., here */}
         <link

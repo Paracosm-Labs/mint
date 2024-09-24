@@ -110,7 +110,7 @@ function CustomerClubs() {
 
   if (isLoading) {
     return (
-        <div className="kmint container mt-2" style={{
+        <div className="kmint container" style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',

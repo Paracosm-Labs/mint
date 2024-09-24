@@ -53,7 +53,7 @@ function DealModal({ show, onHide, deal }) {
     let payload = {
       description: description,
       txID: txID,
-      image: imageUrl,
+      image: imageUrl.url,
       owner: data.userData.user._id,
       business: data.userData.businesses._id,
       club: data.userData.clubs._id,
@@ -88,8 +88,8 @@ function DealModal({ show, onHide, deal }) {
 
       let metadataUri = {
         description: dealDescription,
-        external_url: "https://mintdeals/deals/",
-        image: url,
+        external_url: "https://mintdeals.netlify.app/deals/",
+        image: url.url,
         name: metadataName,
       };
 
@@ -128,11 +128,11 @@ function DealModal({ show, onHide, deal }) {
               <div className="mt-3 text-center">
                 {/** style accordingy */}
                 <Image
-                  loader={() => url}
+                  loader={() => url.url}  
                   // fill={true}
-                  width={400}
-                  height={200}
-                  src={url}
+                  width={400} 
+                  height={200}  
+                  src={url.url} 
                   alt="Uploaded Deal Image"
                 />
               </div>

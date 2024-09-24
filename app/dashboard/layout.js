@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from 'react';
 import Sidebar from "../components/sidebar";
 import { useAuth } from "@/lib/AuthContext";
 import { redirect } from "next/navigation";
@@ -11,8 +12,15 @@ export default function DashboardLayout({ children }) {
     redirect("/login");
   }
 
+    useEffect(() => {
+      const container = document.querySelector('.kmint.container');
+      if (container) {
+        container.classList.add('fade-up');
+      }
+    }, []);
+
   return (
-    <div className="kmint container mt-2">
+    <div className="kmint container mt-4">
       <div className="row">
         <Sidebar />
         {children}

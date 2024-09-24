@@ -89,15 +89,15 @@ export default function Home() {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-6 mb-5 mb-md-0">
-              <h1 className="display-4 fw-bold text-dark-green mb-4 mt-5">
+              <h1 className="display-4 fw-bold text-dark-green mt-5">
                 Supercharge Your Business with MintDeals
               </h1>
               <p className="lead mb-4">
-                Join 50+ businesses revolutionizing their growth. Create clubs, unlock exclusive deals, and access smart credit - all powered by blockchain.
+                Join 2+ businesses revolutionizing their growth. Create clubs, unlock exclusive deals, and access smart credit - all powered by blockchain.
               </p>
               <div className="d-grid gap-2 d-md-flex justify-content-md-start">
               <button id="ctaExploreButton" className="btn btn-mint btn-lg px-4 me-md-2">
-                <Link href="/explore" className="nav-link">Discover Clubs Near You</Link>
+                <Link href="/explore" className="nav-link">Discover Clubs</Link>
               </button>
                 
                 <button id="ctaOnboardButton" className="btn btn-outline-dark btn-lg px-4" onClick={handleSignIn}>
@@ -117,7 +117,7 @@ export default function Home() {
       </section>
 
       {/* Social Proof */}
-      <section className="py-5 bg-white">
+      <section className="py-5 bg-white d-none">
         <div className="container text-center">
           <p className="lead mb-4">Trusted by over 50 local business communities</p>
           <div className="row justify-content-center align-items-center">
@@ -158,21 +158,21 @@ export default function Home() {
       {/* How It Works */}
       <section className="py-5 py-md-7 bg-light">
         <div className="container">
-          <h2 className="text-center mb-5">Get Started in 4 Simple Steps</h2>
+        <h2 className="text-center mb-5">Grow Your Business in 4 Powerful Steps</h2>
           <div className="row">
             {[
-              { step: "1", title: "Create Your Club", description: "Set up in minutes and invite your community" },
-              { step: "2", title: "Offer Exclusive Deals", description: "Attract customers with irresistible offers" },
-              { step: "3", title: "Build Your Credit", description: "Watch your business credit score improve" },
-              { step: "4", title: "Grow Your Business", description: "Access credit and expand your operations" }
+              { step: "1", title: "Launch Your Deal Club", description: "Set up your exclusive club in minutes, invite your loyal customers, and start building your onchain community." },
+              { step: "2", title: "Tokenize Irresistible Offers", description: "Turn your best deals into NFTs and give your customers access to unique discounts that drive engagement." },
+              { step: "3", title: "Unlock Onchain Credit", description: "Boost your business by accessing stablecoin-backed credit, building a decentralized credit score as you grow." },
+              { step: "4", title: "Fuel Business Growth", description: "Leverage your credit to scale, reinvest, and take your operations to the next level—without the red tape." }
             ].map((item, index) => (
-              <div key={index} className="col-md-6 col-lg-3 mb-4 mb-lg-0">
+              <div key={index} className="col-md-6 col-lg-6 mb-4 mt-3 mb-lg-0">
                 <div className="text-center">
                   <div className="rounded-circle bg-mint text-white d-flex align-items-center justify-content-center mx-auto mb-3" style={{width: '64px', height: '64px'}}>
                     <span className="h4 mb-0">{item.step}</span>
                   </div>
                   <h3 className="h5 mb-2">{item.title}</h3>
-                  <p>{item.description}</p>
+                  <p className="lead mb-4">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -186,7 +186,7 @@ export default function Home() {
           <h2 className="text-center mb-4">Built on Trust and Innovation</h2>
           <p className="lead mb-4">MintDeals is revolutionizing business finance and customer loyalty through the power of blockchain technology. Built on the Tron network, we offer a secure, transparent, and efficient platform for businesses to access credit and engage with their customers like never before.</p>
           <div className="text-center">
-            <Link target="_blank" href="https://paracosmlabs.gitbook.io/mintdeals" className="btn btn-dark">Learn More About MintDeals</Link>
+            <Link target="_blank" href="https://paracosmlabs.gitbook.io/mintdeals" className="btn btn-dark btn-lg">Learn More About MintDeals</Link>
           </div>
         </div>
       </section>

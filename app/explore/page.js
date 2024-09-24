@@ -170,7 +170,7 @@ function ExploreClubs() {
 
   if (isLoading) {
     return (
-        <div className="kmint container mt-2" style={{
+        <div className="kmint container" style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -183,7 +183,7 @@ function ExploreClubs() {
 
   if (sortedClubs.length === 0) {
     return (
-      <div className="kmint container mt-2">
+      <div className="kmint container">
       <EmptyState 
         iconClass="fa-folder-open" 
         message="No clubs created yet."
@@ -194,7 +194,7 @@ function ExploreClubs() {
 
   return (
     <>
-      <div className="kmint container mt-2">
+      <div className="kmint container">
         <div className="row mb-4">
           <div className="col-md-12 text-center">
             <h1>Discover Amazing Clubs</h1>

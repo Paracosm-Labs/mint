@@ -15,13 +15,17 @@ const Login = () => {
     setData(data);
     setIsAuthenticated(true);
     setJwtToken(auth);
+    localStorage.setItem("isAuthenticated", true);
+    localStorage.setItem("jwtToken", auth);
+    localStorage.setItem("data", JSON.stringify(data));
     router.push("/dashboard/business", { scroll: false });
   };
+
   const handleLoginClick = () => {
     login(postLogin);
   };
-  return (
-    <main className="d-flex align-items-center py-2 form-signin w-100 m-auto">
+  return (<>
+    // <main className="d-flex align-items-center py-2 form-signin w-100 m-auto">
       <div className="kmint container">
         <div className="row">
         <div className="col-md-4"></div>
@@ -50,7 +54,8 @@ const Login = () => {
         draggable
         pauseOnHover
         />
-    </main>
+    // </main>
+    </>
   );
 };
 
