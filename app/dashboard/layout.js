@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }) {
     }, []);
 
   return (
-    <div className="kmint container mt-4">
+    <div className="kmint container mt-3">
       <div className="row">
         <Sidebar />
         {children}
