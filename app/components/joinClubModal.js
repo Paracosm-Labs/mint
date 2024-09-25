@@ -24,7 +24,7 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
         <div className="row">
           <div className="col-md-6">
             <Image
-              src={club?.image || "/api/placeholder/400/300"}
+              src={club?.image || "/placeholder.jpg"}
               className="img-fluid rounded-3 mb-3 w-100"
               alt={club?.name}
               height={200}

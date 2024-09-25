@@ -30,7 +30,7 @@ function RedemptionsTable() {
 
     const intervalId = setInterval(() => {
       loadRedemptions();
-    }, 120000); // 120 seconds
+    }, 45000); // 45 seconds
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, [loadRedemptions]);

@@ -4,7 +4,7 @@ import Image from "next/image";
 
 function Club({ club, handleViewDeals, handleViewMyDeals }) {
   return (
-    <div className="col-md-6 col-sm-12 mb-4" key={club.id}>
+    <div className="col-md-6 col-sm-12 mb-4 mt-4" key={club.id}>
       <div className="card club-card-horizontal">
         <div className="row g-0">
           <div className="col-md-4">
@@ -23,7 +23,7 @@ function Club({ club, handleViewDeals, handleViewMyDeals }) {
                 <p className="card-text">{club.description}</p>
               </div>
               <div className=" mt-3">
-                <p className="text-muted">{club.members} Members</p>
+                {/* <p className="text-muted">{club.members} Members</p> */}
                 <button
                   className="btn btn-success"
                   onClick={() => handleViewDeals(club)}

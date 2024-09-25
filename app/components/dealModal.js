@@ -88,7 +88,7 @@ function DealModal({ show, onHide, deal }) {
 
       let metadataUri = {
         description: dealDescription,
-        external_url: "https://mintdeals.netlify.app/deals/",
+        external_url: "https://mintdeals.vercel.app/",
         image: url.url,
         name: metadataName,
       };

@@ -19,7 +19,7 @@ const nextConfig = {
         port: '',
       },
       {
-        // Match images from your Pinata domain
+        // Match images from Pinata domain
         hostname: 'peach-urban-macaw-192.mypinata.cloud',
         port: '',
       },

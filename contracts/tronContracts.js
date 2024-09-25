@@ -1,10 +1,10 @@
 // // contracts/tronContracts.js
 
 // Addresses for contracts (Nile)
-export const clubDealRegistryAddress = 'TJU7deU76F4YBNdd8GjrAYAs2zB2ockMM9';
-export const CreditManagerAddress = "TVpa8wW8nYhbubQNKiHwHZEqiUykwF8NRe";
+export const clubDealRegistryAddress = 'TAm39WDvG5jrjTSAGstqNXb8b8VH8c1KrZ';
+export const CreditManagerAddress = "TXUJ98amn3AJKXhtihDD227pjGHyWr5Mc2";
 export const CreditFacilityAddress = "TNmKSWRW4dxDR5JZdfzzM6mtaUPxZipPrv";
-export const mintDealsNFTAddress = 'TKxs8sdzE4hecXJqfvqAzoLVDMBknGmrtG';
+export const mintDealsNFTAddress = 'TAh317KmzK9CR2iMgyz9XxFAewuByfYjqn';
 
 export const USDDAddress = 'THJ6CYd8TyNzHFrdLTYQ1iAAZDrf5sEsZU';
 export const USDDcTokenAddress = "TPgnCN3BdRsfoRMZV7RfxNYoWeU19rUzRv";

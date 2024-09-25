@@ -232,7 +232,23 @@ fieldset[disabled] .btn-kmint-blue.active {
 }
 
 
+.jl-logo{
+  background-color: #4950d4;
+  padding-right: 14px;
+  padding-left: 14px;
+  border-radius: 30px;
+}
 
+.fa-heart{color:red;}
+.fa-money-bill-wave{color: green;}
+.fa-chart-line{color: orange;}
+.fa-lock{color: #4950d4;}
+
+.sidebar .nav-link{color: #000;}
+
+.sidebar .nav-link:focus, .sidebar .nav-link:hover {
+  color: #1f811f !important;
+}
 
 /*////////////////////////////*/
 
@@ -263,7 +279,7 @@ fieldset[disabled] .btn-kmint-blue.active {
    /* url('https://picsum.photos/200/00'); */
   background-size: cover;
   background-position: center;
-  height: 88vh;
+  height: 80vh;
   box-shadow: rgba(50, 50, 93, 0.5) 0px 13px 27pxs -5px, rgba(0, 0, 0, 0.5) 0px 8px 16px -8px;
 }
 .section-padding {

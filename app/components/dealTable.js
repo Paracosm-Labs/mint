@@ -31,7 +31,7 @@ function DealTable({ onEdit }) {
         let { clubId, dealId } = await getDealIdFromEvent(deal_.txID);
         if (clubId && dealId) {
           let details = await getDealDetails(clubId, dealId);
-          let image = "https://via.placeholder.com/200x150";
+          let image = "/placeholder.jpg";
           if (deal_.image) {
             image = deal_.image;
           }
@@ -100,7 +100,7 @@ function DealTable({ onEdit }) {
           <tr>
             <th>ID</th>
             <th></th>
-            <th>Supply/Minted : (Max Supply)</th>
+            <th>Max Supply | Minted | Redeemed </th>
             <th>Description</th>
           </tr>
         </thead>
@@ -119,8 +119,7 @@ function DealTable({ onEdit }) {
                 />
               </td>
               <td>
-                {deal.remainingSupply}/{deal.redeemedSupply} : ({deal.maxSupply}
-                )
+              {deal.maxSupply} | {deal.maxSupply - deal.remainingSupply} | {deal.redeemedSupply} 
               </td>
 
               <td>

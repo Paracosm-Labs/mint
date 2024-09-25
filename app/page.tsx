@@ -95,7 +95,7 @@ export default function Home() {
               <p className="lead mb-4">
                 Join 2+ businesses revolutionizing their growth. Create clubs, unlock exclusive deals, and access smart credit - all powered by blockchain.
               </p>
-              <div className="d-grid gap-2 d-md-flex justify-content-md-start">
+              <div className="d-grid gap-2 d-md-flex justify-content-md-start mb-5">
               <button id="ctaExploreButton" className="btn btn-mint btn-lg px-4 me-md-2">
                 <Link href="/explore" className="nav-link">Discover Clubs</Link>
               </button>
@@ -103,6 +103,39 @@ export default function Home() {
                 <button id="ctaOnboardButton" className="btn btn-outline-dark btn-lg px-4" onClick={handleSignIn}>
                   Start Your Own Club Today
                 </button>
+              </div>
+              <div className="mt-5 mb-5">
+                <b>Built With</b>
+                <Image src="/trondao-logo.svg" 
+                  alt="Tron Logo"
+                  height={60}
+                  width={140}
+                  className="mx-2"
+                />
+                <Image src="/justlend-logo.svg" 
+                  alt="JustLend Logo"
+                  height={50}
+                  width={160}
+                  className="mx-2 jl-logo"
+                />
+                <Image src="/btc.png" 
+                  alt="BTC Logo"
+                  height={42}
+                  width={42}
+                  className="mx-2"
+                />
+                <Image src="/usdd.png" 
+                  alt="USDD Logo"
+                  height={42}
+                  width={42}
+                  className="mx-2"
+                />
+                <Image src="/usdt.png" 
+                  alt="USDT Logo"
+                  height={42}
+                  width={42}
+                  className="mx-2"
+                />
               </div>
             </div>
             <div className="col-md-6">
@@ -131,7 +164,7 @@ export default function Home() {
       </section>
 
       {/* Value Proposition */}
-      <section className="py-5 py-md-7">
+      <section className="py-5 py-md-7 mt-4">
         <div className="container">
           <h2 className="text-center mb-5">Why Choose MintDeals</h2>
           <div className="row g-4">

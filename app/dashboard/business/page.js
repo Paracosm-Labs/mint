@@ -2,7 +2,7 @@
 import React from "react";
 
 import ClubStats from "../../components/clubStats";
-import RedemptionChart from "../../components/redemptionChart";
+import DealsMintedChart from "../../components/dealsMintedChart";
 import RecentRedemptions from "../../components/recentRedemptions";
 
 function BusinessDashboard() {
@@ -29,9 +29,9 @@ function BusinessDashboard() {
       <hr/>
       <ClubStats />
       <div className="row mt-4">
-        {/* <div className="col-md-12">
-              <RedemptionChart />
-            </div> */}
+        <div className="col-md-12">
+              <DealsMintedChart />
+            </div>
       </div>
       <div className="row mt-4">
         {/* <div className="col-md-12">

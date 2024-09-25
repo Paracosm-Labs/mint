@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 
 const WalletConnect = ({ handleBusinessLogin }) => {
-  const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth(); // Include setJwtToken and setData to handle auth token and user data
+  const { isAuthenticated, setIsAuthenticated, setJwtToken, setData  } = useAuth();
   const [isTronLinkConnected, setIsTronLinkConnected] = useState(false);
   const [tronAddress, setTronAddress] = useState(null);
   const [showModal, setShowModal] = useState(false); // State for modal visibility
@@ -18,7 +18,7 @@ const WalletConnect = ({ handleBusinessLogin }) => {
         setTronAddress(address);
         setIsTronLinkConnected(true);
 
-        setShowModal(false); // Hide modal after successful connection
+        setShowModal(false);
       } else {
         alert("Please install TronLink to connect your wallet.");
       }
@@ -31,21 +31,14 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   const handleLogoutClick = () => {
     try {
       console.log("logging out");
-
-      // Clear the auth-related states
-      setIsAuthenticated(false);
+      setIsAuthenticated(false); // Set auth state to false
       setJwtToken(null);
       setData(null);
-
-      // Clear localStorage (if needed)
-      localStorage.removeItem("isAuthenticated");
-      localStorage.removeItem("jwtToken");
-      localStorage.removeItem("data");
-
-      // Delay the redirection to give time for state change
-      setTimeout(() => {
-        router.push("/"); // Redirect after logout
-      }, 50); // Small delay (50ms)
+  
+      // // Delay the redirection to give time for state change
+      // setTimeout(() => {
+      //   router.push("/"); // Redirect after logout
+      // }, 100); // Small delay (100ms)
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -65,11 +58,11 @@ const WalletConnect = ({ handleBusinessLogin }) => {
     if (isAuthenticated) {
       handleLogoutClick();
     } else if (isTronLinkConnected) {
-      setShowModal(true); // Show modal for business login
+      // Show modal for business login
+      setShowModal(true);
     } else {
-      // Handle TronLink connection and then trigger business login
       handleBusinessLogin().then(() => {
-        connectTronLink();
+        connectTronLink(); // Connect TronLink after business login
       });
     }
   };
@@ -112,15 +105,8 @@ const WalletConnect = ({ handleBusinessLogin }) => {
           <Modal.Title>Business Login</Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-center">
-          <p>
-            You are connected to your wallet.
-            <br />
-            Please log in as a business user.
-          </p>
-          <Button
-            onClick={handleBusinessLoginWithClose}
-            className="btn-kmint-blue"
-          >
+          <p>You are connected to your wallet.<br/>Please log in as a business user.</p>
+          <Button onClick={handleBusinessLoginWithClose} className="btn-kmint-blue">
             Business Login
           </Button>
         </Modal.Body>
