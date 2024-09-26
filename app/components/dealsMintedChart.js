@@ -1,6 +1,4 @@
-// components/dealsMintedChart.js
-"use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getDealsMintedForClub } from '@/lib/mintdeals';
 import { getClubIdFromEvent } from "@/lib/club";
@@ -14,7 +12,7 @@ function DealsMintedChart() {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchDeals = async () => {
+  const fetchDeals = useCallback(async () => {
     const now = Date.now();
     const sixMonthsAgo = now - 6 * 30 * 24 * 60 * 60 * 1000; // Approximate 6 months in milliseconds
 
@@ -47,15 +45,15 @@ function DealsMintedChart() {
     } finally {
       setLoading(false); // Set loading to false after fetching
     }
-  };
+  }, [data]); // Add data as a dependency to useCallback
 
   useEffect(() => {
     fetchDeals(); // Fetch deals initially
 
-    const intervalId = setInterval(fetchDeals, 69000); // Refresh every 60 seconds
+    const intervalId = setInterval(fetchDeals, 69000); // Refresh every 69 seconds
 
     return () => clearInterval(intervalId); // Clear the interval on unmount
-  }, [data]);
+  }, [fetchDeals]); // Use fetchDeals as a dependency
 
   return (
     <div className="card">

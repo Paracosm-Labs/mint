@@ -122,19 +122,19 @@ function CustomerClubs() {
     );
   }
   
-  if (purchasedClubs.length === 0) {
-    return (
-      <div className="kmint container text-center">
-        <EmptyState 
-          iconClass="fa-folder-open" 
-          message="You haven't joined any clubs, yet."
-        />
-        <button className="btn btn-mint">
-          <Link href="/explore" className="nav-link"><i className="fa fa-search"/>&nbsp;Explore Clubs</Link>
-        </button>
-      </div>
-    );
-  }
+  // if (purchasedClubs.length === 0) {
+  //   return (
+  //     <div className="kmint container text-center">
+  //       <EmptyState 
+  //         iconClass="fa-folder-open" 
+  //         message="You haven't joined any clubs, yet."
+  //       />
+  //       <button className="btn btn-mint">
+  //         <Link href="/explore" className="nav-link"><i className="fa fa-search"/>&nbsp;Explore Clubs</Link>
+  //       </button>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="kmint container text-center">
@@ -160,14 +160,26 @@ function CustomerClubs() {
       </div>
 
       <div className="row">
-        {filteredClubs.map((club) => (
+
+      { purchasedClubs.length === 0 ? (<>
+      
+        <EmptyState 
+          iconClass="fa-folder-open" 
+          message="You haven't joined any clubs, yet."
+        />
+        <button className="btn btn-mint w-25 m-auto">
+          <Link href="/explore" className="nav-link"><i className="fa fa-search"/>&nbsp;Explore Clubs</Link>
+        </button>
+
+        </>): (filteredClubs.map((club) => (
           <Club
             club={club}
             key={club.txID}
             handleViewDeals={handleViewDeals}
             handleViewMyDeals={handleViewMyDeals}
           ></Club>
-        ))}
+        )))
+        }
       </div>
       <OffcanvasDeals
         show={showOffcanvas}

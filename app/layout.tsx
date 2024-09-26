@@ -5,6 +5,7 @@ import  "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Metadata from "../app/metadata";
+import Script from "next/script";
 import {AuthProvider} from "../lib/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,7 +29,10 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"
           rel="stylesheet"
         />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <Script 
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+          strategy="lazyOnload"  // Load script lazily after the page is loaded
+        />
       </head>
       <AuthProvider>
       <body id="root" className={`bg-mintdeals ${inter.className}`}>
