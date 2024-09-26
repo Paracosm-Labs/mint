@@ -118,7 +118,7 @@ export default function Home() {
                 Supercharge Your Business with MintDeals
               </h1>
               <p className="lead mb-4">
-                <span className="d-none">Join 2+ businesses revolutionizing their growth.</span>Create clubs, unlock exclusive deals, and access smart credit - all powered by blockchain.
+                <span className="d-none">Join 2+ businesses revolutionizing their growth.</span>Create clubs, unlock exclusive deals and access smart credit - all powered by blockchain.
               </p>
               <div className="d-grid gap-2 d-md-flex justify-content-md-start mb-5">
               <button id="ctaExploreButton" className="btn btn-mint btn-lg px-4 me-md-2">
@@ -143,7 +143,7 @@ export default function Home() {
                 )}
               </div>
               <div className="mt-5 mb-5 text-center">
-                <b>Built With</b>
+                <b className="">Built With</b>
                 <Image src="/trondao-logo.svg" 
                   alt="Tron Logo"
                   height={60}
@@ -177,11 +177,11 @@ export default function Home() {
               </div>
             </div>
             <div className="col-md-6">
-              <Image src="/images/hero-image.jpg"
+              <Image src="/hero-image.png"
                alt="MintDeals platform illustration" 
-               height={500}
-               width={300}
-               className="img-fluid  d-none" />
+               height={800}
+               width={800}
+               className="img-fluid" />
             </div>
           </div>
         </div>
