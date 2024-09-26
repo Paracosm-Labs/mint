@@ -1,3 +1,4 @@
+// components/emptyState.js
 import React from 'react';
 
 const EmptyState = ({ iconClass, message }) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import countries from '../../../utils/countries';
+import { countries } from '../../../utils/countries';
 import categories from '../../../utils/categories';
 
 const BusinessInfo = ({ onNext, onDataUpdate, data }) => {

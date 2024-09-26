@@ -22,6 +22,7 @@ function StatsCards() {
       // Ensure clubDetails is defined before accessing its properties
       if (clubDetails) {
         setStatsData([
+          { title: "Club Name", value: data.userData.clubs.name || 'Unknown' },
           { title: "Members", value: clubDetails.memberCount || 0 }, // Default to 0 if undefined
           // Add other stats here if available
         ]);

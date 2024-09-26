@@ -1,5 +1,5 @@
 // utils/countries.js
-const countries = [
+export const countries = [
     {
         "name": "Afghanistan",
         "code": "AF"
@@ -1008,8 +1008,6 @@ const countries = [
         "name": "Åland Islands",
         "code": "AX"
     }
-]
+];
 
-
-  export default countries;
   

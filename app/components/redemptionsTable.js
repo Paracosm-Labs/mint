@@ -43,18 +43,24 @@ function RedemptionsTable() {
         redemption.onChainId,
         redemption.tokenId
       );
-      console.log(`Redemption confirmed with transaction ID: ${txID}`);
-      // alert(`Redemption confirmed`);
       
+      console.log(`Redemption confirmed with transaction ID: ${txID}`);
       toast.success("Redemption confirmed.");
-
-      // Refresh redemption requests after approval
-      loadRedemptions(); // Call the load function to refresh data
+  
+      // Optimistically update the redemption status in the UI
+      setRedemptions((prevRedemptions) =>
+        prevRedemptions.map((r) =>
+          r.id === redemption.id ? { ...r, status: "Confirmed" } : r
+        )
+      );
     } catch (error) {
       console.error("Error confirming redemption:", error);
       toast.error("Failed to confirm redemption.");
     } finally {
-      setApprovingRedemptionId(null); // Reset after the process
+      setApprovingRedemptionId(null); // Reset approving state after process
+      
+      // Optionally: Trigger a background refresh to ensure data consistency
+      loadRedemptions(); // Refresh the redemptions in the background
     }
   };
 

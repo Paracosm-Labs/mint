@@ -1,3 +1,4 @@
+// components/walletConnect.js
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useRouter } from "next/navigation";
@@ -35,10 +36,10 @@ const WalletConnect = ({ handleBusinessLogin }) => {
       setJwtToken(null);
       setData(null);
   
-      // // Delay the redirection to give time for state change
-      // setTimeout(() => {
-      //   router.push("/"); // Redirect after logout
-      // }, 100); // Small delay (100ms)
+      // Delay the redirection to give time for state change
+      setTimeout(() => {
+        router.push("/explore"); // Redirect after logout
+      }, 100); // Small delay (100ms)
     } catch (error) {
       console.error("Logout error:", error);
     }

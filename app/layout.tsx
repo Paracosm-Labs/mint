@@ -28,6 +28,7 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"
           rel="stylesheet"
         />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
       </head>
       <AuthProvider>
       <body id="root" className={`bg-mintdeals ${inter.className}`}>

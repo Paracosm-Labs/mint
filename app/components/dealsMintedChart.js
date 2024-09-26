@@ -52,7 +52,7 @@ function DealsMintedChart() {
   useEffect(() => {
     fetchDeals(); // Fetch deals initially
 
-    const intervalId = setInterval(fetchDeals, 45000); // Refresh every 45 seconds
+    const intervalId = setInterval(fetchDeals, 69000); // Refresh every 60 seconds
 
     return () => clearInterval(intervalId); // Clear the interval on unmount
   }, [data]);
@@ -88,17 +88,6 @@ function DealsMintedChart() {
           </ResponsiveContainer>
         )}
 
-        {/* Display list of deals below the chart */}
-        <div className='d-none'>
-          <h6 className="mt-4">Minted Deals (Events)</h6>
-          <ul className=''>
-            {deals.map((deal, index) => (
-              <li key={index}>
-                <strong>Deal ID:</strong> {deal.dealId}, {deal.clubId} <strong>Date:</strong> {new Date(deal.timestamp).toLocaleDateString()}
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
     </div>
   );

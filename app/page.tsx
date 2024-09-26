@@ -118,7 +118,7 @@ export default function Home() {
                 Supercharge Your Business with MintDeals
               </h1>
               <p className="lead mb-4">
-                Join 2+ businesses revolutionizing their growth. Create clubs, unlock exclusive deals, and access smart credit - all powered by blockchain.
+                <span className="d-none">Join 2+ businesses revolutionizing their growth.</span>Create clubs, unlock exclusive deals, and access smart credit - all powered by blockchain.
               </p>
               <div className="d-grid gap-2 d-md-flex justify-content-md-start mb-5">
               <button id="ctaExploreButton" className="btn btn-mint btn-lg px-4 me-md-2">
