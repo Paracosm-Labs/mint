@@ -4,6 +4,7 @@ import categories from '../../../utils/categories';
 
 const BusinessInfo = ({ onNext, onDataUpdate, data }) => {
   const [name, setBusinessName] = useState(data.name || '');
+  const [email, setEmail] = useState(data.email || '');
   const [industry, setIndustry] = useState(data.industry || '');
   const [country, setCountry] = useState(data.country || '');
   const [hasDominicaDID, setHasDominicaDID] = useState(false);
@@ -24,7 +25,7 @@ const BusinessInfo = ({ onNext, onDataUpdate, data }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onDataUpdate("businessInfo", { name, industry, country });
+    onDataUpdate("businessInfo", { name, email, industry, country });
     onNext();
   };
 
@@ -59,6 +60,18 @@ const BusinessInfo = ({ onNext, onDataUpdate, data }) => {
           id="name"
           value={name}
           onChange={(e) => setBusinessName(e.target.value)}
+        //   required
+        />
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="email" className="form-label">Email</label>
+        <input
+          type="text"
+          className="form-control"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         //   required
         />
       </div>

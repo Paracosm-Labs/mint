@@ -10,6 +10,9 @@ const BusinessSchema = new mongoose.Schema(
         name: {
             type: String,
           },
+          email: {
+            type: String, 
+          },
           industry: {
               type: String,
             },            

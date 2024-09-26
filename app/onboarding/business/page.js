@@ -21,6 +21,7 @@ const BusinessOnboarding = () => {
   const [businessData, setBusinessData] = useState({
     businessInfo: {
       name: "",
+      email: "",
       industry: "",
       country: "",
     },

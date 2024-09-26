@@ -50,6 +50,7 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
         </div>
         <div className="card-body">
           <p><strong>Business Name:</strong> {businessInfo.name}</p>
+          <p><strong>Email:</strong> {businessInfo.email}</p>
           <p><strong>Industry:</strong> {businessInfo.industry}</p>
           <p><strong>Location:</strong> {businessInfo.country}</p>
         </div>

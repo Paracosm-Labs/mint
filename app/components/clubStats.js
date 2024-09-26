@@ -22,8 +22,8 @@ function StatsCards() {
       // Ensure clubDetails is defined before accessing its properties
       if (clubDetails) {
         setStatsData([
-          { title: "Club Name", value: data.userData.clubs.name || 'Unknown' },
-          { title: "Members", value: clubDetails.memberCount || 0 }, // Default to 0 if undefined
+          { title: "Club Name", value: data.userData.clubs.name || 'Unknown', col: "col-md-5" },
+          { title: "Members", value: clubDetails.memberCount || 0, col: "col-md-3" },
           // Add other stats here if available
         ]);
       } else {
@@ -42,7 +42,7 @@ function StatsCards() {
   return (
     <div className="row">
       {statsData.map((stat, index) => (
-        <div key={index} className="col-md-4">
+        <div key={index} className={stat.col}>
           <div className="card mb-4 shadow-sm">
             <div className="card-body">
               <h5 className="card-title">{stat.title}</h5>
