@@ -25,7 +25,7 @@ export default function RootLayout({
       <head>
         {/* You can add meta tags, title, etc., here */}
         <link
-          href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+          href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"
           rel="stylesheet"
         />
       </head>

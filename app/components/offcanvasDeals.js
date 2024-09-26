@@ -1,3 +1,4 @@
+// components/offcanvasDeals.js
 import React, { useEffect, useState } from "react";
 import { Offcanvas } from "react-bootstrap";
 import MintDeal from "./mintDeals";

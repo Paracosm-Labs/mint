@@ -16,10 +16,11 @@ import {
   CreditManagerAddress,
   USDDcTokenAddress,
   USDDAddress,
+  USDTcTokenAddress,
+  USDTAddress,
 } from "@/lib/address";
-import approveSpend from "@/lib/approveSpend";
 import trc20ABI from "@/abi/trc20";
-import Web3 from "web3";
+import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -37,30 +38,21 @@ function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
 
     try {
       const beneficiary = window.tronWeb.defaultAddress.base58;
-      const tokenAddress = USDDAddress;
-      const cTokenAddress = USDDcTokenAddress;
-
-      let web3 = new Web3();
-      let amount = web3.utils.toWei(String(paymentAmount), "ether");
+      const tokenAddress = USDTAddress;
+      const cTokenAddress = USDTcTokenAddress;
+      let tokenDecimals;
+      if (tokenAddress === USDTAddress) {
+        tokenDecimals = 6;
+      } else {
+        tokenDecimals = 18;
+      }
 
       if (repayTo === "creditManager") {
-        await approveSpend(
-          CreditManagerAddress,
-          amount,
-          tokenAddress,
-          trc20ABI
-        );
         const manager = await creditManager();
-        await manager.repay(tokenAddress, paymentAmount);
+        await manager.repay(tokenAddress, paymentAmount, tokenDecimals);
       } else if (repayTo === "creditFacility") {
-        await approveSpend(
-          CreditFacilityAddress,
-          amount,
-          tokenAddress,
-          trc20ABI
-        );
         const facility = await creditFacility();
-        await facility.repay(cTokenAddress, paymentAmount, beneficiary);
+        await facility.repay(tokenAddress, paymentAmount, beneficiary, tokenDecimals);
       }
 
       console.log("Repayment submitted successfully");
@@ -70,7 +62,7 @@ function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
     } catch (err) {
       console.error("Error processing repayment:", err);
       setError("Failed to process repayment. Please try again.");
-      toast.error("Failed to process repayment. Please try again.");
+      // toast.error("Failed to process repayment. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -129,13 +121,28 @@ function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
             </OverlayTrigger>
           </div>
           <Form.Group className="mb-4">
-            <Form.Label>Payment Amount (USDD)</Form.Label>
+            <Form.Label>Payment Amount 
+              <Image
+                  src={`/usdt.png`}
+                  alt={'USDT'}
+                  width={24}
+                  height={24}
+                  style={{ marginLeft: '4px' }}
+                />
+            </Form.Label>
             <div className="input-group">
               <span className="input-group-text">$</span>
               <Form.Control
-                type="number"
+                type="text"
                 value={paymentAmount}
-                onChange={(e) => setPaymentAmount(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  // Check if the input is a valid number or a decimal
+                  if (!isNaN(value) && value.match(/^\d*\.?\d*$/)) {
+                    setPaymentAmount(value); // Only set valid decimal values
+                  }
+                }}
                 required
                 min="0"
                 max={outstandingDebt}
@@ -179,7 +186,7 @@ function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
       <Modal.Footer className="bg-light">
         <small className="text-muted">
           {/* <FontAwesomeIcon icon={faInfoCircle} className="me-1" /> */}
-          Repayments are processed in USDD. Ensure you have sufficient balance.
+          Repayments are processed in USDT. Ensure you have sufficient balance.
         </small>
       </Modal.Footer>
     </Modal>

@@ -94,8 +94,15 @@ function Header() {
         />
           <span style={{color:'#0a462a'}}>MintDeals</span>
         </Link>
-        <button className="navbar-toggler" type="button" onClick={toggleMenu}>
-          <span className="mt-3 navbar-toggler-icon">&#9776;</span>
+        <button
+          className={`navbar-toggler ${isOpen ? "" : "collapsed"}`} 
+          type="button" 
+          onClick={toggleMenu}
+          aria-controls="navbarNav" 
+          aria-expanded={isOpen} 
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
         </button>
         <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
           {getMenuEntries()}

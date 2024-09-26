@@ -101,6 +101,7 @@ function CustomerClubs() {
   const closeModal = () => {
     setShowModal(false);
     setRefresh((prev) => prev + 1);
+    setRefreshCanvas((prev) => prev + 1);
   };
 
   // const closeCanvas = () => {
@@ -172,7 +173,7 @@ function CustomerClubs() {
         show={showOffcanvas}
         onHide={() => setShowOffcanvas(false)}
         club={selectedClub}
-        // key={refreshCanvas}
+        key={refreshCanvas}
       />
       <MyDealsModal
         show={showModal}

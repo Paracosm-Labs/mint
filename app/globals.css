@@ -244,10 +244,39 @@ fieldset[disabled] .btn-kmint-blue.active {
 .fa-chart-line{color: orange;}
 .fa-lock{color: #4950d4;}
 
-.sidebar .nav-link{color: #000;}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.club-image-preview-a{
+  width: 500px!important;
+  height: 250px!important;
+  display: block;
+}
+
+
+.deal-image-preview-a{
+  width: 400px!important;
+  height: 200px!important;
+}
+
+.deal-image-preview-b{
+  width: 350px!important;
+  height: 175px!important;
+}
+
+.sidebar .nav-link{
+  color: #000;
+  margin-bottom: 20px;
+}
 
 .sidebar .nav-link:focus, .sidebar .nav-link:hover {
   color: #1f811f !important;
+}
+
+.club-card-horizontal img {
+  height: 150px;
+  width: 300px;
 }
 
 /*////////////////////////////*/

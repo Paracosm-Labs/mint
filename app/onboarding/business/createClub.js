@@ -63,7 +63,7 @@ import Upload from '../../components/upload';
         <Upload setImageUrl={setClubImage} /> {/* Using the Upload component */}
         {clubImage && (
           <Image src={clubImage.url} alt="Club Image" 
-            height={200} width={400}   
+            height={200} width={400}  className='club-image-preview-a m-auto my-2' 
           style={{ width: '100%', height: 'auto', marginTop: '10px' }} />
         )}<small className="form-text text-muted">Recommended Dimensions - height 400px x width 800px</small>
       </div>

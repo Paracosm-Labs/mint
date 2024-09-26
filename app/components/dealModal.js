@@ -1,3 +1,4 @@
+// components/dealModal.js
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { createDeal } from "@/lib/deal";
@@ -134,6 +135,7 @@ function DealModal({ show, onHide, deal }) {
                   height={200}  
                   src={url.url} 
                   alt="Uploaded Deal Image"
+                  className="deal-image-preview-a"
                 />
               </div>
             )}

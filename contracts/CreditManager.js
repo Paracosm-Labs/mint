@@ -1,10 +1,14 @@
 // src/contracts/CreditManager.js
 import SmartContractBase from "./smartContractBase";
 import { CreditManagerAddress } from "../lib/address";
+import approveSpend from "../lib/approveSpend";
+import trc20 from "../abi/trc20";
+import Web3 from "web3";
 
 class CreditManager extends SmartContractBase {
   constructor() {
     super(CreditManagerAddress);
+    this.web3 = new Web3();
   }
 
   init = async () => {
@@ -52,13 +56,20 @@ class CreditManager extends SmartContractBase {
   };
 
   // Function to borrow tokens from the credit manager
-  borrow = async (tokenAddress, amount) => {
+  borrow = async (tokenAddress, amount, tokenDecimals) => {
     this.check();
 
     try {
-      const amountInWei = this.web3.utils.toWei(amount.toString(), "ether");
+      // Normalize the amount based on the token's decimals
+      let normalizedAmount;
+      if (tokenDecimals === 6) {
+        normalizedAmount = Math.floor(parseFloat(amount) * 1e6).toString(); // Handle 6-decimal tokens
+      } else {
+        normalizedAmount = this.web3.utils.toWei(amount.toString(), "ether"); // Default for 18-decimal tokens
+      }
+
       const result = await this.contract
-        .borrow(tokenAddress, amountInWei)
+        .borrow(tokenAddress, normalizedAmount)
         .send();
       return result;
     } catch (error) {
@@ -68,22 +79,35 @@ class CreditManager extends SmartContractBase {
   };
 
   // Function to repay tokens to the credit manager
-  repay = async (tokenAddress, repaymentAmount) => {
+  repay = async (tokenAddress, repaymentAmount, tokenDecimals) => {
     this.check();
 
     try {
-      const amountInWei = this.web3.utils.toWei(
-        repaymentAmount.toString(),
-        "ether"
+      // Normalize the repayment amount based on token decimals
+      let normalizedRepaymentAmount;
+      if (tokenDecimals === 6) {
+        normalizedRepaymentAmount = Math.floor(parseFloat(repaymentAmount) * 1e6).toString(); // Handle 6-decimal tokens
+      } else {
+        normalizedRepaymentAmount = this.web3.utils.toWei(repaymentAmount.toString(), "ether"); // Default for 18-decimal tokens
+      }
+
+      // Approve the spend for the repayment amount
+      await approveSpend(
+        CreditManagerAddress,
+        normalizedRepaymentAmount,
+        tokenAddress,
+        trc20
       );
+
       const result = await this.contract
-        .repay(tokenAddress, amountInWei)
+        .repay(tokenAddress, normalizedRepaymentAmount)
         .send();
       return result;
     } catch (error) {
       console.error("Error repaying tokens:", error);
       throw error;
     }
+  
   };
 
   // Function to fetch interestDeltaBP

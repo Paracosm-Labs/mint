@@ -1,10 +1,14 @@
 // src/contracts/CreditFacility.js
 import SmartContractBase from "./smartContractBase";
 import { CreditFacilityAddress } from "../lib/address";
+import approveSpend from "../lib/approveSpend";
+import trc20 from "../abi/trc20";
+import Web3 from "web3";
 
 class CreditFacility extends SmartContractBase {
   constructor() {
     super(CreditFacilityAddress);
+    this.web3 = new Web3();
   }
 
   init = async () => {
@@ -46,12 +50,19 @@ class CreditFacility extends SmartContractBase {
     }
   };
 
-  borrow = async (cTokenAddress, amount) => {
+  borrow = async (cTokenAddress, amount, tokenDecimals) => {
     this.check();
     try {
-      const amountInWei = this.web3.utils.toWei(amount.toString(), "ether");
+      // Normalize amount based on token decimals
+      let normalizedAmount;
+      if (tokenDecimals === 6) {
+        normalizedAmount = Math.floor(parseFloat(amount) * 1e6).toString(); // For 6-decimal tokens
+      } else {
+        normalizedAmount = this.web3.utils.toWei(amount.toString(), "ether"); // For 18-decimal tokens
+      }
+
       const result = await this.contract
-        .borrow(cTokenAddress, amountInWei)
+        .borrow(cTokenAddress, normalizedAmount)
         .send();
       return result;
     } catch (error) {
@@ -60,18 +71,36 @@ class CreditFacility extends SmartContractBase {
     }
   };
 
-  repay = async (cTokenAddress, amount, beneficiary) => {
+  repay = async (tokenAddress, amount, beneficiary, tokenDecimals) => {
     this.check();
     try {
-      const amountInWei = this.web3.utils.toWei(amount.toString(), "ether");
+      // Normalize amount based on token decimals
+      let normalizedAmount;
+      if (tokenDecimals === 6) {
+        normalizedAmount = Math.floor(parseFloat(amount) * 1e6).toString(); // For 6-decimal tokens
+      } else {
+        normalizedAmount = this.web3.utils.toWei(amount.toString(), "ether"); // For 18-decimal tokens
+      }
+
+      const cTokenAddress = await this.getCTokenAddress(tokenAddress);
+
+      // Approve the spend for the repayment amount
+      await approveSpend(
+        CreditFacilityAddress,           // The contract address for the token
+        normalizedAmount,        // The normalized amount for approval
+        tokenAddress,           // Token address to approve
+        trc20                    // ABI for token interaction (TRC20)
+      );
+
       const result = await this.contract
-        .repayBorrow(cTokenAddress, amountInWei, beneficiary)
+        .repayBorrow(cTokenAddress, normalizedAmount, beneficiary)
         .send();
       return result;
     } catch (error) {
       console.error("Error repaying borrow:", error);
       throw error;
     }
+
   };
 
   accrueInterest = async (cTokenAddress, user) => {
@@ -165,7 +194,7 @@ class CreditFacility extends SmartContractBase {
       maxEvents,
       "LoanRepayment",
       "borrower",
-      "repaymentAmount"
+      "amount"
     );
   };
 }

@@ -1,4 +1,5 @@
 'use client'
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import login from "@/lib/login";
 import { getAddress, verifyWallet } from "@/lib/wallet";
@@ -7,7 +8,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { setIsAuthenticated, setJwtToken, setData } = useAuth();
+  const { setIsAuthenticated, setJwtToken, setData, isAuthenticated } = useAuth();
+  const [userExists, setUserExists] = useState<boolean | null>(null);  
   const router = useRouter();
 
   const postLogin = (auth: string, data : any) => {
@@ -31,38 +33,61 @@ export default function Home() {
     return data.success;
   }
 
-  const handleSignIn = async () => {
-    verifyWallet().then(res => {
-      console.log(res)
-      if(!res || res.length == 0){
-        alert("Please install or login to Tronlink to proceed.");
-        return;
-      }
-      if(res.code != 200){
-        alert(res.message);
-        return;
-      }
-      getAddress().then(address => {
-        checkUserExists(address).then(userExists => {
-          if(userExists){
-            login(postLogin)
-          } else {
-            router.push('/onboarding/business', { scroll: false })
-          }
-        })
-      })
-    }).catch(error => {
-      console.log(error);
-    })
-    
-    
+  const toDashboard = async() =>{
+    router.push('/dashboard/business', { scroll: false })    
   }
+
+  const handleSignIn = async () => {
+    verifyWallet()
+      .then((res) => {
+        if (!res || res.length === 0) {
+          alert("Please install or login to Tronlink to proceed.");
+          return;
+        }
+        if (res.code !== 200) {
+          alert(res.message);
+          return;
+        }
+        getAddress().then(async (address) => {
+          const exists = await checkUserExists(address);
+          if (exists) {
+            login(postLogin);
+          } else {
+            router.push("/onboarding/business", { scroll: false });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  // Effect to check user authentication state
+  useEffect(() => {
+    const checkUser = async () => {
+      if (isAuthenticated) {
+        const address = await getAddress();
+        if (address) {
+          const exists = await checkUserExists(address);
+          setUserExists(exists);
+        } else {
+          setUserExists(false);
+        }
+      } else {
+        setUserExists(false);
+      }
+    };
+
+    checkUser();
+  }, [isAuthenticated]);
+
+
   return (
     <main>
       <div className="App">
         <div>
 
-        <section className="hero text-center d-none" style={{
+        {/* <section className="hero text-center d-none" style={{
         background: 'linear-gradient(rgba(76, 175, 80, 0.8), rgba(76, 175, 80, 0.8)), url("https://picsum.photos/1200/400?random=1")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -82,7 +107,7 @@ export default function Home() {
             </Link>
           </button>
         </div>
-      </section>
+      </section> */}
 
       {/* Hero Section */}
       <section className="hero py-5 py-md-7">
@@ -99,12 +124,25 @@ export default function Home() {
               <button id="ctaExploreButton" className="btn btn-mint btn-lg px-4 me-md-2">
                 <Link href="/explore" className="nav-link">Discover Clubs</Link>
               </button>
-                
-                <button id="ctaOnboardButton" className="btn btn-outline-dark btn-lg px-4" onClick={handleSignIn}>
-                  Start Your Own Club Today
-                </button>
+              {userExists ? (<>
+              <button
+                    id="ctaOnboardButton"
+                    className="btn btn-outline-dark btn-lg px-4"
+                    onClick={toDashboard}
+                  >
+                      Go to Your Club Dashboard
+                  </button>
+                  </>) :(
+              <button
+                    id="ctaOnboardButton"
+                    className="btn btn-outline-dark btn-lg px-4"
+                    onClick={handleSignIn}
+                  >
+                   Start Your Own Club Today
+                  </button>
+                )}
               </div>
-              <div className="mt-5 mb-5">
+              <div className="mt-5 mb-5 text-center">
                 <b>Built With</b>
                 <Image src="/trondao-logo.svg" 
                   alt="Tron Logo"

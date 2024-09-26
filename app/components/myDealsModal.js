@@ -1,3 +1,4 @@
+// components/myDealsModal.js
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { Modal, Card, Button } from "react-bootstrap";

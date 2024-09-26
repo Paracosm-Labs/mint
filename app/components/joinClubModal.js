@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import CurrencySelector from './currencySelector';
 import Image from "next/image";
+import { toast } from 'react-toastify'; // Import the toast function
 
 const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurrency, onJoin }) => {
   const [loading, setLoading] = useState(false); // Loading state to handle button behavior
@@ -9,7 +10,10 @@ const JoinClubModal = ({ show, onHide, club, selectedCurrency, setSelectedCurren
   const handleJoinClick = async () => {
     setLoading(true);  // Start loading when the user clicks Join
     try {
-      await onJoin();
+      await onJoin(); // Call the onJoin function
+      toast.success(`Successfully joined ${club?.name} for $${club?.membershipFee}!`);
+    } catch (error) {
+      toast.error(`Failed to join the club. Please try again.`);
     } finally {
       setLoading(false); // Stop loading when transaction completes
     }

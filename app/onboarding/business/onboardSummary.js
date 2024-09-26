@@ -61,7 +61,7 @@ const OnboardSummary = ({ onComplete, onPrev, businessInfo, clubInfo }) => {
         </div>
         <div className="card-body">
           <Image src={clubInfo.image} alt="Club Image" 
-            height={200} width={400}   
+            height={200} width={400} className='club-image-preview-a m-auto my-2'  
           style={{ width: '100%', height: 'auto', marginTop: '10px', marginBottom:'20px'}} />
           <p><strong>Club Name:</strong> {clubInfo.name}</p>
           {/* <p><strong>Club Image URL:</strong> {clubInfo.image}</p> */}

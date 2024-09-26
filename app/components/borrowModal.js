@@ -13,11 +13,12 @@ import {
 import { creditManager } from "@/contracts/CreditManager";
 import { creditFacility } from "@/contracts/CreditFacility";
 import {
-  USDDAddress,
   USDDcTokenAddress,
-  USDTAddress,
+  USDDAddress,
   USDTcTokenAddress,
-} from "@/contracts/tronContracts";
+  USDTAddress,
+} from "@/lib/address";
+import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -47,12 +48,18 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
     try {
       const tokenAddress = USDTAddress;
       const cTokenAddress = USDTcTokenAddress;
+      let tokenDecimals;
+      if (tokenAddress === USDTAddress) {
+        tokenDecimals = 6;
+      } else {
+        tokenDecimals = 18;
+      }
       if (borrowFrom === "creditManager") {
         const manager = await creditManager();
-        await manager.borrow(tokenAddress, borrowAmount);
+        await manager.borrow(tokenAddress, borrowAmount, tokenDecimals);
       } else if (borrowFrom === "creditFacility") {
         const facility = await creditFacility();
-        await facility.borrow(cTokenAddress, borrowAmount);
+        await facility.borrow(cTokenAddress, borrowAmount, tokenDecimals);
       }
 
       console.log("Borrow request submitted successfully");
@@ -62,7 +69,7 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
     } catch (err) {
       console.error("Error borrowing tokens:", err);
       setError("Failed to borrow tokens. Please try again.");
-      toast.error("Failed to borrow tokens. Please try again.");
+      // toast.error("Failed to borrow tokens. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -125,13 +132,29 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
             </OverlayTrigger>
           </div>
           <Form.Group className="mb-4">
-            <Form.Label>Borrow Amount (USDT)</Form.Label>
+            <Form.Label>Borrow Amount 
+              <Image
+                src={`/usdt.png`}
+                alt={'USDT'}
+                width={24}
+                height={24}
+                style={{ marginLeft: '4px' }}
+              />
+              
+            </Form.Label>
             <div className="input-group">
               <span className="input-group-text">$</span>
               <Form.Control
-                type="number"
+                type="text"
                 value={borrowAmount}
-                onChange={(e) => setBorrowAmount(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  // Check if the input is a valid number or a decimal
+                  if (!isNaN(value) && value.match(/^\d*\.?\d*$/)) {
+                    setBorrowAmount(value); // Only set valid decimal values
+                  }
+                }}
                 required
                 min="0"
                 max={availableCredit}

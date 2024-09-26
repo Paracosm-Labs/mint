@@ -40,13 +40,13 @@ function Sidebar() {
             </li>
             <li className="nav-item">
               <Link href="/dashboard/deals" className="nav-link">
-                <i className="fas fa-receipt me-2"></i>
+                <i className="fas fa-tags me-2"></i>
                 Manage Deals
               </Link>
             </li>
             <li className="nav-item">
               <Link href="/dashboard/redemptions" className="nav-link">
-                <i className="fas fa-qrcode me-2"></i>
+                <i className="fas fa-receipt me-2"></i>
                 Redemptions
               </Link>
             </li>

@@ -1,5 +1,5 @@
-const businessOnboardingMsg = "Sign this to boost your business!";
+const businessOnboardingMsg = "Please sign this to complete your onboarding.";
 
-const loginMsg = "Sign this message to login : ";
+const loginMsg = "Welcome to MintDeals! To login to your account, please sign this message: ";
 
 export {businessOnboardingMsg, loginMsg}

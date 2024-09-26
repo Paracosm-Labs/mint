@@ -1,11 +1,22 @@
 "use client";
-import React from "react";
-
+import React, { useState } from "react";
 import ClubStats from "../../components/clubStats";
 import DealsMintedChart from "../../components/dealsMintedChart";
 import RecentRedemptions from "../../components/recentRedemptions";
+import SocialShare from "../../components/socialShare";
 
 function BusinessDashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleShareClick = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const clubUrl = "https://mintdeals.vercel.app/explore/club/id"; // Replace with actual club URL
 
 
 
@@ -21,9 +32,10 @@ function BusinessDashboard() {
                 <span data-feather="calendar"></span>
                 This week
               </button> */}
-          {/* <button className="btn btn-kmint-blue mx-2">
-                Edit Club Info
-              </button> */}
+          <button className="btn btn-outline-dark mx-2" onClick={handleShareClick}>
+          <i class="fa-solid fa-share-nodes"></i>&nbsp;
+                Share Club
+              </button>
         </div>
       </div>
       <hr/>
@@ -38,7 +50,7 @@ function BusinessDashboard() {
               <RecentRedemptions />
             </div> */}
       </div>
-
+      {isModalOpen && <SocialShare clubUrl={clubUrl} onClose={handleCloseModal} />}
     </main>
   );
 }

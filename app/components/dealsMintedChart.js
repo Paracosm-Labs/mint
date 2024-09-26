@@ -1,10 +1,12 @@
 // components/dealsMintedChart.js
+"use client";
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getDealsMintedForClub } from '@/lib/mintdeals';
 import { getClubIdFromEvent } from "@/lib/club";
 import { useAuth } from "@/lib/AuthContext";
 import ClipLoader from "react-spinners/ClipLoader";
+import EmptyState from './emptyState';  // Import EmptyState component
 
 function DealsMintedChart() {
   const { data } = useAuth();
@@ -71,6 +73,8 @@ function DealsMintedChart() {
           >
             <ClipLoader color="#98ff98" size={100} />
           </div>
+        ) : chartData.length === 0 ? ( // Show EmptyState when no data is available
+          <EmptyState iconClass="fa-chart-bar" message="No deals minted in the last 6 months." />
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
