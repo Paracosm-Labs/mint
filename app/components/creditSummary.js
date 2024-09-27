@@ -1,5 +1,6 @@
 // components/creditSummary.js
 "use client";
+import Image from "next/image";
 import React from "react";
 import { Card, ProgressBar, Row, Col, Badge, Spinner } from "react-bootstrap";
 
@@ -13,8 +14,17 @@ const CreditSummary = ({ basicCreditInfo, sharedCreditInfo }) => {
   const CreditCard = ({ title, data, variant }) => (
     <Card className="h-100 shadow-sm">
       <Card.Body className="d-flex flex-column">
-        <Card.Title className="d-flex align-items-center mb-4">
-          {title}
+        <Card.Title className="d-flex justify-content-between align-items-center mb-4">
+          <span>{title}</span>
+          <Image
+                src={`/usdt.png`}
+                alt={'USDT'}
+                width={30}
+                height={30}
+                className="align-items-end" 
+                style={{ marginLeft: '4px', marginTop: '-4px' }}
+              />
+
         </Card.Title>
         <Row className="mb-3">
           <Col>

@@ -620,6 +620,40 @@ const ClubDealRegistryABI = [
 		  "type": "uint256"
 		},
 		{
+		  "internalType": "uint256",
+		  "name": "_dealId",
+		  "type": "uint256"
+		},
+		{
+		  "internalType": "address",
+		  "name": "_member",
+		  "type": "address"
+		}
+	  ],
+	  "name": "getMintStatus",
+	  "outputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "mintCount",
+		  "type": "uint256"
+		},
+		{
+		  "internalType": "uint256",
+		  "name": "maxMints",
+		  "type": "uint256"
+		}
+	  ],
+	  "stateMutability": "view",
+	  "type": "function"
+	},
+	{
+	  "inputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "_clubId",
+		  "type": "uint256"
+		},
+		{
 		  "internalType": "address",
 		  "name": "_address",
 		  "type": "address"

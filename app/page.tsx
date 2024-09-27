@@ -202,9 +202,9 @@ export default function Home() {
       </section>
 
       {/* Value Proposition */}
-      <section className="py-5 py-md-7 mt-4">
+      <section className="py-5 py-md-7">
         <div className="container">
-          <h2 className="text-center mb-5">Why Choose MintDeals</h2>
+          <h2 className="text-center mb-5 mt-5">Why Choose MintDeals</h2>
           <div className="row g-4">
             {[
               { icon: "fas fa-heart", title: "10x Customer Loyalty", description: "Engage customers with irresistible, exclusive deals" },

@@ -31,7 +31,7 @@ export async function POST(request, res) {
             return NextResponse.json({ nonce: `${loginMsg}${nonce}` }, { status: 200 });
           } else {
             console.log(`User not found with the given address : ${address}`);
-            return NextResponse.json({auth : null, msg : 'User not found with the given address.'}, { status: 500 });
+            return NextResponse.json({auth : null, msg : 'User not found with the given address.'}, { status: 403 });
           }
 
     } catch (error) {

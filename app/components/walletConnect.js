@@ -1,14 +1,15 @@
 // components/walletConnect.js
 import React, { useState, useEffect } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 
 const WalletConnect = ({ handleBusinessLogin }) => {
-  const { isAuthenticated, setIsAuthenticated, setJwtToken, setData  } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth();
   const [isTronLinkConnected, setIsTronLinkConnected] = useState(false);
   const [tronAddress, setTronAddress] = useState(null);
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false); // State for loading
   const router = useRouter();
 
   // TronLink connection handler
@@ -18,7 +19,6 @@ const WalletConnect = ({ handleBusinessLogin }) => {
         const address = window.tronWeb.defaultAddress.base58;
         setTronAddress(address);
         setIsTronLinkConnected(true);
-
         setShowModal(false);
       } else {
         alert("Please install TronLink to connect your wallet.");
@@ -32,20 +32,23 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   const handleLogoutClick = () => {
     try {
       console.log("logging out");
-      setIsAuthenticated(false); // Set auth state to false
+      setIsAuthenticated(false);
       setJwtToken(null);
       setData(null);
-  
+
       // Delay the redirection to give time for state change
       setTimeout(() => {
-        router.push("/explore"); // Redirect after logout
-      }, 100); // Small delay (100ms)
+        router.push("/explore");
+      }, 100);
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
   const getButtonText = () => {
+    if (loading) {
+      return (<><Spinner animation="border" size="sm" />&nbsp;Connecting...</>); // Show spinner while loading
+    }
     if (isAuthenticated) {
       return "Logout";
     }
@@ -55,16 +58,18 @@ const WalletConnect = ({ handleBusinessLogin }) => {
     return "Login";
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
+    if (loading) return; // Prevent further clicks while loading
+
     if (isAuthenticated) {
       handleLogoutClick();
     } else if (isTronLinkConnected) {
-      // Show modal for business login
-      setShowModal(true);
+      setShowModal(true); // Show modal for business login
     } else {
-      handleBusinessLogin().then(() => {
-        connectTronLink(); // Connect TronLink after business login
-      });
+      setLoading(true); // Set loading to true
+      await handleBusinessLogin();
+      await connectTronLink(); // Connect TronLink after business login
+      setLoading(false); // Reset loading to false
     }
   };
 
@@ -79,10 +84,12 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   // Handle modal close
   const handleCloseModal = () => setShowModal(false);
 
-  const handleBusinessLoginWithClose = (e) => {
+  const handleBusinessLoginWithClose = async (e) => {
     e.preventDefault(); // Prevent default action
-    handleBusinessLogin();
+    setLoading(true); // Set loading to true
+    await handleBusinessLogin();
     setShowModal(false); // Close the modal
+    setLoading(false); // Reset loading to false
   };
 
   return (
@@ -96,6 +103,7 @@ const WalletConnect = ({ handleBusinessLogin }) => {
             : "btn btn-kmint-blue"
         }
         onClick={handleButtonClick}
+        disabled={loading} // Disable button while loading
       >
         {getButtonText()}
       </Button>
@@ -106,9 +114,9 @@ const WalletConnect = ({ handleBusinessLogin }) => {
           <Modal.Title>Business Login</Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-center">
-          <p>You are connected to your wallet.<br/>Please log in as a business user.</p>
-          <Button onClick={handleBusinessLoginWithClose} className="btn-kmint-blue">
-            Business Login
+          <p>You are connected to your wallet.<br />Please log in as a business user.</p>
+          <Button onClick={handleBusinessLoginWithClose} className="btn-kmint-blue" disabled={loading}>
+            {loading ? <Spinner animation="border" size="sm" /> : "Business Login"}
           </Button>
         </Modal.Body>
       </Modal>

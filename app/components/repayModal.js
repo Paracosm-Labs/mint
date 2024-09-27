@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Button,
@@ -29,6 +29,32 @@ function RepayModal({ show, onHide, onSuccess, basicOutstandingDebt, sharedOutst
   const [repayTo, setRepayTo] = useState("creditFacility");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [usdtBalance, setUsdtBalance] = useState(0);
+
+  // Fetch USDT balance
+  const fetchUsdtBalance = async () => {
+    try {
+      const tokenContract = await window.tronWeb.contract(trc20ABI, USDTAddress);
+      const address = window.tronWeb.defaultAddress.base58;
+      const balance = await tokenContract.balanceOf(address).call();
+      const normalizedBalance = parseFloat(balance / 10**6).toFixed(2);
+      setUsdtBalance(normalizedBalance.toString()); // Set the USDT balance
+    } catch (err) {
+      console.error("Error fetching USDT balance:", err.message);
+      setError("Failed to fetch USDT balance");
+    }
+  };
+
+ // Clear form input when modal is closed
+  useEffect(() => {
+    if (!show) {
+      setPaymentAmount("");
+      setRepayTo("creditFacility");
+      setError(null);
+    } else {
+      fetchUsdtBalance();
+    }
+  }, [show]);
 
  // Determine available credit based on the selected borrowing source
  const outstandingDebt =
@@ -156,7 +182,8 @@ function RepayModal({ show, onHide, onSuccess, basicOutstandingDebt, sharedOutst
             </div>
             {outstandingDebt && (
               <Form.Text className="text-muted">
-                Outstanding debt: ${outstandingDebt}
+                Outstanding debt: ${outstandingDebt}<br/>
+                Wallet Balance: ${usdtBalance}
               </Form.Text>
             )}
           </Form.Group>

@@ -22,9 +22,9 @@ function Header() {
     router.push("/dashboard/business", { scroll: false });
   };
 
-  const handleBusinessLogin = () => {
+  const handleBusinessLogin = async () => {
     try {
-      login(postLogin);
+      await login(postLogin, router);
     } catch (error) {
       console.error(error);
       alert(error);

@@ -28,9 +28,9 @@ const Login = () => {
     }
   };
   
-  const handleLoginClick = () => {
+  const handleLoginClick = async () => {
     setLoading(true);
-    login(postLogin);
+    await login(postLogin, router);
   };
 
   return (<>

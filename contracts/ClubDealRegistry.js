@@ -97,9 +97,20 @@ class ClubDealRegistry extends SmartContractBase {
     }
   };
 
+  // Function to mint a deal NFT for a club member
   mintDeal = async (clubId, dealId) => {
     this.check();
     try {
+      // Step 1: Call getMintStatus to check the member's mint count and max allowed mints
+      const [mintCount, maxMints] = await this.contract.getMintStatus(clubId, dealId, window.tronWeb.defaultAddress.base58).call();
+
+      // Step 2: Check if the user has remaining mints
+      if (mintCount >= maxMints) {
+        console.error("Mint limit reached for this deal");
+        throw new Error("You have reached the mint limit for this deal.");
+      }
+
+      // Step 3: Proceed with minting if they have mints remaining
       const result = await this.contract.mintDeal(clubId, dealId).send();
       return result;
     } catch (error) {

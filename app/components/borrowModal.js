@@ -31,6 +31,16 @@ function BorrowModal({ show, onHide, onSuccess, basicAvailableCredit, sharedAvai
   const [borrowFrom, setBorrowFrom] = useState("creditFacility");
   const [utilizationPercentage, setUtilizationPercentage] = useState(0);
 
+  // Clear form input when modal is closed
+  useEffect(() => {
+    if (!show) {
+      setBorrowAmount("");
+      setError(null);
+      setBorrowFrom("creditFacility");
+      setUtilizationPercentage(0);
+    }
+  }, [show]);
+
  // Determine available credit based on the selected borrowing source
  const availableCredit =
  borrowFrom === "creditFacility"

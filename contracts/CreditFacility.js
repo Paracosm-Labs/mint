@@ -221,9 +221,9 @@ class CreditFacility extends SmartContractBase {
   getRepaymentEvents = async (maxEvents) => {
     return this.getEventsForUser(
       maxEvents,
-      "LoanRepayment",
+      "Repayment",
       "borrower",
-      "amount"
+      "cTokenAddress",
     );
   };
 }

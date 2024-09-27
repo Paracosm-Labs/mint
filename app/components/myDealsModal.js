@@ -12,6 +12,7 @@ import { formatDate } from "@/lib/format";
 import EmptyState from './emptyState';
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MyDealsModal({ show, onHide, club }) {
   const [showRedeem, setShowRedeem] = useState(false);
@@ -87,7 +88,7 @@ function MyDealsModal({ show, onHide, club }) {
               });
             } else {
               // If not confirmed, wait and try again (polling)
-              await new Promise((resolve) => setTimeout(resolve, 5000)); // Poll every 5 seconds
+              await new Promise((resolve) => setTimeout(resolve, 3000)); // Poll every 3 seconds
             }
           }
         };

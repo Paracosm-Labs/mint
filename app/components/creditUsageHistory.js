@@ -33,14 +33,14 @@ function CreditUsageHistory({ refresh }) {
           id: event.txId,
           date: new Date(event.txDate).toISOString(),
           amount: event.amount,
-          type: "Borrowed",
+          type: "Borrow",
           source: "Shared Credit",
         })),
         ...facilityBorrowedEvents.map((event) => ({
           id: event.txId,
           date: new Date(event.txDate).toISOString(),
           amount: event.amount,
-          type: "Borrowed",
+          type: "Borrow",
           source: "Basic Credit",
         })),
         ...managerRepaymentEvents.map((event) => ({
@@ -97,7 +97,7 @@ function CreditUsageHistory({ refresh }) {
   // };
 
   const getTypeBadgeVariant = (type) => {
-    return type === "Borrowed" ? "bg-warning text-dark" : "bg-info text-dark";
+    return type === "Borrow" ? "bg-warning text-dark" : "bg-info text-dark";
   };
 
   return (
@@ -142,7 +142,7 @@ function CreditUsageHistory({ refresh }) {
                     <td>
                       <span
                         className={`fw-bold ${
-                          item.type === "Borrowed" ? "text-danger" : "text-success"
+                          item.type === "Borrow" ? "text-danger" : "text-success"
                         }`}
                       >
                         $
