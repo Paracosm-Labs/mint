@@ -32,7 +32,7 @@ function BusinessDashboard() {
                 <span data-feather="calendar"></span>
                 This week
               </button> */}
-          <button className="btn btn-outline-dark mx-2" onClick={handleShareClick}>
+          <button className="btn btn-outline-secondary" onClick={handleShareClick}>
           <i class="fa-solid fa-share-nodes"></i>&nbsp;
                 Share Club
               </button>

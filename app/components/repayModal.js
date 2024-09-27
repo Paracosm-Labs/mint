@@ -24,11 +24,17 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
+function RepayModal({ show, onHide, onSuccess, basicOutstandingDebt, sharedOutstandingDebt }) {
   const [paymentAmount, setPaymentAmount] = useState("");
   const [repayTo, setRepayTo] = useState("creditFacility");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+ // Determine available credit based on the selected borrowing source
+ const outstandingDebt =
+ repayTo === "creditFacility"
+   ? basicOutstandingDebt
+   : sharedOutstandingDebt;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,9 +66,9 @@ function RepayModal({ show, onHide, onSuccess, outstandingDebt }) {
       toast.success("Repayment submitted successfully");
       onHide();
     } catch (err) {
-      console.error("Error processing repayment:", err);
-      setError("Failed to process repayment. Please try again.");
-      // toast.error("Failed to process repayment. Please try again.");
+      console.error("Error processing repayment:", err.message);
+      setError(err.message);
+      // toast.error(err.message);
     } finally {
       setLoading(false);
     }

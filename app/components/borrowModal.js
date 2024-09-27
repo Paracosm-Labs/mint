@@ -1,3 +1,4 @@
+// components/borrowModal.js
 import React, { useState, useEffect } from "react";
 import {
   Modal,
@@ -22,13 +23,19 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
+function BorrowModal({ show, onHide, onSuccess, basicAvailableCredit, sharedAvailableCredit }) {
   const [borrowAmount, setBorrowAmount] = useState("");
   // const [purpose, setPurpose] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [borrowFrom, setBorrowFrom] = useState("creditFacility");
   const [utilizationPercentage, setUtilizationPercentage] = useState(0);
+
+ // Determine available credit based on the selected borrowing source
+ const availableCredit =
+ borrowFrom === "creditFacility"
+   ? basicAvailableCredit
+   : sharedAvailableCredit;
 
   useEffect(() => {
     if (borrowAmount && availableCredit) {
@@ -67,9 +74,9 @@ function BorrowModal({ show, onHide, onSuccess, availableCredit }) {
       toast.success("Borrow request submitted successfully");
       onHide();
     } catch (err) {
-      console.error("Error borrowing tokens:", err);
-      setError("Failed to borrow tokens. Please try again.");
-      // toast.error("Failed to borrow tokens. Please try again.");
+      console.error("Error borrowing tokens:", err.message);
+      setError(err.message);
+      // toast.error(err.message);
     } finally {
       setLoading(false);
     }

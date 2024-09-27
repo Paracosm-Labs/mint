@@ -53,12 +53,30 @@ class CreditFacility extends SmartContractBase {
   borrow = async (cTokenAddress, amount, tokenDecimals) => {
     this.check();
     try {
+
+      // Get the user's total borrowing power
+      const borrowingCapacity = await this.calculateTotalBorrowingPower(window.tronWeb.defaultAddress.base58);
+      
+      // Get the user's total stablecoin borrows
+      const totalUserBorrows = await this.calculateTotalUserStablecoinBorrows(window.tronWeb.defaultAddress.base58);
+      
+      // Calculate the available borrowing capacity
+      const availableBorrowingCapacity = parseFloat(borrowingCapacity) - parseFloat(totalUserBorrows);
+
       // Normalize amount based on token decimals
       let normalizedAmount;
       if (tokenDecimals === 6) {
         normalizedAmount = Math.floor(parseFloat(amount) * 1e6).toString(); // For 6-decimal tokens
+      
       } else {
         normalizedAmount = this.web3.utils.toWei(amount.toString(), "ether"); // For 18-decimal tokens
+      
+      }
+
+      // alert(`${amount} and ${availableBorrowingCapacity}`)
+      // Ensure the user has enough capacity to borrow the requested amount
+      if (amount > availableBorrowingCapacity) {
+        throw new Error(`Insufficient borrowing capacity.`);
       }
 
       const result = await this.contract
@@ -74,6 +92,9 @@ class CreditFacility extends SmartContractBase {
   repay = async (tokenAddress, amount, beneficiary, tokenDecimals) => {
     this.check();
     try {
+      // Get the user's total stablecoin borrows
+      const totalUserBorrows = await this.calculateTotalUserStablecoinBorrows(window.tronWeb.defaultAddress.base58);
+  
       // Normalize amount based on token decimals
       let normalizedAmount;
       if (tokenDecimals === 6) {
@@ -81,27 +102,35 @@ class CreditFacility extends SmartContractBase {
       } else {
         normalizedAmount = this.web3.utils.toWei(amount.toString(), "ether"); // For 18-decimal tokens
       }
-
+  
+      // Ensure the user is repaying within the total borrowed amount
+      if (amount > totalUserBorrows) {
+        throw new Error(`Repayment amount exceeds total borrowed balance.`);
+      }
+  
       const cTokenAddress = await this.getCTokenAddress(tokenAddress);
-
+  
       // Approve the spend for the repayment amount
       await approveSpend(
-        CreditFacilityAddress,           // The contract address for the token
-        normalizedAmount,        // The normalized amount for approval
+        CreditFacilityAddress,  // The contract address for the token
+        normalizedAmount,       // The normalized amount for approval
         tokenAddress,           // Token address to approve
-        trc20                    // ABI for token interaction (TRC20)
+        trc20                   // ABI for token interaction (TRC20)
       );
-
+  
+      // Proceed with repayment transaction
       const result = await this.contract
         .repayBorrow(cTokenAddress, normalizedAmount, beneficiary)
         .send();
+  
       return result;
+  
     } catch (error) {
       console.error("Error repaying borrow:", error);
       throw error;
     }
-
   };
+  
 
   accrueInterest = async (cTokenAddress, user) => {
     this.check();
@@ -185,7 +214,7 @@ class CreditFacility extends SmartContractBase {
   };
 
   getBorrowedEvents = async (maxEvents) => {
-    return this.getEventsForUser(maxEvents, "Borrowed", "borrower");
+    return this.getEventsForUser(maxEvents, "Borrowed", "borrower", "cTokenAddress");
   };
 
   // Function to get loan repayment events

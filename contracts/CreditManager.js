@@ -58,8 +58,11 @@ class CreditManager extends SmartContractBase {
   // Function to borrow tokens from the credit manager
   borrow = async (tokenAddress, amount, tokenDecimals) => {
     this.check();
-
+  
     try {
+      // Fetch user's credit info (score, limit, and used credit)
+      const creditInfo = await this.getCreditInfo(window.tronWeb.defaultAddress.base58);
+  
       // Normalize the amount based on the token's decimals
       let normalizedAmount;
       if (tokenDecimals === 6) {
@@ -67,22 +70,37 @@ class CreditManager extends SmartContractBase {
       } else {
         normalizedAmount = this.web3.utils.toWei(amount.toString(), "ether"); // Default for 18-decimal tokens
       }
-
+  
+      // Calculate remaining borrowing capacity
+      const availableCapacity = parseFloat(creditInfo.limit) - parseFloat(creditInfo.used);
+  
+      // Check if the user has enough borrowing capacity
+      if (parseFloat(amount) > availableCapacity) {
+        throw new Error(`Insufficient borrowing capacity.`);
+      }
+  
+      // Proceed with borrowing if capacity is sufficient
       const result = await this.contract
         .borrow(tokenAddress, normalizedAmount)
         .send();
+      
       return result;
+  
     } catch (error) {
       console.error("Error borrowing tokens:", error);
       throw error;
     }
   };
+  
 
   // Function to repay tokens to the credit manager
   repay = async (tokenAddress, repaymentAmount, tokenDecimals) => {
     this.check();
-
+  
     try {
+      // Fetch user's credit info (score, limit, and used credit)
+      const creditInfo = await this.getCreditInfo(window.tronWeb.defaultAddress.base58);
+  
       // Normalize the repayment amount based on token decimals
       let normalizedRepaymentAmount;
       if (tokenDecimals === 6) {
@@ -90,7 +108,12 @@ class CreditManager extends SmartContractBase {
       } else {
         normalizedRepaymentAmount = this.web3.utils.toWei(repaymentAmount.toString(), "ether"); // Default for 18-decimal tokens
       }
-
+  
+      // Ensure repayment amount does not exceed used credit
+      if (parseFloat(repaymentAmount) > parseFloat(creditInfo.used)) {
+        throw new Error(`Repayment amount exceeds borrowed balance.`);
+      }
+  
       // Approve the spend for the repayment amount
       await approveSpend(
         CreditManagerAddress,
@@ -98,17 +121,20 @@ class CreditManager extends SmartContractBase {
         tokenAddress,
         trc20
       );
-
+  
+      // Proceed with repayment if checks pass
       const result = await this.contract
         .repay(tokenAddress, normalizedRepaymentAmount)
         .send();
+      
       return result;
+  
     } catch (error) {
       console.error("Error repaying tokens:", error);
       throw error;
     }
-  
   };
+  
 
   // Function to fetch interestDeltaBP
   getInterestDeltaPB = async () => {

@@ -77,43 +77,97 @@ function DealModal({ show, onHide, deal }) {
     }
   };
 
+  // const saveDeal = async () => {
+  //   if (!validateForm()) return;
+
+  //   setIsLoading(true);
+  //   try {
+  //     const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
+  //     console.log("clubId", clubId);
+
+  //     let metadataName = data.userData.businesses.name;
+
+  //     let metadataUri = {
+  //       description: dealDescription,
+  //       external_url: "https://mintdeals.vercel.app/",
+  //       image: url.url,
+  //       name: metadataName,
+  //     };
+
+  //     const txID = await createDeal(
+  //       clubId,
+  //       maxSupply,
+  //       dealValidTo,
+  //       JSON.stringify(metadataUri),
+  //       5
+  //     );
+  //     console.log("deal txID", txID);
+
+  //     let resJson = await save(txID, dealDescription, url);
+  //     toast.success("Deal created successfully!");
+  //     handleClose();
+  //   } catch (error) {
+  //     console.error("Error saving deal:", error);
+  //      toast.error("Failed to create the deal. Please try again.");
+
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+
   const saveDeal = async () => {
     if (!validateForm()) return;
-
+  
     setIsLoading(true);
     try {
       const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
       console.log("clubId", clubId);
-
+  
       let metadataName = data.userData.businesses.name;
-
+  
+      // Create metadata object
       let metadataUri = {
         description: dealDescription,
         external_url: "https://mintdeals.vercel.app/",
-        image: url.url,
+        image: url.url,  // Assuming `url` comes from image upload
         name: metadataName,
       };
-
-      const txID = await createDeal(
-        clubId,
-        maxSupply,
-        dealValidTo,
-        JSON.stringify(metadataUri),
-        5
-      );
+  
+      // Convert metadata to JSON file
+      const jsonBlob = new Blob([JSON.stringify(metadataUri)], { type: "application/json" });
+      const jsonFile = new File([jsonBlob], "metadata.json");
+  
+      // Upload the JSON file to Pinata using the existing API
+      const formData = new FormData();
+      formData.append("file", jsonFile);
+  
+      const uploadRequest = await fetch("/api/files", {
+        method: "POST",
+        body: formData,
+      });
+  
+      const pinataResponse = await uploadRequest.json();
+      const metadataUrl = pinataResponse.url;
+  
+      console.log("Metadata CID:", metadataUrl);
+  
+      // Use the CID from Pinata for your on-chain deal creation
+      const txID = await createDeal(clubId, maxSupply, dealValidTo, metadataUrl, 5);
       console.log("deal txID", txID);
-
+  
+      // Save the deal and show success notification
       let resJson = await save(txID, dealDescription, url);
       toast.success("Deal created successfully!");
       handleClose();
     } catch (error) {
       console.error("Error saving deal:", error);
-       toast.error("Failed to create the deal. Please try again.");
-
+      toast.error("Failed to create the deal. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <Modal show={show} onHide={onHide} size="md" centered>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Card, Table, Badge, Spinner } from "react-bootstrap";
+import { Card, Table, Badge } from "react-bootstrap";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faHistory, faMoneyBillWave, faExchangeAlt, faPiggyBank, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { creditManager } from "@/contracts/CreditManager";
 import { creditFacility } from "@/contracts/CreditFacility";
 import Link from "next/link";
+import { ClipLoader } from "react-spinners";
 import EmptyState from "../components/emptyState";
 
 function CreditUsageHistory({ refresh }) {
@@ -87,16 +88,16 @@ function CreditUsageHistory({ refresh }) {
     fetchCreditUsageHistory();
   }, [refresh]);
 
-  const getSourceIcon = (source) => {
-    return source === "Manager" ? faUsers : faPiggyBank;
+  const getSourceVariant = (source) => {
+    return source === "Shared Credit" ? "success" : "primary";
   };
 
-  const getTypeIcon = (type) => {
-    return type === "Borrowed" ? faMoneyBillWave : faExchangeAlt;
-  };
+  // const getTypeIcon = (type) => {
+  //   return type === "Borrowed" ? faMoneyBillWave : faExchangeAlt;
+  // };
 
   const getTypeBadgeVariant = (type) => {
-    return type === "Borrowed" ? "warning" : "success";
+    return type === "Borrowed" ? "bg-warning text-dark" : "bg-info text-dark";
   };
 
   return (
@@ -109,10 +110,13 @@ function CreditUsageHistory({ refresh }) {
       </Card.Header>
         <Card.Body>
         {loading ? (
-          <div className="text-center my-4">
-            <Spinner animation="border" role="status" variant="primary">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '300px',
+          }}>
+            <ClipLoader color="#98ff98" size={100} />
           </div>
         ) : error ? (
           <div className="alert alert-danger" role="alert">
@@ -150,8 +154,8 @@ function CreditUsageHistory({ refresh }) {
                     </td>
                     <td>
                       <Badge
-                        bg={getTypeBadgeVariant(item.type)}
-                        className="d-flex align-items-center"
+                        // bg=
+                        className={`d-flex align-items-center ${getTypeBadgeVariant(item.type)}`}
                         style={{ width: "fit-content" }}
                       >
                         {item.type}
@@ -159,7 +163,7 @@ function CreditUsageHistory({ refresh }) {
                     </td>
                     <td>
                       <Badge
-                        bg="secondary"
+                        bg={getSourceVariant(item.source)}
                         className="d-flex align-items-center"
                         style={{ width: "fit-content" }}
                       >
