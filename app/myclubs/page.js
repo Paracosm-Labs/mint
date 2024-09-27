@@ -1,3 +1,4 @@
+// app/myclubs/page.js
 "use client";
 import React, { useEffect, useState } from "react";
 import Club from "../components/club";
@@ -121,20 +122,6 @@ function CustomerClubs() {
         </div>
     );
   }
-  
-  // if (purchasedClubs.length === 0) {
-  //   return (
-  //     <div className="kmint container text-center">
-  //       <EmptyState 
-  //         iconClass="fa-folder-open" 
-  //         message="You haven't joined any clubs, yet."
-  //       />
-  //       <button className="btn btn-mint">
-  //         <Link href="/explore" className="nav-link"><i className="fa fa-search"/>&nbsp;Explore Clubs</Link>
-  //       </button>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="kmint container text-center">

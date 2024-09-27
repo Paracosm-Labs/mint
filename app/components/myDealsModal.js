@@ -15,8 +15,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function MyDealsModal({ show, onHide, club }) {
-  const [showRedeem, setShowRedeem] = useState(false);
-  const [selectedDeal, setSelectedDeal] = useState(null);
   const [myDeals, setMyDeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [redeemingDealId, setRedeemingDealId] = useState(null); // Track which deal is being redeemed
@@ -38,36 +36,39 @@ function MyDealsModal({ show, onHide, club }) {
     return dealList;
   };
 
-  const load = useCallback(async () => {
-    let dealList = [];
-    let nfts = await loadNFTs();
-    let deals = await loadDealsForClub(club);
-    for (let index = 0; index < nfts.length; index++) {
-      const nft = nfts[index];
-      for (let index = 0; index < deals.length; index++) {
-        const deal_ = deals[index];
-        if (deal_.onChainId === nft.dealId) {
-          let isRequested = await isRedemptionRequested(nft.tokenId);
-          let deal = { ...deal_, ...nft, requested: isRequested };
-          dealList.push(deal);
-        }
+    const load = useCallback(async () => {
+      setIsLoading(true);
+      let dealList = [];
+      try {
+          let nfts = await loadNFTs();
+          let deals = await loadDealsForClub(club);
+          
+          for (const nft of nfts) {
+              // Only process deals that belong to the current club
+              const deal_ = deals.find(deal => deal.onChainId === nft.dealId);
+              if (deal_) {
+                  let isRequested = await isRedemptionRequested(nft.tokenId);
+                  dealList.push({ ...deal_, ...nft, requested: isRequested });
+                  // console.log(`HEYA ${deal_.onChainClubId}  --- ${club.onChainId}`)
+              }
+          }
+      } catch (error) {
+          console.error(error);
+      } finally {
+          setIsLoading(false);
       }
-    }
-    return dealList;
-  }, [club]);
+      return dealList;
+    }, [club]);
 
-  useEffect(() => {
-    setIsLoading(true); // Set loading to true at the start
-    load()
-      .then((dealList) => {
-        setMyDeals(dealList);
-        setIsLoading(false); // Set loading to false once data is loaded
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-      });
-  }, [load]);
+    useEffect(() => {
+      if (show) {
+          load().then((dealList) => {
+              setMyDeals(dealList);
+          });
+      }
+    }, [show, load]);
+
+
 
   const handleRedeem = (deal) => {
     setRedeemingDealId(deal.tokenId); // Set the deal as being redeemed
@@ -103,13 +104,6 @@ function MyDealsModal({ show, onHide, club }) {
         toast.error("Redemption request failed. Please try again.");
       });
 
-    setSelectedDeal(deal);
-    setShowRedeem(true);
-  };
-
-  const handleCloseRedeem = () => {
-    setShowRedeem(false);
-    setSelectedDeal(null);
   };
 
   return (
@@ -189,11 +183,6 @@ function MyDealsModal({ show, onHide, club }) {
         </Modal.Body>
       </Modal>
 
-      {/* <OffcanvasRedeem
-        show={showRedeem}
-        onHide={handleCloseRedeem}
-        deal={selectedDeal}
-      /> */}
     </>
   );
 }
