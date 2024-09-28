@@ -70,7 +70,10 @@ main.kmint, .kmint.container{background-color: #fff;
   transform: translateY(0);
 }
 
-
+.mintdeals .nav-item:hover{
+  background-color: #80c580;
+  border-radius: 8px;
+}
 
 .onboard-choice{
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
@@ -244,6 +247,7 @@ fieldset[disabled] .btn-kmint-blue.active {
 }
 
 
+
 .jl-logo{
   background-color: #4950d4;
   padding-right: 14px;
@@ -279,11 +283,14 @@ fieldset[disabled] .btn-kmint-blue.active {
 
 .sidebar .nav-link{
   color: #000;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
-
 .sidebar .nav-link:focus, .sidebar .nav-link:hover {
-  color: #1f811f !important;
+  /* color: #1f811f !important; */
+  /* color: #fff !important; */
+  background-color: #80c580;
+  border-radius: 8px;
 }
 
 .club-card-horizontal img {

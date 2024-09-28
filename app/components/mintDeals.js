@@ -81,7 +81,7 @@ function MintDeal({ deal, club, onMintSuccess }) {
             </div>
             {/* Show mint status */}
             <small className="text-muted">
-              Mints Remaining: {maxMints - mintCount}/{maxMints}
+              Mints Left: {maxMints - mintCount}
             </small>
             <Badge className="text-white p-2 m-2 bg-secondary">
               Valid to {deal.expiryDate ? formatDate(deal.expiryDate) : ""}

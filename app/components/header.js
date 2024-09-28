@@ -50,7 +50,7 @@ function Header() {
             Explore Clubs
           </Link>
         </li>
-        <li className="nav-item">
+        <li className={`nav-item ${isAuthenticated ? ``: `me-2` }`}>
           <Link className="nav-link" href="/myclubs">
             My Clubs
           </Link>

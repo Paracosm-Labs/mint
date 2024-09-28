@@ -272,7 +272,25 @@ export default function Home() {
         <div className="container text-center">
           <h2 className="mb-4">Ready to Transform Your Business?</h2>
           <p className="lead mb-4">Join the growing number of businesses already thriving with MintDeals</p>
-          <button  onClick={handleSignIn} className="btn btn-outline-dark btn-lg">Start Your Own Club Today</button>
+
+          {userExists ? (<>
+              <button
+                    id="ctaOnboardButton"
+                    className="btn btn-outline-dark btn-lg px-4"
+                    onClick={toDashboard}
+                  >
+                      Go to Your Club Dashboard
+                  </button>
+                  </>) :(
+              <button
+                    id="ctaOnboardButton"
+                    className="btn btn-outline-dark btn-lg px-4"
+                    onClick={handleSignIn}
+                  >
+                   Start Your Own Club Today
+                  </button>
+            )}
+
         </div>
       </section>
 

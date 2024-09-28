@@ -128,7 +128,7 @@ function MyDealsModal({ show, onHide, club }) {
           ) : (
             <div className="d-flex flex-column" style={{ gap: "20px" }}>
               {myDeals.map((deal) => (
-                <Card key={deal.txID} className="mb-2">
+                <Card key={`${deal.txID}-${deal.tokenId}`} className="mb-2">
                   <div className="row g-0">
                     <div className="col-md-3">
                       <Card.Img

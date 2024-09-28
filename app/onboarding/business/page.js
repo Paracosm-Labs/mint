@@ -57,7 +57,9 @@ const BusinessOnboarding = () => {
     let address = await getAddress();
     const exists = await checkUserExists(address);
     if (exists) {
-      redirect("/login");
+      router.push("/login", {
+        scroll: false,
+      });
     }
   };
 
