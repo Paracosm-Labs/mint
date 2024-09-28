@@ -13,7 +13,9 @@ function DealModal({ show, onHide, deal }) {
   const { data } = useAuth();
   const [dealImage, setDealImage] = useState(deal?.image || "");
   const [maxSupply, setMaxSupply] = useState(deal?.maxSupply || "");
-  const [dealDescription, setDealDescription] = useState(deal?.description || "");
+  const [dealDescription, setDealDescription] = useState(
+    deal?.description || ""
+  );
   const [dealValidTo, setDealValidTo] = useState(deal?.validTo || "");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -34,7 +36,6 @@ function DealModal({ show, onHide, deal }) {
     onHide(); // Call the onHide prop to close the modal
   };
 
-
   const validateForm = () => {
     const newErrors = {};
     if (!maxSupply) newErrors.maxSupply = "Max supply is required";
@@ -50,7 +51,6 @@ function DealModal({ show, onHide, deal }) {
     if (!txID) {
       throw Error("txID is null");
     }
-    debugger;
     let payload = {
       description: description,
       txID: txID,
@@ -115,47 +115,54 @@ function DealModal({ show, onHide, deal }) {
   //   }
   // };
 
-
   const saveDeal = async () => {
     if (!validateForm()) return;
-  
+
     setIsLoading(true);
     try {
       const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
       console.log("clubId", clubId);
-  
+
       let metadataName = data.userData.businesses.name;
-  
+
       // Create metadata object
       let metadataUri = {
         description: dealDescription,
         external_url: "https://mintdeals.vercel.app/",
-        image: url.url,  // Assuming `url` comes from image upload
+        image: url.url, // Assuming `url` comes from image upload
         name: metadataName,
       };
-  
+
       // Convert metadata to JSON file
-      const jsonBlob = new Blob([JSON.stringify(metadataUri)], { type: "application/json" });
+      const jsonBlob = new Blob([JSON.stringify(metadataUri)], {
+        type: "application/json",
+      });
       const jsonFile = new File([jsonBlob], "metadata.json");
-  
+
       // Upload the JSON file to Pinata using the existing API
       const formData = new FormData();
       formData.append("file", jsonFile);
-  
+
       const uploadRequest = await fetch("/api/files", {
         method: "POST",
         body: formData,
       });
-  
+
       const pinataResponse = await uploadRequest.json();
       const metadataUrl = pinataResponse.url;
-  
+
       console.log("Metadata CID:", metadataUrl);
-  
+
       // Use the CID from Pinata for your on-chain deal creation
-      const txID = await createDeal(clubId, maxSupply, dealValidTo, metadataUrl, 5);
+      const txID = await createDeal(
+        clubId,
+        maxSupply,
+        dealValidTo,
+        metadataUrl,
+        5
+      );
       console.log("deal txID", txID);
-  
+
       // Save the deal and show success notification
       let resJson = await save(txID, dealDescription, url);
       toast.success("Deal created successfully!");
@@ -167,7 +174,6 @@ function DealModal({ show, onHide, deal }) {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <Modal show={show} onHide={onHide} size="md" centered>
@@ -183,11 +189,11 @@ function DealModal({ show, onHide, deal }) {
               <div className="mt-3 text-center">
                 {/** style accordingy */}
                 <Image
-                  loader={() => url.url}  
+                  loader={() => url.url}
                   // fill={true}
-                  width={400} 
-                  height={200}  
-                  src={url.url} 
+                  width={400}
+                  height={200}
+                  src={url.url}
                   alt="Uploaded Deal Image"
                   className="deal-image-preview-a"
                 />

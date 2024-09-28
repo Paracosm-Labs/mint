@@ -6,7 +6,7 @@ import OffcanvasDeals from "../components/offcanvasDeals";
 import MyDealsModal from "../components/myDealsModal";
 import { getClubsForMember, getEventTxIDFromClubId } from "@/lib/club";
 import { ClipLoader } from "react-spinners";
-import EmptyState from '../components/emptyState';
+import EmptyState from "../components/emptyState";
 import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,7 +24,7 @@ function CustomerClubs() {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadClubs = async () => {
-    setIsLoading(true);  // Set loading to true when starting to fetch data
+    setIsLoading(true); // Set loading to true when starting to fetch data
     try {
       let clubIds = await getClubsForMember();
       let clubTxIDs = new Map();
@@ -70,9 +70,11 @@ function CustomerClubs() {
     } catch (error) {
       console.error(error);
       // alert(error.message);
-      toast.error(`An error has occured. Please install or login to TronLink. ${error.message}`);
+      toast.error(
+        `An error has occured. Please install or login to TronLink. ${error.message}`
+      );
     } finally {
-      setIsLoading(false);  // Set loading to false when done fetching data
+      setIsLoading(false); // Set loading to false when done fetching data
     }
   };
 
@@ -112,14 +114,17 @@ function CustomerClubs() {
 
   if (isLoading) {
     return (
-        <div className="kmint container" style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+      <div
+        className="kmint container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           // height: '80vh',  // This will make it full screen
-        }}>
-          <ClipLoader color="#98ff98" size={150} />
-        </div>
+        }}
+      >
+        <ClipLoader color="#98ff98" size={150} />
+      </div>
     );
   }
 
@@ -147,26 +152,29 @@ function CustomerClubs() {
       </div>
 
       <div className="row">
-
-      { purchasedClubs.length === 0 ? (<>
-      
-        <EmptyState 
-          iconClass="fa-folder-open" 
-          message="You haven't joined any clubs, yet."
-        />
-        <button className="btn btn-mint w-25 m-auto">
-          <Link href="/explore" className="nav-link"><i className="fa fa-search"/>&nbsp;Explore Clubs</Link>
-        </button>
-
-        </>): (filteredClubs.map((club) => (
-          <Club
-            club={club}
-            key={club.txID}
-            handleViewDeals={handleViewDeals}
-            handleViewMyDeals={handleViewMyDeals}
-          ></Club>
-        )))
-        }
+        {purchasedClubs.length === 0 ? (
+          <>
+            <EmptyState
+              iconClass="fa-folder-open"
+              message="You haven't joined any clubs, yet."
+            />
+            <button className="btn btn-mint w-25 m-auto">
+              <Link href="/explore" className="nav-link">
+                <i className="fa fa-search" />
+                &nbsp;Explore Clubs
+              </Link>
+            </button>
+          </>
+        ) : (
+          filteredClubs.map((club) => (
+            <Club
+              club={club}
+              key={club.txID}
+              handleViewDeals={handleViewDeals}
+              handleViewMyDeals={handleViewMyDeals}
+            ></Club>
+          ))
+        )}
       </div>
       <OffcanvasDeals
         show={showOffcanvas}
@@ -187,7 +195,7 @@ function CustomerClubs() {
         closeOnClick
         draggable
         pauseOnHover
-        />
+      />
     </div>
   );
 }

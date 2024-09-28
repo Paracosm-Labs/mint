@@ -3,13 +3,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Modal, Card, Button } from "react-bootstrap";
 import { loadDealsForClub } from "@/lib/deal";
-import {
-  requestRedemption,
-  getNFTsAndDealIdsInWallet,
-} from "@/lib/mintdeals";
+import { requestRedemption, getNFTsAndDealIdsInWallet } from "@/lib/mintdeals";
 import { isRedemptionRequested } from "@/lib/redemptions";
 import { formatDate } from "@/lib/format";
-import EmptyState from './emptyState';
+import EmptyState from "./emptyState";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,7 +19,7 @@ function MyDealsModal({ show, onHide, club }) {
   const loadNFTs = async () => {
     let dealList = [];
     try {
-      let nfts = await getNFTsAndDealIdsInWallet();
+      let nfts = await getNFTsAndDealIdsInWallet(club.onChainId);
 
       for (let index = 0; index < nfts.length; index++) {
         const nft = nfts[index];
@@ -36,39 +33,39 @@ function MyDealsModal({ show, onHide, club }) {
     return dealList;
   };
 
-    const load = useCallback(async () => {
-      setIsLoading(true);
-      let dealList = [];
-      try {
-          let nfts = await loadNFTs();
-          let deals = await loadDealsForClub(club);
-          
-          for (const nft of nfts) {
-              // Only process deals that belong to the current club
-              const deal_ = deals.find(deal => deal.onChainId === nft.dealId);
-              if (deal_) {
-                  let isRequested = await isRedemptionRequested(nft.tokenId);
-                  dealList.push({ ...deal_, ...nft, requested: isRequested });
-                  // console.log(`HEYA ${deal_.onChainClubId}  --- ${club.onChainId}`)
-              }
-          }
-      } catch (error) {
-          console.error(error);
-      } finally {
-          setIsLoading(false);
+  const load = useCallback(async () => {
+    setIsLoading(true);
+    let dealList = [];
+    try {
+      let nfts = await loadNFTs();
+      let deals = await loadDealsForClub(club);
+
+      for (const nft of nfts) {
+        // Only process deals that belong to the current club
+        const deal_ = deals.find(
+          (deal) => deal.onChainId === nft.dealId.toString()
+        );
+        if (deal_) {
+          let isRequested = await isRedemptionRequested(nft.tokenId);
+          dealList.push({ ...deal_, ...nft, requested: isRequested });
+          // console.log(`HEYA ${deal_.onChainClubId}  --- ${club.onChainId}`)
+        }
       }
-      return dealList;
-    }, [club]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+    return dealList;
+  }, [club]);
 
-    useEffect(() => {
-      if (show) {
-          load().then((dealList) => {
-              setMyDeals(dealList);
-          });
-      }
-    }, [show, load]);
-
-
+  useEffect(() => {
+    if (show) {
+      load().then((dealList) => {
+        setMyDeals(dealList);
+      });
+    }
+  }, [show, load]);
 
   const handleRedeem = (deal) => {
     setRedeemingDealId(deal.tokenId); // Set the deal as being redeemed
@@ -103,7 +100,6 @@ function MyDealsModal({ show, onHide, club }) {
         setRedeemingDealId(null); // Reset the redeeming state if there's an error
         toast.error("Redemption request failed. Please try again.");
       });
-
   };
 
   return (
@@ -125,8 +121,8 @@ function MyDealsModal({ show, onHide, club }) {
               <ClipLoader color="#98ff98" size={100} />
             </div>
           ) : myDeals.length === 0 ? (
-            <EmptyState 
-              iconClass="fa-receipt" 
+            <EmptyState
+              iconClass="fa-receipt"
               message="You do not own any deals."
             />
           ) : (
@@ -153,7 +149,9 @@ function MyDealsModal({ show, onHide, club }) {
                         <div className="d-flex justify-content-end align-items-center mt-3">
                           {deal.requested ? (
                             <>
-                              <Button className="btn-secondary btn-sm" disabled>Redemption Requested</Button>
+                              <Button className="btn-secondary btn-sm" disabled>
+                                Redemption Requested
+                              </Button>
                             </>
                           ) : redeemingDealId === deal.tokenId ? (
                             <Button className="btn-kmint-blue" disabled>
@@ -182,7 +180,6 @@ function MyDealsModal({ show, onHide, club }) {
           )}
         </Modal.Body>
       </Modal>
-
     </>
   );
 }
