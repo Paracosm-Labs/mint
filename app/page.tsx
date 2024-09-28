@@ -6,6 +6,7 @@ import { getAddress, verifyWallet } from "@/lib/wallet";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import {checkUserExists} from "@/lib/user";
 
 export default function Home() {
   const { setIsAuthenticated, setJwtToken, setData, isAuthenticated } = useAuth();
@@ -18,20 +19,7 @@ export default function Home() {
     setJwtToken(auth);
     router.push('/dashboard/business', { scroll: false })    
   }
-  const checkUserExists = async (address: string) => {
-    const response = await fetch("/api/user/check", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        address: address,
-      }),
-    });
-    const data = await response.json();
-    console.log(data);
-    return data.success;
-  }
+
 
   const toDashboard = async() =>{
     router.push('/dashboard/business', { scroll: false })    

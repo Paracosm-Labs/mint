@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StepIndicator from "./stepIndicator";
 import BusinessInfo from "./businessInfo";
 import CreateClub from "./createClub";
@@ -9,14 +9,17 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/lib/AuthContext";
 
-import { verifyWallet, signUsingWallet } from "@/lib/wallet";
+import { verifyWallet, signUsingWallet, getAddress } from "@/lib/wallet";
 import { businessOnboardingMsg } from "@/utils/messageForSign";
 import ClubDealRegistryABI from "@/abi/ClubDealsRegistry.js";
 import { USDDAddress, USDTAddress } from "@/lib/address";
 import { createClubOnChain } from "@/lib/club";
 import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
+import { checkUserExists } from "@/lib/user";
 
 const BusinessOnboarding = () => {
+  const [userExists, setUserExists] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [businessData, setBusinessData] = useState({
     businessInfo: {
@@ -40,16 +43,38 @@ const BusinessOnboarding = () => {
 
   const { setIsAuthenticated, setJwtToken } = useAuth();
 
+  const loginIfBusinessOwner = async () => {
+    let res = await verifyWallet();
+    if (!res || res.length === 0) {
+      alert("Please install or login to Tronlink to proceed.");
+      return;
+    }
+    if (res.code !== 200) {
+      alert(res.message);
+      return;
+    }
+
+    let address = await getAddress();
+    const exists = await checkUserExists(address);
+    if (exists) {
+      redirect("/login");
+    }
+  };
+
+  useEffect(() => {
+    loginIfBusinessOwner();
+  }, []);
+
   const nextStep = () => setCurrentStep(currentStep + 1);
   const prevStep = () => setCurrentStep(currentStep - 1);
 
   const handleDataUpdate = (section, data) => {
-    setBusinessData(prevData => ({
+    setBusinessData((prevData) => ({
       ...prevData,
       [section]: {
         ...prevData[section],
-        ...data
-      }
+        ...data,
+      },
     }));
   };
 
@@ -116,33 +141,36 @@ const BusinessOnboarding = () => {
         setErrMsg(verifyWalletResponse.message);
         return;
       }
-  
-      const currencyAddress = selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
+
+      const currencyAddress =
+        selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
       const tokenDecimals = selectedCurrency === "USDT" ? 6 : 18;
-  
+
       // Validate membership fee
       if (!businessData.clubInfo.membershipFee) {
         setErr(3);
         setErrMsg("Membership fee is not set.");
         return;
       }
-  
-      console.log("membership fee:",businessData.clubInfo.membershipFee);
+
+      console.log("membership fee:", businessData.clubInfo.membershipFee);
       let txID = await createClubOnChain(
         currencyAddress,
         businessData.clubInfo.membershipFee,
         true,
         tokenDecimals
       );
-  
+
       let signature = await signUsingWallet(businessOnboardingMsg);
-  
+
       let auth = await save(signature, txID);
-  
+
       if (auth) {
         // setIsAuthenticated(true);
         // setJwtToken(auth);
-        toast.success("Onboarding completed successfully! Welcome to MintDeals!");
+        toast.success(
+          "Onboarding completed successfully! Welcome to MintDeals!"
+        );
         router.push("/login", {
           scroll: false,
         });
@@ -155,15 +183,15 @@ const BusinessOnboarding = () => {
       console.error(error);
     }
   };
-    
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
         return (
-          <BusinessInfo onNext={nextStep} 
-          onDataUpdate={handleDataUpdate}
-          data={businessData.businessInfo}
+          <BusinessInfo
+            onNext={nextStep}
+            onDataUpdate={handleDataUpdate}
+            data={businessData.businessInfo}
           />
         );
       case 2:
@@ -178,12 +206,20 @@ const BusinessOnboarding = () => {
       case 3:
         //   return <CreateDeal onNext={nextStep} onPrev={prevStep} onDataUpdate={handleDataUpdate} />;
         // case 4:
-        return <OnboardSummary onComplete={complete} onPrev={prevStep} businessInfo={businessData.businessInfo} clubInfo={businessData.clubInfo} />;
+        return (
+          <OnboardSummary
+            onComplete={complete}
+            onPrev={prevStep}
+            businessInfo={businessData.businessInfo}
+            clubInfo={businessData.clubInfo}
+          />
+        );
       default:
         return (
-          <BusinessInfo onNext={nextStep} 
-          onDataUpdate={handleDataUpdate}
-          data={businessData.clubInfo}
+          <BusinessInfo
+            onNext={nextStep}
+            onDataUpdate={handleDataUpdate}
+            data={businessData.clubInfo}
           />
         );
     }
@@ -201,8 +237,8 @@ const BusinessOnboarding = () => {
             Join our platform and start offering amazing deals to your
             customers.
             <br />
-            As your customers join your club and redeem your deals, you gain access to a growing
-            credit line.
+            As your customers join your club and redeem your deals, you gain
+            access to a growing credit line.
           </p>
           <StepIndicator currentStep={currentStep} />
           <div className="card">
