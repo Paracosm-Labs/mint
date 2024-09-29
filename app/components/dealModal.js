@@ -195,7 +195,7 @@ function DealModal({ show, onHide, deal }) {
                   height={200}
                   src={url.url}
                   alt="Uploaded Deal Image"
-                  className="deal-image-preview-a"
+                  className="deal-image-preview-a rounded"
                 />
               </div>
             )}

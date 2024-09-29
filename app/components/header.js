@@ -1,4 +1,4 @@
-// componentss/header.js
+// components/header.js
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -8,12 +8,20 @@ import { useRouter } from "next/navigation";
 import login from "@/lib/login";
 import WalletConnect from "./walletConnect";
 import Image from "next/image";
+import { initializeAmplitude, logEvent } from "@/utils/analytics";
 
 function Header() {
   const { isAuthenticated } = useAuth();
   const { setIsAuthenticated, setJwtToken, setData } = useAuth();
   const [isOpen, setIsOpen] = useState(false); // State for toggling
   const router = useRouter();
+
+  const amplitudeInstance = initializeAmplitude();
+
+  const handleLinkClick = (page) => {
+    // Log link click event to Amplitude
+    logEvent("Link Clicked", { page });
+  };
 
   const postLogin = async (auth, data) => {
     setData(data);
@@ -46,18 +54,18 @@ function Header() {
     return (
       <ul className="navbar-nav ms-auto">
         <li className="nav-item">
-          <Link className="nav-link" href="/explore">
+          <Link className="nav-link" href="/explore" onClick={() => handleLinkClick("Explore Clubs")}>
             Explore Clubs
           </Link>
         </li>
         <li className={`nav-item ${isAuthenticated ? ``: `me-2` }`}>
-          <Link className="nav-link" href="/myclubs">
+          <Link className="nav-link" href="/myclubs" onClick={() => handleLinkClick("My Clubs")}>
             My Clubs
           </Link>
         </li>
         {isAuthenticated ? (<>
         <li className="nav-item me-2">
-          <Link className="nav-link" href="/dashboard/business">
+          <Link className="nav-link" href="/dashboard/business" onClick={() => handleLinkClick("Dashboard")}>
             Dashboard
           </Link>
         </li>

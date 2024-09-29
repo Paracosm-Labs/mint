@@ -57,7 +57,7 @@ function MintDeal({ deal, club, onMintSuccess }) {
       style={{ minWidth: "350px", maxWidth: "350px" }}
       className="flex-shrink-0"
     >
-      <Card.Img variant="top" src={deal.image} alt={deal.description} className="deal-image-preview-b" />
+      <Card.Img variant="top" src={deal.image} alt={deal.description} className="deal-image-preview-b rounded" />
       <Card.Body className="d-flex flex-column align-items-center">
         <Card.Text style={{ minHeight: "60px" }}>{deal.description}</Card.Text>
 
