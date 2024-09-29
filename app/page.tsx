@@ -176,7 +176,7 @@ export default function Home() {
       </section>
 
       {/* Social Proof */}
-      <section className="py-5 bg-white d-none">
+      {/* <section className="py-5 bg-white d-none">
         <div className="container text-center">
           <p className="lead mb-4">Trusted by over 50 local business communities</p>
           <div className="row justify-content-center align-items-center">
@@ -187,7 +187,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Value Proposition */}
       <section className="py-5 py-md-7">
@@ -251,7 +251,7 @@ export default function Home() {
       </section>
 
       {/* Testimonial */}
-      <section className="py-5 py-md-7 bg-light d-none">
+      {/* <section className="py-5 py-md-7 bg-light d-none">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8 text-center">
@@ -265,7 +265,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA */}
       <section className="py-5 py-md-7 bg-mint">

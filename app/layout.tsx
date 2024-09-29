@@ -1,3 +1,4 @@
+//  app/layout.tsx
 "use client";
 import { createContext, useEffect } from "react";
 import { Inter } from "next/font/google";
@@ -6,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Metadata from "../app/metadata";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import { initializeAmplitude, logEvent } from "../utils/analytics";
+import { initializeAmplitude, logEvent, getAmplitudeInstance } from "../utils/analytics";
 import { usePathname } from "next/navigation";  // Use usePathname to monitor route changes
 import { AuthProvider } from "../lib/AuthContext";
 import { ToastContainer } from "react-toastify";
@@ -22,12 +23,33 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname(); // Use usePathname hook to track URL changes
-  const amplitudeInstance = initializeAmplitude();
 
   useEffect(() => {
-    // Log page view to Amplitude on route change
+    // Initialize Amplitude
+    initializeAmplitude();
+    const amplitudeInstance = getAmplitudeInstance();
+
+    const handleRouteChange = (url:string) => {
+      // Log page view to Amplitude
+      logEvent("Page Viewed", { page: url });
+    };
+
+    // Log the initial page view
     logEvent("Page Viewed", { page: pathname });
-  }, [pathname]); // Re-run effect whenever the pathname changes
+
+    // Log changes on pathname
+    const handlePathnameChange = () => {
+      logEvent("Page Viewed", { page: pathname });
+    };
+
+    // Add a listener for pathname changes (React Hook)
+    handlePathnameChange();
+
+    return () => {
+      // Cleanup if necessary, but in this case, no cleanup is needed for a direct log
+    };
+  }, [pathname]); // Dependency array includes pathname
+
 
   return (
     <html lang="en">
@@ -44,10 +66,10 @@ export default function RootLayout({
           strategy="lazyOnload"
         />
       </head>
-      <body className={`bg-mintdeals ${inter.className}`}>
+      <body id="root" className={`bg-mintdeals ${inter.className}`}>
         <AuthProvider>
-          {amplitudeInstance && (
-            <AmplitudeContext.Provider value={amplitudeInstance}>
+          
+            <AmplitudeContext.Provider value={getAmplitudeInstance()}>
               <Header />
               {children}
               <Footer />
@@ -60,7 +82,7 @@ export default function RootLayout({
                 pauseOnHover
               />
             </AmplitudeContext.Provider>
-          )}
+          
         </AuthProvider>
       </body>
     </html>

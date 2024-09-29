@@ -1,7 +1,7 @@
 // components/header.js
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "react-bootstrap";
 import { useRouter } from "next/navigation";
@@ -11,12 +11,14 @@ import Image from "next/image";
 import { initializeAmplitude, logEvent } from "@/utils/analytics";
 
 function Header() {
-  const { isAuthenticated } = useAuth();
-  const { setIsAuthenticated, setJwtToken, setData } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth();
   const [isOpen, setIsOpen] = useState(false); // State for toggling
   const router = useRouter();
 
-  const amplitudeInstance = initializeAmplitude();
+  useEffect(() => {
+    // Initialize Amplitude on mount
+    initializeAmplitude();
+  }, []);
 
   const handleLinkClick = (page) => {
     // Log link click event to Amplitude
@@ -47,7 +49,7 @@ function Header() {
   };
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev); // Toggle based on previous state
   };
 
   const getMenuEntries = () => {
@@ -58,19 +60,18 @@ function Header() {
             Explore Clubs
           </Link>
         </li>
-        <li className={`nav-item ${isAuthenticated ? ``: `me-2` }`}>
+        <li className={`nav-item ${isAuthenticated ? "" : "me-2"}`}>
           <Link className="nav-link" href="/myclubs" onClick={() => handleLinkClick("My Clubs")}>
             My Clubs
           </Link>
         </li>
-        {isAuthenticated ? (<>
-        <li className="nav-item me-2">
-          <Link className="nav-link" href="/dashboard/business" onClick={() => handleLinkClick("Dashboard")}>
-            Dashboard
-          </Link>
-        </li>
-        </>):(<></>)
-        }
+        {isAuthenticated && (
+          <li className="nav-item me-2">
+            <Link className="nav-link" href="/dashboard/business" onClick={() => handleLinkClick("Dashboard")}>
+              Dashboard
+            </Link>
+          </li>
+        )}
         <li className="">
           {/* Render the WalletConnect component */}
           <WalletConnect 
@@ -86,21 +87,21 @@ function Header() {
     <header className="mintdeals navbar navbar-expand-lg navbar-dark">
       <div className="container">
         <Link className="navbar-brand" href="/">
-        <Image
-          src="/logo192.png"
-          alt="MintDeals Logo"
-          width={40}
-          height={40}
-          className="d-inline-block align-top border border-white shadow-lg"
-          style={{
-            padding: "5px",
-            marginRight: "10px",
-            backgroundColor: "white",
-            borderRadius: "15%", // Creates the rounded square effect
-            marginTop: "-5px",
-          }}
-        />
-          <span style={{color:'#0a462a'}}>MintDeals</span>
+          <Image
+            src="/logo192.png"
+            alt="MintDeals Logo"
+            width={40}
+            height={40}
+            className="d-inline-block align-top border border-white shadow-lg"
+            style={{
+              padding: "5px",
+              marginRight: "10px",
+              backgroundColor: "white",
+              borderRadius: "15%", // Creates the rounded square effect
+              marginTop: "-5px",
+            }}
+          />
+          <span style={{ color: '#0a462a' }}>MintDeals</span>
         </Link>
         <button
           className={`navbar-toggler ${isOpen ? "" : "collapsed"}`} 
