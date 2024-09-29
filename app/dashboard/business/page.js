@@ -1,12 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ClubStats from "../../components/clubStats";
 import DealsMintedChart from "../../components/dealsMintedChart";
 import RecentRedemptions from "../../components/recentRedemptions";
 import SocialShare from "../../components/socialShare";
+import { useAuth } from "@/lib/AuthContext";
 
 function BusinessDashboard() {
+  const { data } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clubId, setClubId] = useState(null);
+
+  useEffect(() => {
+    const fetchClubId = async () => {
+      if (data && data.userData.clubs._id) {
+        const fetchedClubId = data.userData.clubs._id;
+        setClubId(fetchedClubId);
+      }
+    };
+    fetchClubId();
+  }, [data]);
 
   const handleShareClick = () => {
     setIsModalOpen(true); // Open the modal
@@ -16,7 +29,7 @@ function BusinessDashboard() {
     setIsModalOpen(false); // Close the modal
   };
 
-  const clubUrl = "https://mintdeals.vercel.app/explore/club/id"; // Replace with actual club URL
+  const clubUrl = clubId ? `https://mintdeals.vercel.app/explore/clubs/${clubId}` : "https://mintdeals.vercel.app/explore";
 
 
 
@@ -33,9 +46,9 @@ function BusinessDashboard() {
                 This week
               </button> */}
           <button className="btn btn-outline-secondary" onClick={handleShareClick}>
-          <i class="fa-solid fa-share-nodes"></i>&nbsp;
+            <i className="fa-solid fa-share-nodes"></i>&nbsp;
                 Share Club
-              </button>
+          </button>
         </div>
       </div>
       <hr/>

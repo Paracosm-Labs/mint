@@ -1,3 +1,4 @@
+// components/clubStats.js
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { getClubDetails, getClubIdFromEvent } from "@/lib/club";

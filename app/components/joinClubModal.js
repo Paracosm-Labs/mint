@@ -1,3 +1,4 @@
+// components/joinClubModal.js
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import CurrencySelector from './currencySelector';

@@ -8,11 +8,12 @@ import {
   isUserClubMember,
 } from "@/lib/club";
 import { USDDAddress, USDTAddress } from "@/lib/address";
-import { countries } from "@/utils/countries";
+import { countries, getCountryNameByCode } from "@/utils/countries";
 import { ClipLoader } from "react-spinners";
 import JoinClubModal from "../components/joinClubModal";
 import EmptyState from "../components/emptyState";
 import Image from "next/image";
+import ClubCard from "../components/ClubCard";
 import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 
@@ -29,12 +30,6 @@ function ExploreClubs() {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-  };
-
-  // Function to get country name by code
-  const getCountryNameByCode = (code) => {
-    const country = countries.find((c) => c.code === code);
-    return country ? country.name : "All Countries";
   };
 
   // Extract unique countries and categories from the clubs data
@@ -325,58 +320,23 @@ function ExploreClubs() {
         </div>
 
         <div className="row" id="club-container">
-        {sortedClubs.length === 0 ? (
-          <EmptyState 
-            iconClass="fa-folder-open" 
-            message="No clubs created yet."
-          />
-        ) : (
-          sortedClubs.map((club) => (
-            <div className="col-md-4 mb-4" key={club.id}>
-              <div className="card club-card">
-                <Image
-                  height={200}
-                  width={400}
-                  src={club.image}
-                  className="card-img-top"
-                  alt={club.name}
+          {sortedClubs.length === 0 ? (
+            <EmptyState 
+              iconClass="fa-folder-open" 
+              message="No clubs created yet."
+            />
+          ) : (
+            sortedClubs.map((club) => (
+              <div className="col-md-4 mb-4" key={club.id}>
+                <ClubCard 
+                  club={club} 
+                  onJoin={join} 
+                  getCountryNameByCode={getCountryNameByCode}
                 />
-                <div className="card-body">
-                  <h5 className="card-title">{club.name}</h5>
-                  <p className="card-text">{club.description}</p>
-                  <div className="membershipFee-qty-container">
-                    <span className="badge bg-secondary badge-category">
-                      {club.category}
-                    </span>
-                    <span 
-                      className="badge bg-secondary badge-country mx-2" 
-                      data-bs-toggle="tooltip" 
-                      title={getCountryNameByCode(club.country)}
-                    >
-                      {club.country}
-                    </span>
-                    <span className="text-success">{club.members} Members</span>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center">
-                    <h4 className="text-success mt-3">${club.membershipFee}</h4>
-                    {club.isMember ? (
-                      <button className="btn btn-success disabled">Joined</button>
-                    ) : (
-                      <button
-                        className="btn btn-success"
-                        onClick={() => join(club)}
-                      >
-                        Join Club
-                      </button>
-                    )}
-                  </div>
-                </div>
               </div>
-            </div>
-          ))
-        )}
-      </div>
-
+            ))
+          )}
+        </div>
 
 
         <JoinClubModal

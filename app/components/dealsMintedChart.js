@@ -81,7 +81,7 @@ function DealsMintedChart() {
           <ResponsiveContainer width="100%" height={300}>
             {/* <AreaChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis />
               <YAxis />
               <Tooltip />
               <Legend />
@@ -100,7 +100,7 @@ function DealsMintedChart() {
 
             <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis />
             <YAxis />
             <Tooltip />
             <Legend />

@@ -1,4 +1,11 @@
 // utils/countries.js
+
+  // Function to get country name by code
+  export const getCountryNameByCode = (code) => {
+    const country = countries.find((c) => c.code === code);
+    return country ? country.name : "All Countries";
+  };
+
 export const countries = [
     {
         "name": "Afghanistan",

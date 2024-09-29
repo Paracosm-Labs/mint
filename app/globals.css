@@ -270,6 +270,13 @@ fieldset[disabled] .btn-kmint-blue.active {
   display: block;
 }
 
+.deal {
+  height: 350px;
+}
+
+.deal .descript {
+  height: 80px;
+}
 
 .deal-image-preview-a{
   width: 400px!important;
@@ -297,6 +304,31 @@ fieldset[disabled] .btn-kmint-blue.active {
   height: 150px;
   width: 300px;
 }
+
+.club-card {
+  position: relative; /* Keep position relative for overlay */
+  overflow: hidden; /* Ensure overlay doesn't overflow */
+}
+
+.overlay {
+  position: absolute; /* Position the overlay absolutely */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust position to truly center it */
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  display: flex; /* Use flex to center the button */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  opacity: 0; /* Hide overlay initially */
+  transition: opacity 0.3s ease; /* Smooth transition for visibility */
+}
+
+.club-card:hover .overlay {
+  opacity: 1; /* Show overlay on hover */
+}
+
 
 /*////////////////////////////*/
 

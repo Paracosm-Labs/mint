@@ -52,10 +52,12 @@ const CreditSummary = ({ basicCreditInfo, sharedCreditInfo }) => {
       </Card.Body>
       <Card.Footer className="bg-transparent border-top-0">
         <Row className="align-items-center">
-          <Col>
+          <Col>Borrow Rate<br/>
+          <h5>
             <Badge bg={variant} className="p-2">
-              Borrowing Rate: {data.interestRate}% APY
+              {data.interestRate}% APY
             </Badge>
+            </h5>
           </Col>
           {data.title === "Shared Credit" ? (
             data.score > 0 ? (
