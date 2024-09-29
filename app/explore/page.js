@@ -13,7 +13,7 @@ import { ClipLoader } from "react-spinners";
 import JoinClubModal from "../components/joinClubModal";
 import EmptyState from "../components/emptyState";
 import Image from "next/image";
-import ClubCard from "../components/ClubCard";
+import ClubCard from "../components/clubCard";
 import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 
