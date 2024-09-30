@@ -5,9 +5,11 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
 import { useRouter } from "next/navigation";
 import login from "@/lib/login";
+import { getAddress, verifyWallet } from "@/lib/wallet";
 import WalletConnect from "./walletConnect";
 import Image from "next/image";
 import { initializeAmplitude, logEvent } from "@/utils/analytics";
+import { toast } from "react-toastify";
 
 function Header() {
   const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth();
@@ -19,10 +21,39 @@ function Header() {
     initializeAmplitude();
   }, []);
 
-  const handleLinkClick = (page) => {
-    // Log link click event to Amplitude
+  const handleLinkClick = async (page) => {
+    // Log the event to Amplitude
     logEvent("Link Clicked", { page });
+  
+    try {
+      await verifyWallet();
+  
+      // If wallet is connected, route to the corresponding page
+      if (getAddress) {
+        switch (page) {
+          case "Explore Clubs":
+            router.push("/explore", { scroll: false });
+            break;
+          case "My Clubs":
+            router.push("/myclubs", { scroll: false });
+            break;
+          case "Dashboard":
+            router.push("/dashboard/business", { scroll: false });
+            break;
+          default:
+            break;
+        }
+      } else {
+        // Show a toast warning if wallet is not connected
+        toast.warn("Please connect your TronLink wallet before proceeding.");
+      }
+    } catch (error) {
+      console.error("Error during wallet verification: ", error);
+      toast.error("Error verifying wallet. Please try again.");
+    }
   };
+  
+  
 
   const postLogin = async (auth, data) => {
     setData(data);
@@ -63,20 +94,20 @@ function Header() {
     return (
       <ul className="navbar-nav ms-auto">
         <li className="nav-item">
-          <Link className="nav-link" href="/explore" onClick={() => handleLinkClick("Explore Clubs")}>
+          <button className="nav-link text-dark" onClick={() => handleLinkClick("Explore Clubs")}>
             Explore Clubs
-          </Link>
+          </button>
         </li>
         <li className={`nav-item ${isAuthenticated ? "" : "me-2"}`}>
-          <Link className="nav-link" href="/myclubs" onClick={() => handleLinkClick("My Clubs")}>
+          <button className="nav-link text-dark" onClick={() => handleLinkClick("My Clubs")}>
             My Clubs
-          </Link>
+          </button>
         </li>
         {isAuthenticated && (
           <li className="nav-item me-2">
-            <Link className="nav-link" href="/dashboard/business" onClick={() => handleLinkClick("Dashboard")}>
+            <button className="nav-link text-dark" onClick={() => handleLinkClick("Dashboard")}>
               Dashboard
-            </Link>
+            </button>
           </li>
         )}
         <li className="">

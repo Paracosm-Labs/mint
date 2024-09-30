@@ -21,7 +21,7 @@ const WalletConnect = ({ handleBusinessLogin }) => {
         setIsTronLinkConnected(true);
         setShowModal(false);
       } else {
-        alert("Please install TronLink to connect your wallet.");
+        return; //alert("Please install TronLink to connect your wallet.");
       }
     } catch (error) {
       console.error("Error connecting TronLink:", error);
@@ -59,8 +59,9 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   };
 
   const handleButtonClick = async () => {
+    await connectTronLink(); // Connect TronLink after business login
     if (loading) return; // Prevent further clicks while loading
-
+    
     if (isAuthenticated) {
       handleLogoutClick();
     } else if (isTronLinkConnected) {
@@ -75,10 +76,15 @@ const WalletConnect = ({ handleBusinessLogin }) => {
 
   // Check TronLink connection when the component mounts
   useEffect(() => {
-    if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
-      setTronAddress(window.tronWeb.defaultAddress.base58);
-      setIsTronLinkConnected(true);
+    
+    async function checkTronLinkConnection() {
+      if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
+        setTronAddress(window.tronWeb.defaultAddress.base58);
+        setIsTronLinkConnected(true);
+      }
     }
+    checkTronLinkConnection();
+
   }, []);
 
   // Handle modal close
