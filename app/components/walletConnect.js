@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Spinner } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
+import { verifyWallet } from "@/lib/wallet";
 
 const WalletConnect = ({ handleBusinessLogin }) => {
   const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth();
@@ -77,7 +78,9 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   // Check TronLink connection when the component mounts
   useEffect(() => {
     
+    
     async function checkTronLinkConnection() {
+      const address = await verifyWallet();
       if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
         setTronAddress(window.tronWeb.defaultAddress.base58);
         setIsTronLinkConnected(true);
