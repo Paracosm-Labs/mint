@@ -64,7 +64,9 @@ const BusinessOnboarding = () => {
   };
 
   useEffect(() => {
-    loginIfBusinessOwner();
+    if (typeof window !== "undefined") {
+      loginIfBusinessOwner();
+    }
   }, []);
 
   const nextStep = () => setCurrentStep(currentStep + 1);
@@ -170,12 +172,9 @@ const BusinessOnboarding = () => {
       if (auth) {
         // setIsAuthenticated(true);
         // setJwtToken(auth);
-        toast.success(
-          "Onboarding completed successfully! Welcome to MintDeals!"
-        );
-        router.push("/login", {
-          scroll: false,
-        });
+        toast.success("Onboarding completed successfully! Welcome to MintDeals!");
+        setTimeout(() => {router.push("/login", {scroll: false});
+        }, 1000);
       } else {
         setErr(3);
         setErrMsg("Something went wrong. Please try again.");
