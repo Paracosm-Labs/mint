@@ -3,7 +3,6 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthContext";
-import { Button } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import login from "@/lib/login";
 import WalletConnect from "./walletConnect";
@@ -49,8 +48,16 @@ function Header() {
   };
 
   const toggleMenu = () => {
-    setIsOpen((prev) => !prev); // Toggle based on previous state
+    if (isOpen) {
+      // Manually remove 'show' class if open
+      document.getElementById("navbarNav").classList.remove("show");
+    } else {
+      // Manually add 'show' class if closed
+      document.getElementById("navbarNav").classList.add("show");
+    }
+    setIsOpen(!isOpen); // Set new state
   };
+  
 
   const getMenuEntries = () => {
     return (
