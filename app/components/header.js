@@ -120,7 +120,7 @@ function Header() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`}>
+        <div id="navbarNav" className={`collapse navbar-collapse`}>
           {getMenuEntries()}
         </div>
       </div>
