@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }) {
   const handleAddressChange = () => {
     setIsAuthenticated(false);
     setJwtToken(null);
-    router.push("/");
+    // router.push("/");
   };
   useEffect(() => {
     monitorAddressChange(handleAddressChange);
