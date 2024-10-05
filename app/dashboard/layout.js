@@ -3,16 +3,19 @@ import { useEffect } from 'react';
 import Sidebar from "../components/sidebar";
 import { useAuth } from "@/lib/AuthContext";
 import { redirect } from "next/navigation";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   checkNetwork,
   monitorNetwork,
   stopNetworkMonitor,
 } from "@/lib/network";
+import {useRouter} from 'next/navigation';
 
 export default function DashboardLayout({ children }) {
   const { isAuthenticated, jwtToken, setData } = useAuth();
+  const router = useRouter();
+
   if (!isAuthenticated) {
     redirect("/login");
   }
@@ -28,7 +31,7 @@ export default function DashboardLayout({ children }) {
       toast.error(
         `Please switch to the ${process.env.NEXT_PUBLIC_TRON_NETWORK_NAME} network to continue.`
       );
-      redirect("/login");
+      router.push("/login");
     };
 
     useEffect(() => {
