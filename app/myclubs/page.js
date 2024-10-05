@@ -8,7 +8,7 @@ import { getClubsForMember, getEventTxIDFromClubId } from "@/lib/club";
 import { ClipLoader } from "react-spinners";
 import EmptyState from "../components/emptyState";
 import Link from "next/link";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function CustomerClubs() {
@@ -187,14 +187,6 @@ function CustomerClubs() {
         onHide={() => closeModal()}
         club={selectedClub}
         key={refresh}
-      />
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-        pauseOnHover
       />
     </div>
   );

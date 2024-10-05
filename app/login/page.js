@@ -1,11 +1,10 @@
+// login/page.js
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import login from "@/lib/login";
 import Image from "next/image";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const { setIsAuthenticated, setJwtToken, setData } = useAuth();
@@ -30,7 +29,13 @@ const Login = () => {
   
   const handleLoginClick = async () => {
     setLoading(true);
-    await login(postLogin, router);
+    try {
+      await login(postLogin, router);
+      setLoading(false);
+    } catch (error) {
+      console.error("Login failed or TronLink cancelled: ", error);
+      setLoading(false);
+    }
   };
 
   return (<>
@@ -61,14 +66,7 @@ const Login = () => {
         <div className="col-md-4"></div>
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-        pauseOnHover
-        />
+
     </>
   );
 };

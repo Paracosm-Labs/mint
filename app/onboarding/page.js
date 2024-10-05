@@ -6,7 +6,7 @@ const Onboarding = () => {
   useEffect(() => {
     redirect("/login");
   }, []);
-  return <div className="container"></div>;
+  return <div className="kmint container"></div>;
 };
 
 export default Onboarding;

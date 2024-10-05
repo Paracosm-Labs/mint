@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Spinner } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
+import { verifyWallet } from "@/lib/wallet";
 
 const WalletConnect = ({ handleBusinessLogin }) => {
   const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth();
@@ -21,7 +22,7 @@ const WalletConnect = ({ handleBusinessLogin }) => {
         setIsTronLinkConnected(true);
         setShowModal(false);
       } else {
-        alert("Please install TronLink to connect your wallet.");
+        return; //alert("Please install TronLink to connect your wallet.");
       }
     } catch (error) {
       console.error("Error connecting TronLink:", error);
@@ -59,8 +60,9 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   };
 
   const handleButtonClick = async () => {
+    await connectTronLink(); // Connect TronLink after business login
     if (loading) return; // Prevent further clicks while loading
-
+    
     if (isAuthenticated) {
       handleLogoutClick();
     } else if (isTronLinkConnected) {
@@ -75,10 +77,17 @@ const WalletConnect = ({ handleBusinessLogin }) => {
 
   // Check TronLink connection when the component mounts
   useEffect(() => {
-    if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
-      setTronAddress(window.tronWeb.defaultAddress.base58);
-      setIsTronLinkConnected(true);
+    
+    
+    async function checkTronLinkConnection() {
+      const address = await verifyWallet();
+      if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
+        setTronAddress(window.tronWeb.defaultAddress.base58);
+        setIsTronLinkConnected(true);
+      }
     }
+    checkTronLinkConnection();
+
   }, []);
 
   // Handle modal close

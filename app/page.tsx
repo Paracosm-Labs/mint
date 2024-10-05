@@ -25,8 +25,20 @@ export default function Home() {
     router.push('/dashboard/business', { scroll: false })    
   }
 
+  const toExplore = async() =>{
+    
+    if (!isAuthenticated) {
+      await verifyWallet();
+      router.push('/explore', { scroll: false }) 
+    } 
+    else {
+      router.push('/explore', { scroll: false }) 
+    }
+       
+  }
+
   const handleSignIn = async () => {
-    verifyWallet()
+    await verifyWallet()
       .then((res) => {
         if (!res || res.length === 0) {
           alert("Please install or login to Tronlink to proceed.");
@@ -52,8 +64,10 @@ export default function Home() {
 
   // Effect to check user authentication state
   useEffect(() => {
-    const checkUser = async () => {
-      if (isAuthenticated) {
+    
+    async function checkUser() {
+      const vaddress = await verifyWallet(); // Verify wallet and get address
+      if (isAuthenticated && vaddress) {
         const address = await getAddress();
         if (address) {
           const exists = await checkUserExists(address);
@@ -67,7 +81,7 @@ export default function Home() {
     };
 
     checkUser();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, userExists]);
 
 
   return (
@@ -109,8 +123,10 @@ export default function Home() {
                 <span className="d-none">Join 2+ businesses revolutionizing their growth.</span>Create clubs, unlock exclusive deals and access smart credit - all powered by blockchain.
               </p>
               <div className="d-grid gap-2 d-md-flex justify-content-md-start mb-5">
-              <button id="ctaExploreButton" className="btn btn-mint btn-lg px-4 me-md-2">
-                <Link href="/explore" className="nav-link">Discover Clubs</Link>
+              <button id="ctaExploreButton" className="btn btn-mint btn-lg px-4 me-md-2" onClick={toExplore}>
+                {/* <Link href="/explore" className="nav-link"> */}
+                Discover Clubs
+                {/* </Link> */}
               </button>
               {userExists ? (<>
               <button
@@ -176,7 +192,7 @@ export default function Home() {
       </section>
 
       {/* Social Proof */}
-      <section className="py-5 bg-white d-none">
+      {/* <section className="py-5 bg-white d-none">
         <div className="container text-center">
           <p className="lead mb-4">Trusted by over 50 local business communities</p>
           <div className="row justify-content-center align-items-center">
@@ -187,7 +203,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Value Proposition */}
       <section className="py-5 py-md-7">
@@ -251,7 +267,7 @@ export default function Home() {
       </section>
 
       {/* Testimonial */}
-      <section className="py-5 py-md-7 bg-light d-none">
+      {/* <section className="py-5 py-md-7 bg-light d-none">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8 text-center">
@@ -265,7 +281,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA */}
       <section className="py-5 py-md-7 bg-mint">
