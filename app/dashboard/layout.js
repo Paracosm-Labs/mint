@@ -5,6 +5,11 @@ import { useAuth } from "@/lib/AuthContext";
 import { redirect } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  checkNetwork,
+  monitorNetwork,
+  stopNetworkMonitor,
+} from "@/lib/network";
 
 export default function DashboardLayout({ children }) {
   const { isAuthenticated, jwtToken, setData } = useAuth();
@@ -17,6 +22,21 @@ export default function DashboardLayout({ children }) {
       if (container) {
         container.classList.add('fade-up');
       }
+    }, []);
+
+    const handleWrongNetwork = () => {
+      toast.error(
+        `Please switch to the ${process.env.NEXT_PUBLIC_TRON_NETWORK_NAME} network to continue.`
+      );
+      redirect("/login");
+    };
+
+    useEffect(() => {
+      checkNetwork(() => {}, handleWrongNetwork);
+      monitorNetwork(() => {}, handleWrongNetwork);
+      return () => {
+        stopNetworkMonitor();
+      };
     }, []);
 
   return (

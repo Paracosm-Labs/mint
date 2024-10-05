@@ -17,6 +17,11 @@ import { createClubOnChain } from "@/lib/club";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
 import { checkUserExists } from "@/lib/user";
+import {
+  checkNetwork,
+  monitorNetwork,
+  stopNetworkMonitor,
+} from "@/lib/network";
 
 const BusinessOnboarding = () => {
   const [userExists, setUserExists] = useState(null);
@@ -63,10 +68,29 @@ const BusinessOnboarding = () => {
     }
   };
 
+  const handleWrongNetwork = () => {
+    toast.error(
+      `Please switch to the ${process.env.NEXT_PUBLIC_TRON_NETWORK_NAME} network to continue.`
+    );
+    router.push("/", {
+      scroll: false,
+    });
+  };
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      loginIfBusinessOwner();
-    }
+    checkNetwork(() => {
+      if (typeof window !== "undefined") {
+        loginIfBusinessOwner();
+      }
+    }, handleWrongNetwork);
+    monitorNetwork(() => {
+      if (typeof window !== "undefined") {
+        loginIfBusinessOwner();
+      }
+    }, handleWrongNetwork);
+    return () => {
+      stopNetworkMonitor();
+    };
   }, []);
 
   const nextStep = () => setCurrentStep(currentStep + 1);
@@ -172,8 +196,11 @@ const BusinessOnboarding = () => {
       if (auth) {
         // setIsAuthenticated(true);
         // setJwtToken(auth);
-        toast.success("Onboarding completed successfully! Welcome to MintDeals!");
-        setTimeout(() => {router.push("/login", {scroll: false});
+        toast.success(
+          "Onboarding completed successfully! Welcome to MintDeals!"
+        );
+        setTimeout(() => {
+          router.push("/login", { scroll: false });
         }, 1000);
       } else {
         setErr(3);

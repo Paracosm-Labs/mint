@@ -10,6 +10,11 @@ import EmptyState from "../components/emptyState";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  checkNetwork,
+  monitorNetwork,
+  stopNetworkMonitor,
+} from "@/lib/network";
 
 function CustomerClubs() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,9 +83,22 @@ function CustomerClubs() {
     }
   };
 
-  // Fetch purchased clubs from API or your data source
-  useEffect(() => {
+  const loadPage = () => {
     loadClubs();
+  };
+
+  const handleWrongNetwork = () => {
+    toast.error(
+      `Please switch to the ${process.env.NEXT_PUBLIC_TRON_NETWORK_NAME} network to continue.`
+    );
+  };
+
+  useEffect(() => {
+    checkNetwork(loadPage, handleWrongNetwork);
+    monitorNetwork(loadPage, handleWrongNetwork);
+    return () => {
+      stopNetworkMonitor();
+    };
   }, []);
 
   const handleViewDeals = (club) => {

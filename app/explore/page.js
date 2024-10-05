@@ -15,7 +15,11 @@ import EmptyState from "../components/emptyState";
 import Image from "next/image";
 import ClubCard from "../components/clubCard";
 import { toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import {
+  checkNetwork,
+  monitorNetwork,
+  stopNetworkMonitor,
+} from "@/lib/network";
 
 function ExploreClubs() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
@@ -33,8 +37,13 @@ function ExploreClubs() {
   };
 
   // Extract unique countries and categories from the clubs data
-  const uniqueCountryCodes = new Set(clubs.map(club => club.country));
-  const uniqueCountries = ["All Countries", ...countries.filter(c => uniqueCountryCodes.has(c.code)).map(c => c.name)];
+  const uniqueCountryCodes = new Set(clubs.map((club) => club.country));
+  const uniqueCountries = [
+    "All Countries",
+    ...countries
+      .filter((c) => uniqueCountryCodes.has(c.code))
+      .map((c) => c.name),
+  ];
 
   const uniqueCategories = [
     "All Categories",
@@ -42,7 +51,7 @@ function ExploreClubs() {
   ];
 
   const load = async () => {
-    setIsLoading(true);  // Set loading to true when starting to fetch data
+    setIsLoading(true); // Set loading to true when starting to fetch data
     try {
       const response = await fetch("/api/explore/", {
         method: "GET",
@@ -72,23 +81,39 @@ function ExploreClubs() {
       console.error(error);
       alert(error.message);
     } finally {
-      setIsLoading(false);  // Set loading to false when done fetching data
+      setIsLoading(false); // Set loading to false when done fetching data
     }
   };
 
-  useEffect(() => {
-    load().then((clubs) => {
-      if (clubs && clubs.length > 0) {
-        setClubs(clubs);
-      }
-    });
-    // return () => {}
-  }, []);
+  const loadPage = () => {
+    load()
+      .then((clubs) => {
+        if (clubs && clubs.length > 0) {
+          setClubs(clubs);
+        }
+      })
+      .catch((error) => {
+        toast.error("Error fetching clubs. Please try again later.");
+      });
+  };
 
+  const handleWrongNetwork = () => {
+    toast.error(
+      `Please switch to the ${process.env.NEXT_PUBLIC_TRON_NETWORK_NAME} network to continue.`
+    );
+  };
+
+  useEffect(() => {
+    checkNetwork(loadPage, handleWrongNetwork);
+    monitorNetwork(loadPage, handleWrongNetwork);
+    return () => {
+      stopNetworkMonitor();
+    };
+  }, []);
 
   const handleCountrySelect = (event, countryName) => {
     event.preventDefault();
-    
+
     const selectedCountryCode =
       countryName === "All Countries"
         ? "All Countries"
@@ -106,13 +131,14 @@ function ExploreClubs() {
     setSelectedSort(sortOption);
   };
 
-
   // Filter clubs based on selected country and category
   const filteredClubs = clubs.filter(
     (club) =>
       club.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (selectedCountry === "All Countries" || club.country === selectedCountry) &&
-      (selectedCategory === "All Categories" || club.category === selectedCategory)
+      (selectedCountry === "All Countries" ||
+        club.country === selectedCountry) &&
+      (selectedCategory === "All Categories" ||
+        club.category === selectedCategory)
   );
 
   // Sort clubs based on selected sort option
@@ -143,10 +169,11 @@ function ExploreClubs() {
 
   const handlePayJoin = async () => {
     if (!selectedClub) return;
-  
-    const currencyAddress = selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
+
+    const currencyAddress =
+      selectedCurrency === "USDT" ? USDTAddress : USDDAddress;
     const tokenDecimals = selectedCurrency === "USDT" ? 6 : 18;
-    
+
     try {
       console.log("membership fee:", selectedClub.membershipFee);
       const txID = await addClubMember(
@@ -155,33 +182,34 @@ function ExploreClubs() {
         selectedClub.membershipFee,
         tokenDecimals
       );
-      
+
       console.log("txID: ", txID);
-      toast.success(`Successfully joined ${selectedClub.name}`); 
+      toast.success(`Successfully joined ${selectedClub.name}`);
       setShowModal(false);
       await load().then((clubs) => {
         if (clubs && clubs.length > 0) {
           setClubs(clubs);
         }
       });
-      
     } catch (error) {
       console.error("Transaction failed:", error);
       toast.error(error);
     }
   };
-  
 
   if (isLoading) {
     return (
-        <div className="kmint container" style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+      <div
+        className="kmint container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           // height: '80vh',  // This will make it full screen
-        }}>
-          <ClipLoader color="#98ff98" size={150} />
-        </div>
+        }}
+      >
+        <ClipLoader color="#98ff98" size={150} />
+      </div>
     );
   }
 
@@ -216,7 +244,6 @@ function ExploreClubs() {
           <div className="col-6"></div>
           <div className="col-12">
             <div className="text-center">
-
               <div className="btn-group filter-dropdown mx-2 mb-3">
                 <button
                   type="button"
@@ -226,7 +253,10 @@ function ExploreClubs() {
                 >
                   {selectedCategory}
                 </button>
-                <ul className="dropdown-menu" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                <ul
+                  className="dropdown-menu"
+                  style={{ maxHeight: "200px", overflowY: "auto" }}
+                >
                   {uniqueCategories.map((category) => (
                     <li key={category}>
                       <a
@@ -248,7 +278,9 @@ function ExploreClubs() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {selectedCountry === "All Countries" ? "Select Country" : selectedCountry}
+                  {selectedCountry === "All Countries"
+                    ? "Select Country"
+                    : selectedCountry}
                 </button>
                 <ul className="dropdown-menu">
                   {uniqueCountries.map((countryName) => (
@@ -264,7 +296,6 @@ function ExploreClubs() {
                   ))}
                 </ul>
               </div>
-
 
               <div className="btn-group filter-dropdown mx-2 mb-3">
                 <button
@@ -314,30 +345,28 @@ function ExploreClubs() {
                   </li>
                 </ul>
               </div>
-              
             </div>
           </div>
         </div>
 
         <div className="row" id="club-container">
           {sortedClubs.length === 0 ? (
-            <EmptyState 
-              iconClass="fa-folder-open" 
+            <EmptyState
+              iconClass="fa-folder-open"
               message="No clubs created yet."
             />
           ) : (
             sortedClubs.map((club) => (
               <div className="col-md-4 mb-4" key={club.id}>
-                <ClubCard 
-                  club={club} 
-                  onJoin={join} 
+                <ClubCard
+                  club={club}
+                  onJoin={join}
                   getCountryNameByCode={getCountryNameByCode}
                 />
               </div>
             ))
           )}
         </div>
-
 
         <JoinClubModal
           show={showModal}
@@ -347,7 +376,6 @@ function ExploreClubs() {
           setSelectedCurrency={setSelectedCurrency}
           onJoin={handlePayJoin}
         />
-
       </div>
     </>
   );
