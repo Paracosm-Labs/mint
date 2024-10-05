@@ -20,6 +20,11 @@ import {
   monitorNetwork,
   stopNetworkMonitor,
 } from "@/lib/network";
+import {
+  monitorAddressChange,
+  stopAddressChangeMonitor,
+} from "@/lib/addressChange";
+import { useRouter } from "next/navigation";
 
 function ExploreClubs() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
@@ -31,6 +36,16 @@ function ExploreClubs() {
   const [clubs, setClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState("USDT");
+  const router = useRouter();
+  const handleAddressChange = () => {
+    router.push("/");
+  };
+  useEffect(() => {
+    monitorAddressChange(handleAddressChange);
+    return () => {
+      stopAddressChangeMonitor();
+    };
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -101,6 +116,7 @@ function ExploreClubs() {
     toast.error(
       `Please switch to the ${process.env.NEXT_PUBLIC_TRON_NETWORK_NAME} network to continue.`
     );
+    router.push("/");
   };
 
   useEffect(() => {

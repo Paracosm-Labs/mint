@@ -15,6 +15,11 @@ import {
   monitorNetwork,
   stopNetworkMonitor,
 } from "@/lib/network";
+import {
+  monitorAddressChange,
+  stopAddressChangeMonitor,
+} from "@/lib/addressChange";
+import { useRouter } from "next/navigation";
 
 function CustomerClubs() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,6 +32,16 @@ function CustomerClubs() {
   const [refresh, setRefresh] = useState(0);
   const [refreshCanvas, setRefreshCanvas] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const handleAddressChange = () => {
+    router.push("/");
+  };
+  useEffect(() => {
+    monitorAddressChange(handleAddressChange);
+    return () => {
+      stopAddressChangeMonitor();
+    };
+  }, []);
 
   const loadClubs = async () => {
     setIsLoading(true); // Set loading to true when starting to fetch data

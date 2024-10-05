@@ -4,6 +4,10 @@ import { Button, Modal, Spinner } from "react-bootstrap";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import { verifyWallet } from "@/lib/wallet";
+import {
+  monitorAddressChange,
+  stopAddressChangeMonitor,
+} from "@/lib/addressChange";
 
 const WalletConnect = ({ handleBusinessLogin }) => {
   const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth();
@@ -12,6 +16,21 @@ const WalletConnect = ({ handleBusinessLogin }) => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false); // State for loading
   const router = useRouter();
+
+  const handleAddressChange = () => {
+    if (window.tronWeb && window.tronWeb.defaultAddress.base58) {
+      const address = window.tronWeb.defaultAddress.base58;
+      setTronAddress(address);
+      setIsTronLinkConnected(true);
+      setShowModal(false);
+    }
+  };
+  useEffect(() => {
+    monitorAddressChange(handleAddressChange);
+    return () => {
+      stopAddressChangeMonitor();
+    };
+  }, []);
 
   // TronLink connection handler
   const connectTronLink = async () => {
@@ -77,8 +96,6 @@ const WalletConnect = ({ handleBusinessLogin }) => {
 
   // Check TronLink connection when the component mounts
   useEffect(() => {
-    
-    
     async function checkTronLinkConnection() {
       const address = await verifyWallet();
       if (window.tronWeb && window.tronWeb.defaultAddress.base58) {

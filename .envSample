@@ -5,3 +5,7 @@ PINATA_API_KEY=xxx
 PINATA_SECRET_API_KEY=xxx
 NEXT_PUBLIC_GATEWAY_URL=xxx
 NEXT_PUBLIC_AMPLITUDE_ANALYTICS=xxx
+# NEXT_PUBLIC_TRON_NETWORK=https://api.trongrid.io  # Replace with your desired network
+# NEXT_PUBLIC_TRON_NETWORK_NAME=mainnet
+NEXT_PUBLIC_TRON_NETWORK=https://api.nileex.io  # Replace with your desired network
+NEXT_PUBLIC_TRON_NETWORK_NAME=nile

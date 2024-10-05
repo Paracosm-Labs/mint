@@ -11,10 +11,25 @@ import {
   stopNetworkMonitor,
 } from "@/lib/network";
 import {useRouter} from 'next/navigation';
+import {
+  monitorAddressChange,
+  stopAddressChangeMonitor,
+} from "@/lib/addressChange";
 
 export default function DashboardLayout({ children }) {
-  const { isAuthenticated, jwtToken, setData } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, setJwtToken, setData } = useAuth();
   const router = useRouter();
+  const handleAddressChange = () => {
+    setIsAuthenticated(false);
+    setJwtToken(null);
+    router.push("/");
+  };
+  useEffect(() => {
+    monitorAddressChange(handleAddressChange);
+    return () => {
+      stopAddressChangeMonitor();
+    };
+  }, []);
 
   if (!isAuthenticated) {
     redirect("/login");
@@ -31,6 +46,8 @@ export default function DashboardLayout({ children }) {
       toast.error(
         `Please switch to the ${process.env.NEXT_PUBLIC_TRON_NETWORK_NAME} network to continue.`
       );
+      setIsAuthenticated(false);
+      setJwtToken(null);
       router.push("/login");
     };
 
