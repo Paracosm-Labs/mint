@@ -37,6 +37,9 @@ function Header() {
           case "My Clubs":
             router.push("/myclubs", { scroll: false });
             break;
+          case "Redeem Deal":
+              router.push("/redeem", { scroll: false });
+            break;
           case "Dashboard":
             router.push("/dashboard/business", { scroll: false });
             break;
@@ -101,6 +104,11 @@ function Header() {
         <li className={`nav-item ${isAuthenticated ? "" : "me-2"}`}>
           <button className="nav-link text-dark" onClick={() => handleLinkClick("My Clubs")}>
             My Clubs
+          </button>
+        </li>
+        <li className={`nav-item ${isAuthenticated ? "" : "me-2"}`}>
+          <button className="nav-link text-dark" onClick={() => handleLinkClick("Redeem Deal")}>
+            Redeem
           </button>
         </li>
         {isAuthenticated && (
