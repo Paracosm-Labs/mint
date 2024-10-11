@@ -38,9 +38,26 @@ function DealModal({ show, onHide, deal }) {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!maxSupply) newErrors.maxSupply = "Max supply is required";
-    if (!dealDescription) newErrors.dealDescription = "Description is required";
-    if (!dealValidTo) newErrors.dealValidTo = "Valid to date is required";
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate date comparison
+    
+    const selectedDate = new Date(dealValidTo);
+    selectedDate.setHours(0, 0, 0, 0); // Reset time to start of day for accurate date comparison
+    
+    if (!url || !url.url) {
+      newErrors.image = "Please upload an image before creating the deal.";
+    }
+    if (!maxSupply || maxSupply <= 0) {
+      newErrors.maxSupply = "Please enter a valid supply number";
+    }
+    if (!dealDescription) {
+      newErrors.dealDescription = "Please enter a description";
+    }
+    if (!dealValidTo) {
+      newErrors.dealValidTo = "Please select a valid date";
+    } else if (selectedDate <= today) {
+      newErrors.dealValidTo = "Please select a future date";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -118,6 +135,7 @@ function DealModal({ show, onHide, deal }) {
   const saveDeal = async () => {
     if (!validateForm()) return;
 
+
     setIsLoading(true);
     try {
       const clubId = await getClubIdFromEvent(data.userData.clubs.txID);
@@ -186,19 +204,22 @@ function DealModal({ show, onHide, deal }) {
             <Form.Label>Upload Image</Form.Label>
             <Upload setImageUrl={setUrl}></Upload>
             {url && (
-              <div className="mt-3 text-center">
-                {/** style accordingy */}
-                <Image
-                  loader={() => url.url}
-                  // fill={true}
-                  width={400}
-                  height={200}
-                  src={url.url}
-                  alt="Uploaded Deal Image"
-                  className="deal-image-preview-a rounded"
-                />
-              </div>
-            )}
+            <div className="mt-3 text-center">
+              <Image
+                loader={() => url.url}
+                width={400}
+                height={200}
+                src={url.url}
+                alt="Uploaded Deal Image"
+                className="deal-image-preview-a rounded"
+              />
+            </div>
+          )}
+          {errors.image && (
+            <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+              {errors.image}
+            </Form.Control.Feedback>
+          )}
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Max Supply</Form.Label>
