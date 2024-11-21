@@ -271,6 +271,29 @@ const ClubDealRegistryABI = [
 	  "type": "function"
 	},
 	{
+	  "inputs": [
+		{
+		  "internalType": "uint256",
+		  "name": "_clubId",
+		  "type": "uint256"
+		},
+		{
+		  "internalType": "uint256",
+		  "name": "_dealId",
+		  "type": "uint256"
+		},
+		{
+		  "internalType": "uint256",
+		  "name": "_quantity",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "batchMintDeal",
+	  "outputs": [],
+	  "stateMutability": "nonpayable",
+	  "type": "function"
+	},
+	{
 	  "inputs": [],
 	  "name": "clubCreationFee",
 	  "outputs": [
@@ -926,7 +949,7 @@ const ClubDealRegistryABI = [
 	  "type": "function"
 	}
   ]
-
+  
 export default ClubDealRegistryABI;
 
 

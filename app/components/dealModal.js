@@ -206,10 +206,10 @@ function DealModal({ show, onHide, deal }) {
             {url && (
             <div className="mt-3 text-center">
               <Image
-                loader={() => url.url}
+                loader={() => url.displayUrl}
                 width={400}
                 height={200}
-                src={url.url}
+                src={url.displayUrl}
                 alt="Uploaded Deal Image"
                 className="deal-image-preview-a rounded"
               />

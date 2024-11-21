@@ -1,12 +1,3 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//     images: {
-//       domains: ['picsum.photos','peach-urban-macaw-192.mypinata.cloud'], // Allow images from picsum.photos
-//     },
-//   };
-  
-//   export default nextConfig;
-  
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // output: 'export',
@@ -20,7 +11,7 @@ const nextConfig = {
       },
       {
         // Match images from Pinata domain
-        hostname: 'peach-urban-macaw-192.mypinata.cloud',
+        hostname: 'orange-odd-quail-691.mypinata.cloud',
         port: '',
       },
     ],

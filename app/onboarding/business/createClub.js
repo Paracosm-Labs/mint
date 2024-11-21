@@ -1,3 +1,4 @@
+// app/onboarding/busines/createClub.js
 import React, { useState } from 'react';
 import Image from "next/image";
 import Upload from '../../components/upload';
@@ -134,7 +135,8 @@ const CreateClub = ({ onNext, onPrev, onDataUpdate, data }) => {
         )}
         {clubImage && (
           <Image 
-            src={clubImage.url} 
+            loader={() => clubImage.displayUrl}
+            src={clubImage.displayUrl} 
             alt="Club Image" 
             height={200} 
             width={400}  

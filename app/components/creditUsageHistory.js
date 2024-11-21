@@ -78,7 +78,8 @@ function CreditUsageHistory({ refresh }) {
 
       setUsageHistory(uniqueEvents);
     } catch (err) {
-      setError(err.message || "An error occurred");
+      // setError(err.message || "Oh my! An error occurred");
+      return(<EmptyState iconClass="fa-receipt" message="No usage history available, yet." />);
     } finally {
       setLoading(false);
     }

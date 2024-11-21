@@ -15,9 +15,15 @@ export async function POST(request) {
       expires: 3600 * 24 * 60 * 60, // 60 days
     });
 
-    console.log(url);
+    // Store the CID with ipfs:// prefix for NFT metadata
+    // const ipfsUrl = `ipfs://${uploadData.cid}`;
+    // Generate gateway URL for frontend display
+    // const displayUrl = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${uploadData.cid}`;
 
-    return NextResponse.json({ url }, { status: 200 });
+    return NextResponse.json({ 
+      url: url,      // for NFT metadata
+      displayUrl: url  // for frontend display
+    }, { status: 200 });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
